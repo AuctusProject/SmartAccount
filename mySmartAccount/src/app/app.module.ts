@@ -28,6 +28,7 @@ import { HomeComponent } from './components/home/home.component';
 import { TokenListItemComponent } from './components/token-list/token-list-item/token-list-item.component';
 import { AddTokenComponent } from './components/add-token/add-token.component';
 import { MetamaskAccountMonitorComponent } from './components/metamask-account-monitor/metamask-account-monitor.component';
+import { TransferTokenComponent } from './components/transfer-token/transfer-token.component';
 
 
 @NgModule({
@@ -42,7 +43,8 @@ import { MetamaskAccountMonitorComponent } from './components/metamask-account-m
     HomeComponent,
     TokenListItemComponent,
     AddTokenComponent,
-    MetamaskAccountMonitorComponent
+    MetamaskAccountMonitorComponent,
+    TransferTokenComponent
   ],
   imports: [
     BrowserModule,

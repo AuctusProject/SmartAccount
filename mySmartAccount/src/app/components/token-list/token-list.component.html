@@ -1,6 +1,16 @@
-<mat-list>
-<app-token-list-item *ngFor="let tokenBalanceItem of tokenBalanceList" [tokenBalance]="tokenBalanceItem">
+<mat-list *ngIf="variables.showList">
+<app-token-list-item 
+    *ngFor="let tokenBalanceItem of tokenBalanceList" 
+    [tokenBalance]="tokenBalanceItem" 
+    (selectedTokenEvent)="updateFrame($event)">
 </app-token-list-item>
 <mat-divider></mat-divider>
 <button [routerLink]="['/add-token']">add new token</button>
  </mat-list>
+
+ <div *ngIf="!variables.showList" >
+    <span>Send <strong>{{variables.selectedToken}}</strong></span>
+    <app-transfer-token  (returnEvent)="showListFrame()">
+    </app-transfer-token>
+ </div>
+
