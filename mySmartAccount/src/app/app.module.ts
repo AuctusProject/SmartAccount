@@ -5,6 +5,8 @@ import { AppRoutingModule } from './/app-routing.module';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatListModule } from "@angular/material/list";
 
 
 import { AppComponent } from './app.component';
@@ -25,9 +27,11 @@ import { ExtensionListItemComponent } from './components/extension-list-item/ext
     BrowserAnimationsModule,
     AppRoutingModule,
     MatExpansionModule,
-    MatCardModule
+    MatCardModule,
+    MatDividerModule,
+    MatListModule
   ],
-  
+
   providers: [],
   bootstrap: [AppComponent]
 })
