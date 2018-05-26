@@ -17,6 +17,8 @@ import { ExtensionListComponent } from './components/extension-list/extension-li
 import { ExtensionListItemComponent } from './components/extension-list-item/extension-list-item.component';
 import { TransferEthComponent } from './components/transfer-eth/transfer-eth.component';
 import { TokenListComponent } from './components/token-list/token-list.component';
+import { TokenListItemComponent } from './components/token-list/token-list-item/token-list-item.component';
+import { AddTokenComponent } from './components/add-token/add-token.component';
 
 
 @NgModule({
@@ -26,7 +28,9 @@ import { TokenListComponent } from './components/token-list/token-list.component
     ExtensionListItemComponent,
     EthBalanceComponent,
     TransferEthComponent,
-    TokenListComponent
+    TokenListComponent,
+    TokenListItemComponent,
+    AddTokenComponent
   ],
   imports: [
     BrowserModule,
