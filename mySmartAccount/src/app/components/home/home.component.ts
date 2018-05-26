@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { SmartAccountService } from '../../services/smart-account.service';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-home',
@@ -9,15 +10,21 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private smartAccountService: SmartAccountService, private router : Router) {
+  creating: boolean;
+
+  constructor(private smartAccountService: SmartAccountService, private router: Router, private zone : NgZone) {
   }
 
   ngOnInit() {
   }
 
   onCreateAccount() {
+    this.creating = true;
     this.smartAccountService.createAccountSC().subscribe(contractAddress => {
-      this.router.navigate(['account']);
+      this.creating = false;
+      if (contractAddress) {
+        this.zone.run(() => this.router.navigate(['/account', contractAddress]));
+      }
     })
   }
 }

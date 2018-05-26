@@ -26,23 +26,22 @@ export class SmartAccountService {
 
   private monitoreAccount() {
     let self = this;
-    var accountInterval = setInterval(function () {
-      self.web3Service.getAccount().subscribe(
-        account => {
-          if (!self.getNetwork()) {
-            return;
-          }
-          if (!self.isCorrectNetwork()) {
-            self.broadcastLoginConditionsFail();
-            return;
-          }
+    this.web3Service && this.web3Service.getAccount().subscribe(
+      account => {
+        if (!self.getNetwork()) {
+          return;
+        }
+        if (!self.isCorrectNetwork()) {
+          self.broadcastLoginConditionsFail();
+          return;
+        }
 
-          if (self.account && self.account != account) {
-            self.broadcastAccountChanged(account);
-          }
-          self.account = account;
-        })
-    }, 100);
+        if (self.account && self.account != account) {
+          self.broadcastAccountChanged(account);
+        }
+        self.account = account;
+      });
+    setTimeout(this.monitoreAccount, 5000);
   }
 
   private runChecks() {
@@ -110,7 +109,7 @@ export class SmartAccountService {
   public createAccountSC(): Observable<any> {
     if (!this.getAccount()) {
       return new Observable(observer => {
-        observer.next(false);
+        observer.next(null);
       });
     }
 
@@ -130,6 +129,9 @@ export class SmartAccountService {
                 })
             });
           }
+          else {
+            observer.next(null);
+          }
         });
     })
   }
@@ -140,10 +142,14 @@ export class SmartAccountService {
   }
 
   public getAccountETHBalance(): any {
-    this.web3Service.getETHBalance(this.getAccount());
+    return this.web3Service.getETHBalance(this.getContractAddress());
   }
 
-  public getContractAddress(){
-    return this.contractAddress;
+  public getContractAddress() {
+    var address = this.contractAddress;
+    if (!address) {
+      this.contractAddress, address = this.localStorageService.getLocalStorage("smartAccountAddress");
+    }
+    return address;
   }
 }

@@ -8,7 +8,7 @@ import { AccountComponent } from './components/account/account.component';
 const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
     { path: 'home', component: HomeComponent },
-    { path: 'account', component: AccountComponent },
+    { path: 'account/:address', component: AccountComponent },
     { path: 'extension/:id', component: ExtensionEditComponent },
     { path: 'add-token', component: AddTokenComponent }
 ];

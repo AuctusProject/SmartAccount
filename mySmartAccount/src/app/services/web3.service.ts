@@ -73,16 +73,24 @@ export class Web3Service {
     return data;
   }
 
-  public getETHBalance(address) {
+  public getETHBalance(address): Observable<number> {
     var self = this;
-    this.web3.eth.getBalance(address, function(error, result) {
-      if (!error) {
-        var ether = self.web3.fromWei(result, 'ether');
-        return parseFloat(ether);
+    return new Observable(observer => {
+      if (!self.web3) {
+        observer.next(0);
       }
-    });
-    
-    return 0;
+      else {
+        self.web3.eth.getBalance(address, function (error, result) {
+          if (!error) {
+            var ether = self.web3.fromWei(result, 'ether');
+            observer.next(parseFloat(ether));
+          }
+          else {
+            observer.next(0);
+          }
+        });
+      }
+    })
   }
 
   public getTokenBalance(tknContractAddress: string, accountAddrs: string, cb) {
@@ -110,10 +118,10 @@ export class Web3Service {
     return new Observable(observer => {
       this.web3.eth.getTransactionReceipt(hash,
         function (err, result) {
-          if (!err && !result){ //not mined yet
+          if (!err && !result) { //not mined yet
             observer.next(null);
           }
-          else 
+          else
             observer.next(result);
         });
     });

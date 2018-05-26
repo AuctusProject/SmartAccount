@@ -12,6 +12,7 @@ import { MatListModule } from "@angular/material/list";
 import { MatIconModule } from '@angular/material/icon';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
+import { Angular2PromiseButtonModule } from 'angular2-promise-buttons/dist';
 
 import { LocalStorageService } from './services/local-storage.service';
 
@@ -53,8 +54,8 @@ import { TransferTokenComponent } from './components/transfer-token/transfer-tok
     TransferTokenComponent
   ],
   imports: [
-    FormsModule,
     BrowserModule,
+    FormsModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     MatExpansionModule,
@@ -66,15 +67,22 @@ import { TransferTokenComponent } from './components/transfer-token/transfer-tok
     MatListModule,
     MatIconModule,
     FlexLayoutModule,
-    EventsServiceModule.forRoot()
+    EventsServiceModule.forRoot(),
+    Angular2PromiseButtonModule
+      .forRoot({
+        spinnerTpl: '<span class="btn-spinner"></span>',
+        disableBtn: true,
+        btnLoadingClass: 'is-loading',
+        handleCurrentBtnOnly: true,
+      })
   ],
 
   providers: [
-	LocalStorageService,
+    LocalStorageService,
     Web3Service,
     SmartAccountService
   ],
-  
+
   bootstrap: [AppComponent]
 })
 export class AppModule { }
