@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {Router} from '@angular/router';
+import {Location} from '@angular/common';
 
 @Component({
   selector: 'app-add-token',
@@ -7,9 +9,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AddTokenComponent implements OnInit {
 
-  constructor() { }
+ 
+  constructor(private router: Router) { 
+  }
 
   ngOnInit() {
+  }
+
+  public add(){
+    alert('Token Added');
+    this.router.navigate(['../']);
   }
 
 }
