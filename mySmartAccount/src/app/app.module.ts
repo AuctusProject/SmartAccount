@@ -11,8 +11,10 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from "@angular/material/list";
 import { MatIconModule } from '@angular/material/icon';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { LocalStorageService } from './services/local-storage.service';
 import { FormsModule } from '@angular/forms';
+import { Angular2PromiseButtonModule } from 'angular2-promise-buttons/dist';
+
+import { LocalStorageService } from './services/local-storage.service';
 
 import { SimpleNotificationsModule } from 'angular2-notifications';
 import { AppComponent } from './app.component';
@@ -29,6 +31,8 @@ import { HomeComponent } from './components/home/home.component';
 import { TokenListItemComponent } from './components/token-list/token-list-item/token-list-item.component';
 import { AddTokenComponent } from './components/add-token/add-token.component';
 import { MetamaskAccountMonitorComponent } from './components/metamask-account-monitor/metamask-account-monitor.component';
+import { ImportAccountComponent } from './components/home/import-account/import-account.component';
+import { AccountComponent } from './components/account/account.component';
 import { TransferTokenComponent } from './components/transfer-token/transfer-token.component';
 
 
@@ -45,10 +49,13 @@ import { TransferTokenComponent } from './components/transfer-token/transfer-tok
     TokenListItemComponent,
     AddTokenComponent,
     MetamaskAccountMonitorComponent,
+    ImportAccountComponent,
+    AccountComponent,
     TransferTokenComponent
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     MatExpansionModule,
@@ -61,6 +68,13 @@ import { TransferTokenComponent } from './components/transfer-token/transfer-tok
     MatIconModule,
     FlexLayoutModule,
     EventsServiceModule.forRoot(),
+    Angular2PromiseButtonModule
+      .forRoot({
+        spinnerTpl: '<span class="btn-spinner"></span>',
+        disableBtn: true,
+        btnLoadingClass: 'is-loading',
+        handleCurrentBtnOnly: true,
+      })
     SimpleNotificationsModule.forRoot(),
     FormsModule
   ],

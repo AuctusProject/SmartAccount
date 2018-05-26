@@ -1,0 +1,28 @@
+<h1>My Smart Account, <a class="address" href="https://ropsten.etherscan.io/address/{{smartAccount.contractAddress}}" target="_blank">{{smartAccount.contractAddress}}</a></h1>
+
+<mat-accordion>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <app-eth-balance></app-eth-balance>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-transfer-eth></app-transfer-eth>
+  </mat-expansion-panel>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Token balance
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-token-list></app-token-list>
+  </mat-expansion-panel>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Extensions
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-extension-list></app-extension-list>
+  </mat-expansion-panel>
+</mat-accordion>
