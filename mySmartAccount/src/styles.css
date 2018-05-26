@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import url(https://fonts.googleapis.com/css?family=Montserrat);
 
 .balance {
     font-size: 20px;
@@ -17,4 +18,8 @@
 
 .pull-left {
     float: left;
+}
+
+h1, h2, h3, p, span, body {
+    font-family: 'Roboto';
 }

@@ -11,6 +11,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from "@angular/material/list";
 import { MatIconModule } from '@angular/material/icon';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormsModule } from '@angular/forms';
 
 import { LocalStorageService } from './services/local-storage.service';
 
@@ -29,6 +30,8 @@ import { HomeComponent } from './components/home/home.component';
 import { TokenListItemComponent } from './components/token-list/token-list-item/token-list-item.component';
 import { AddTokenComponent } from './components/add-token/add-token.component';
 import { MetamaskAccountMonitorComponent } from './components/metamask-account-monitor/metamask-account-monitor.component';
+import { ImportAccountComponent } from './components/home/import-account/import-account.component';
+import { AccountComponent } from './components/account/account.component';
 
 
 @NgModule({
@@ -43,9 +46,12 @@ import { MetamaskAccountMonitorComponent } from './components/metamask-account-m
     HomeComponent,
     TokenListItemComponent,
     AddTokenComponent,
-    MetamaskAccountMonitorComponent
+    MetamaskAccountMonitorComponent,
+    ImportAccountComponent,
+    AccountComponent
   ],
   imports: [
+    FormsModule,
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,

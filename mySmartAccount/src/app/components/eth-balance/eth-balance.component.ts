@@ -25,7 +25,7 @@ export class EthBalanceComponent implements OnInit {
   }
 
   private onLoginConditionsSuccess: Function = (payload: any) => {
-    this.ethBalance = this.smartAccountService.getAccountETHBalance();
+    //this.ethBalance = this.smartAccountService.getAccountETHBalance();
   }
 
 }

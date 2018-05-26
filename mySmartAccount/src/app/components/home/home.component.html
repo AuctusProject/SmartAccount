@@ -1,36 +1,10 @@
 <h1>My Smart Account</h1>
 
-<div *ngIf="!account">
-  We couldn't find any smart account associated to you.
-  <div fxLayout="column">
-    <button mat-button>IMPORT</button>
-    <button mat-button>CREATE</button>
+<div fxLayout="column" fxLayoutGap="20px">
+  <p>We couldn't find any smart account associated to you.</p>
+  <div fxLayout="column" fxLayoutGap="20px">
+    <button mat-raised-button color="accent" (click)="importing=!importing">IMPORT</button>
+    <app-import-account *ngIf="importing"></app-import-account>
+    <button mat-raised-button color="primary" (click)="onCreateAccount()">CREATE</button>
   </div>
 </div>
-
-<mat-accordion *ngIf="account">
-  <mat-expansion-panel>
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        <app-eth-balance></app-eth-balance>
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <app-transfer-eth></app-transfer-eth>
-  </mat-expansion-panel>
-  <mat-expansion-panel>
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        Token balance
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <app-token-list></app-token-list>
-  </mat-expansion-panel>
-  <mat-expansion-panel>
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        Extensions
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <app-extension-list></app-extension-list>
-  </mat-expansion-panel>
-</mat-accordion>
