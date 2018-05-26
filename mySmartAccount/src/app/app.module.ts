@@ -7,6 +7,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
+import { MatDividerModule } from '@angular/material/divider';
+import { MatListModule } from "@angular/material/list";
 
 
 import { AppComponent } from './app.component';
@@ -31,9 +33,11 @@ import { TransferEthComponent } from './components/transfer-eth/transfer-eth.com
     MatExpansionModule,
     MatCardModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatDividerModule,
+    MatListModule
   ],
-  
+
   providers: [],
   bootstrap: [AppComponent]
 })
