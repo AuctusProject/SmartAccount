@@ -75,8 +75,7 @@ export class Web3Service {
     })
   }
 
-  public getContractMethodData(abi: string, contractAddress: string, method: string, ...params: any[]) {
-    var contractInstance = new this.web3.eth.Contract(JSON.parse(abi), contractAddress);
+  public getContractMethodData(contractInstance : any, method: string, ...params: any[]) {
     var data = contractInstance[method].getData.apply(null, params);
     return data;
   }

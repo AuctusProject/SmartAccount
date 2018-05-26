@@ -16,4 +16,8 @@ export class Extension{
         this.description = description;
         this.active = false;
       }
+
+    addSetupParameter(setupParameter : ExtensionSetupParameters){
+        this.setupParameters.push(setupParameter);
+    }
 }

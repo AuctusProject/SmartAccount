@@ -3,6 +3,7 @@ import { Web3Service } from './web3.service';
 import { Extension } from '../model/Extension';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { ExtensionSetupParameters } from '../model/ExtensionSetupParameters';
 
 @Injectable()
 export class ExtensionService {
@@ -21,30 +22,37 @@ export class ExtensionService {
           Observable.combineLatest(this.web3Service.callConstMethod(contractInstance, "getName"),
             this.web3Service.callConstMethod(contractInstance, "getDescription"))
             .subscribe(function handleValues(values) {
-              observer.next(new Extension(extensionAddress, values[0], values[1]));
+              var extension = new Extension(extensionAddress, values[0], values[1]);
+              self.getSetupParameters(extension);
             });
         });
     });
   };
 
-  public getActionsCount(extension: Extension) {
+  public getActions(extension: Extension) {
     this.web3Service.callConstMethod(this.contractInstance, "actionsCount").subscribe(
       result => {
         extension.actionsCount = result;
       })
   }
 
-  public getViewDatasCount(extension: Extension) {
+  public getViewDatas(extension: Extension) {
     this.web3Service.callConstMethod(this.contractInstance, "viewDatasCount").subscribe(
       result => {
         extension.viewDatasCount = result;
       })
   }
 
-  public getSetupParametersCount(extension: Extension) {
+  public getSetupParameters(extension: Extension) {
+    var self = this;
     this.web3Service.callConstMethod(this.contractInstance, "setupParametersCount").subscribe(
       result => {
-        extension.setupParametersCount = result;
+        for (var i = 0; i < result; ++i) {
+          this.web3Service.callConstMethod(self.contractInstance, "getSetupParametersByIndex", i + "").subscribe(
+            setup => {
+              //extension.addSetupParameter(new ExtensionSetupParameters())ç
+            })
+        }
       })
   }
 }
