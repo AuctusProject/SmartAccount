@@ -3,11 +3,13 @@ import { NgModule } from '@angular/core';
 
 
 import { AppComponent } from './app.component';
+import { EthBalanceComponent } from './components/eth-balance/eth-balance.component';
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    EthBalanceComponent
   ],
   imports: [
     BrowserModule
