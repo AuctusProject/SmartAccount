@@ -16,4 +16,7 @@ export class ExtensionListItemComponent implements OnInit {
   ngOnInit() {
   }
 
+  navigate(){
+    this.router.navigate(['/extension', this.extension.address.toString()]);
+  }
 }

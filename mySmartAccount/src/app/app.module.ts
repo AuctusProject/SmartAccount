@@ -34,6 +34,7 @@ import { MetamaskAccountMonitorComponent } from './components/metamask-account-m
 import { ImportAccountComponent } from './components/home/import-account/import-account.component';
 import { AccountComponent } from './components/account/account.component';
 import { TransferTokenComponent } from './components/transfer-token/transfer-token.component';
+import { RedirectProvider } from './provider/redirect.provider';
 
 
 @NgModule({
@@ -82,7 +83,8 @@ import { TransferTokenComponent } from './components/transfer-token/transfer-tok
   providers: [
     LocalStorageService,
     Web3Service,
-    SmartAccountService
+    SmartAccountService,
+    RedirectProvider
   ],
 
   bootstrap: [AppComponent]

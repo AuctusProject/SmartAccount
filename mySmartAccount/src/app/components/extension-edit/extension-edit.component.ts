@@ -16,7 +16,7 @@ export class ExtensionEditComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      this.extension = JSON.parse(this.localStorageService.getLocalStorage("extension_"+params['id']));
+      this.extension = JSON.parse(this.localStorageService.getLocalStorage("extension_"+params['address']));
    });
   }
 

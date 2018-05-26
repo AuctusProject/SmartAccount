@@ -8,6 +8,18 @@
     margin-right: 10px;
 }
 
+.bold {
+    font-weight: 700;
+}
+
 .button {
     cursor: pointer;
+}
+
+/deep/ mat-list-item-content {
+    width: 100%;
+}
+
+span {
+    line-height: 40px;
 }
