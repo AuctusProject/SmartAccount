@@ -11,10 +11,10 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from "@angular/material/list";
 import { MatIconModule } from '@angular/material/icon';
 import { FlexLayoutModule } from '@angular/flex-layout';
-
 import { LocalStorageService } from './services/local-storage.service';
+import { FormsModule } from '@angular/forms';
 
-
+import { SimpleNotificationsModule } from 'angular2-notifications';
 import { AppComponent } from './app.component';
 import { EthBalanceComponent } from './components/eth-balance/eth-balance.component';
 import { ExtensionListComponent } from './components/extension-list/extension-list.component';
@@ -60,15 +60,17 @@ import { TransferTokenComponent } from './components/transfer-token/transfer-tok
     MatListModule,
     MatIconModule,
     FlexLayoutModule,
-    EventsServiceModule.forRoot()
+    EventsServiceModule.forRoot(),
+    SimpleNotificationsModule.forRoot(),
+    FormsModule
   ],
 
   providers: [
-	LocalStorageService,
+    LocalStorageService,
     Web3Service,
     SmartAccountService
   ],
-  
+
   bootstrap: [AppComponent]
 })
 export class AppModule { }

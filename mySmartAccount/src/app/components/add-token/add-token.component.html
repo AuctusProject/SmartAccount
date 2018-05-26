@@ -1,4 +1,3 @@
-
 <div fxLayout="column">
   <div fxLayout="row">
     <button mat-icon-button [routerLink]="['/home']">
@@ -8,18 +7,19 @@
   </div>
   <form>
     <mat-form-field class="full-width">
-      <input matInput placeholder="Contract Address" />
+      <input matInput placeholder="Contract Address" [ngModelOptions]="{standalone: true}" 
+      [(ngModel)]="variables.contractAddress" />
     </mat-form-field>
     <mat-form-field class="full-width">
-      <input matInput placeholder="Symbol" />
+      <input matInput placeholder="Symbol" [ngModelOptions]="{standalone: true}" 
+      [(ngModel)]="variables.symbol" />
     </mat-form-field>
     <mat-form-field class="full-width">
-      <input matInput placeholder="Decimals" type="number" />
+      <input matInput placeholder="Decimals" type="number" [ngModelOptions]="{standalone: true}" 
+      [(ngModel)]="variables.decimals" />
     </mat-form-field>
     <br/>
     <button mat-button (click)="add()">ADD</button>
     <button mat-button [routerLink]="['../']">CANCEL</button>
   </form>
 </div>
-
-

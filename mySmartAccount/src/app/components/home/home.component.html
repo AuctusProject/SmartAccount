@@ -1,6 +1,6 @@
 <h1>My Smart Account</h1>
 
-<div *ngIf="!account">
+<div *ngIf="account">
   We couldn't find any smart account associated to you.
   <div fxLayout="column">
     <button mat-button>IMPORT</button>
@@ -8,7 +8,7 @@
   </div>
 </div>
 
-<mat-accordion *ngIf="account">
+<mat-accordion *ngIf="!account">
   <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title>
