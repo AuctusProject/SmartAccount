@@ -21,7 +21,7 @@ import { ExtensionListItemComponent } from './components/extension-list-item/ext
 import { TransferEthComponent } from './components/transfer-eth/transfer-eth.component';
 import { TokenListComponent } from './components/token-list/token-list.component';
 import { Web3Service } from './services/web3.service';
-import { MetamaskAccountService } from './services/metamask-account.service';
+import { SmartAccountService } from './services/smart-account.service';
 import { EventsServiceModule } from 'angular-event-service';
 import { ExtensionEditComponent } from './components/extension-edit/extension-edit.component';
 import { HomeComponent } from './components/home/home.component';
@@ -61,7 +61,7 @@ import { MetamaskAccountMonitorComponent } from './components/metamask-account-m
   providers: [
 	LocalStorageService,
     Web3Service,
-    MetamaskAccountService
+    SmartAccountService
   ],
   
   bootstrap: [AppComponent]
