@@ -169,9 +169,9 @@ contract RecurrentPayment is IExtension {
             return (configuration[_smartAccount][_beneficiary].maximumAmountPerPeriod, 1);
         } else {
     		uint256 secondsFromTheStart = now.sub(paymentData[_key].start);
-            uint256 pendingPeriods = min(secondsFromTheStart.div(configuration[_smartAccount][_beneficiary].recurrenceTime), 
-                                        configuration[_smartAccount][msg.sender].numberPeriods).add(1)
-                                        .sub(paymentData[_key].releasedPeriods);
+            uint256 pendingPeriods = min(secondsFromTheStart.div(configuration[_smartAccount][_beneficiary].recurrenceTime)
+                                        .add(1).sub(paymentData[_key].releasedPeriods), 
+                                        configuration[_smartAccount][msg.sender].numberPeriods);
                                         
     		if (pendingPeriods == 0) {
                 return (configuration[_smartAccount][_beneficiary].maximumAmountPerPeriod 
