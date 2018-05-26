@@ -2,5 +2,5 @@
 <app-token-list-item *ngFor="let tokenBalanceItem of tokenBalanceList" [tokenBalance]="tokenBalanceItem">
 </app-token-list-item>
 <mat-divider></mat-divider>
-<button>add new token</button>
+<button [routerLink]="['/add-token']">add new token</button>
  </mat-list>
