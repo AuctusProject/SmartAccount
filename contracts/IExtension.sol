@@ -148,7 +148,7 @@ contract IExtension {
     }
 
     function transferTokenFrom(address _smartAccount, address _tokenAddress, address _to, uint256 _amount) internal {
-        bytes memory data = abi.encodePacked(bytes4(keccak256("transfer(address,uint256)")), _to, _amount);
+        bytes memory data = abi.encodePacked(bytes4(keccak256("transfer(address,uint256)")), bytes32(_to), _amount);
         ISmartAccount(_smartAccount).execute(_tokenAddress, 0, 0, data);
     }
     
