@@ -8,6 +8,7 @@ import { MatCardModule } from '@angular/material/card';
 
 
 import { AppComponent } from './app.component';
+import { EthBalanceComponent } from './components/eth-balance/eth-balance.component';
 import { ExtensionListComponent } from './components/extension-list/extension-list.component';
 import { ExtensionListItemComponent } from './components/extension-list-item/extension-list-item.component';
 
@@ -16,7 +17,8 @@ import { ExtensionListItemComponent } from './components/extension-list-item/ext
   declarations: [
     AppComponent,
     ExtensionListComponent,
-    ExtensionListItemComponent
+    ExtensionListItemComponent,
+    EthBalanceComponent
   ],
   imports: [
     BrowserModule,
