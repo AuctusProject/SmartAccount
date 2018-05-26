@@ -93,7 +93,7 @@ export class Web3Service {
     })
   }
 
-  public getTokenBalance(tknContractAddress: string, accountAddrs: string, cb) {
+  public getTokenBalance(tknContractAddress: string, accountAddrs: string, cb, symbol: string) {
     this.web3.eth.call({
       to: tknContractAddress, // Contract address, used call the token balance of the address in question
       data: '0x70a08231000000000000000000000000' + (accountAddrs).substring(2) // Combination of contractData and tknAddress, required to call the balance of an address 
@@ -101,7 +101,7 @@ export class Web3Service {
       if (result) {
         //var tokens = this.web3.toBN(result).toString(); // Convert the result to a usable number string
         var tokensEther = this.web3.fromWei(result, 'ether'); //this.web3.fromWei(tokens, 'ether');
-        cb(err, parseFloat(tokensEther));
+        cb(err, parseFloat(tokensEther), symbol);
       }
       else {
         cb(err);

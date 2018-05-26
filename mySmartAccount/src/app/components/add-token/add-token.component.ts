@@ -29,7 +29,7 @@ export class AddTokenComponent implements OnInit {
     if (this.validate()) {
       if (this.insertToken()) {
         alert("Token Added");
-        this.router.navigate(['../']);
+        this.router.navigate(['home']);
       }
       else
         alert("Contract already addedd.");

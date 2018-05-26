@@ -10,7 +10,7 @@ import { SmartAccount } from '../../../model/SmartAccount';
 })
 export class ImportAccountComponent implements OnInit {
 
-  private account: SmartAccount = new SmartAccount();
+  public account: SmartAccount = new SmartAccount();
 
   constructor(private smartAccountService: SmartAccountService,
     private router: Router) { }

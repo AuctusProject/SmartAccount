@@ -115,7 +115,7 @@ export class SmartAccountService {
 
     var self = this;
     return new Observable(observer => {
-      this.web3Service.sendTransaction(1, 3000000, this.getAccount(), "", 0,
+      this.web3Service.sendTransaction(1000000000, 3000000, this.getAccount(), "", 0,
         environment.smartAccountSCData, environment.chainId).subscribe(txHash => {
           if (txHash) {
 
@@ -143,6 +143,13 @@ export class SmartAccountService {
 
   public getAccountETHBalance(): any {
     return this.web3Service.getETHBalance(this.getContractAddress());
+  }
+
+  public getAccountTokenBalance(tokenAddress : string, symbol: string, cb) {
+    let self = this;
+    this.web3Service.getWeb3().subscribe( web3 => {
+        self.web3Service.getTokenBalance(tokenAddress, this.getContractAddress(), cb, symbol);
+    });
   }
 
   public getContractAddress() {

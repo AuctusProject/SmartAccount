@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TokenBalance } from '../../model/TokenBalance';
 import { TokenListVariables } from '../../model/TokenListVariables';
 import { LocalStorageService } from '../../services/local-storage.service';
-
+import { SmartAccountService } from '../../services/smart-account.service';
 
 
 @Component({
@@ -15,19 +15,28 @@ export class TokenListComponent implements OnInit {
   variables = new TokenListVariables();
   tokenBalanceList : TokenBalance[] = new Array<TokenBalance>();
   
-  constructor(private localStorageService : LocalStorageService) { }
+  constructor(
+      private localStorageService : LocalStorageService,
+      private smartAccountServiec : SmartAccountService) { }
 
   ngOnInit() {
     let tokenList : TokenBalance[] = JSON.parse(this.localStorageService.getLocalStorage("token_list"));
     if (tokenList != null){
       tokenList.forEach(element => {
-        this.tokenBalanceList.push(new TokenBalance(element.symbol, this.checkTokenBalance(element.contractAddress)));
+        this.checkTokenBalance(element.contractAddress, element.symbol);
       });
     }
   }
 
-  checkTokenBalance(address: string) : number{
-    return 0;
+  checkTokenBalance(address: string, symbol: string){
+    let value = this.smartAccountServiec.getAccountTokenBalance(address, symbol, this.pushTokenBalance);
+
+  }
+
+  public pushTokenBalance(err, value?: number, symbol?: string){
+    if (value){
+      this.tokenBalanceList.push(new TokenBalance(symbol,value));
+    }
   }
 
   updateFrame(variables : TokenListVariables){
