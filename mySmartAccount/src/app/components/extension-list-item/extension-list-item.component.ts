@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Extension } from '../../model/Extension';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-extension-list-item',
@@ -10,7 +11,7 @@ export class ExtensionListItemComponent implements OnInit {
 
   @Input() extension : Extension;
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
   }

@@ -9,6 +9,9 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from "@angular/material/list";
+import { MatIconModule } from '@angular/material/icon';
+
+import { LocalStorageService } from './services/local-storage.service';
 
 
 import { AppComponent } from './app.component';
@@ -17,6 +20,8 @@ import { ExtensionListComponent } from './components/extension-list/extension-li
 import { ExtensionListItemComponent } from './components/extension-list-item/extension-list-item.component';
 import { TransferEthComponent } from './components/transfer-eth/transfer-eth.component';
 import { TokenListComponent } from './components/token-list/token-list.component';
+import { ExtensionEditComponent } from './components/extension-edit/extension-edit.component';
+import { HomeComponent } from './components/home/home.component';
 
 
 @NgModule({
@@ -26,7 +31,9 @@ import { TokenListComponent } from './components/token-list/token-list.component
     ExtensionListItemComponent,
     EthBalanceComponent,
     TransferEthComponent,
-    TokenListComponent
+    TokenListComponent,
+    ExtensionEditComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -37,10 +44,11 @@ import { TokenListComponent } from './components/token-list/token-list.component
     MatFormFieldModule,
     MatInputModule,
     MatDividerModule,
-    MatListModule
+    MatListModule,
+    MatIconModule
   ],
 
-  providers: [],
+  providers: [LocalStorageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
