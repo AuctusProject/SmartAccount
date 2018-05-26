@@ -1,9 +1,3 @@
-.active {
-    color: #8BC34A;
-    margin-right: 10px;
-}
-
-.inactive {
-    color: #F44336;
-    margin-right: 10px;
+app-extension-list-item{
+    width: 100%;
 }

@@ -1,5 +1,6 @@
 <mat-list>
-  <mat-list-item> Pepper </mat-list-item>
-  <mat-list-item> Salt </mat-list-item>
-  <mat-list-item> Paprika </mat-list-item>
+<app-token-list-item *ngFor="let tokenBalanceItem of tokenBalanceList" [tokenBalance]="tokenBalanceItem">
+</app-token-list-item>
+<mat-divider></mat-divider>
+<button [routerLink]="['/add-token']">add new token</button>
  </mat-list>

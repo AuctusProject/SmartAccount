@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { TokenBalance } from '../../../model/TokenBalance';
 
 @Component({
   selector: 'app-token-list-item',
@@ -7,6 +8,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TokenListItemComponent implements OnInit {
 
+  @Input() tokenBalance: TokenBalance;
+  
   constructor() { }
 
   ngOnInit() {
