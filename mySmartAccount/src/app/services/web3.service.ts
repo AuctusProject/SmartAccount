@@ -60,11 +60,11 @@ export class Web3Service {
   }
 
   public toHex(val: string): string {
-    return this.web3.utils.toHex(val);
+    return this.web3.toHex(val);
   }
 
   public toWei(value: string, unit?: Unit) {
-    return this.web3.utils.toWei(value, unit);
+    return this.web3.toWei(value, unit);
   }
 
   public getContractMethodData(abi: string, contractAddress: string, method: string, ...params: any[]) {
@@ -91,8 +91,8 @@ export class Web3Service {
       data: '0x70a08231000000000000000000000000' + (accountAddrs).substring(2) // Combination of contractData and tknAddress, required to call the balance of an address 
     }, this.web3.eth.defaultBlock, function (err, result) {
       if (result) {
-        var tokens = this.web3.utils.toBN(result).toString(); // Convert the result to a usable number string
-        var tokensEther = this.web3.utils.fromWei(tokens, 'ether');
+        //var tokens = this.web3.toBN(result).toString(); // Convert the result to a usable number string
+        var tokensEther = this.web3.fromWei(result, 'ether'); //this.web3.fromWei(tokens, 'ether');
         cb(err, parseFloat(tokensEther));
       }
       else {
@@ -104,8 +104,8 @@ export class Web3Service {
   public sendTransaction(gasPrice: number, gasLimit: number, from: string, to: string,
     value: number, data: string, chainId: string): Observable<string> {
 
-    const gasPriceWei = this.web3.utils.toWei(gasPrice.toString(), "ether");
-    const valueWei = this.web3.utils.toWei(value.toString(), 'ether');
+    const gasPriceWei = this.web3.toWei(gasPrice.toString(), "ether");
+    const valueWei = this.web3.toWei(value.toString(), 'ether');
 
     let self = this;
     return new Observable(observer => {
@@ -115,14 +115,14 @@ export class Web3Service {
           if (err) observer.next(null);
           else {
             var transactionObj = {
-              nonce: this.web3.utils.toHex(result),
-              gasPrice: this.web3.utils.toHex(gasPriceWei),
-              gasLimit: this.web3.utils.toHex(gasLimit),
+              nonce: this.web3.toHex(result),
+              gasPrice: this.web3.toHex(gasPriceWei),
+              gasLimit: this.web3.toHex(gasLimit),
               from: from,
               to: to,
-              value: this.web3.utils.toHex(valueWei),
+              value: this.web3.toHex(valueWei),
               data: data,
-              chainId: this.web3.utils.toHex(chainId)
+              chainId: this.web3.toHex(chainId)
             };
 
             self.web3.eth.sendTransaction(transactionObj,
