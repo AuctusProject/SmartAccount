@@ -1,2 +1,9 @@
-<h1>{{extension.name}}</h1>
-<h3>{{extension.description}}</h3>
+<div fxLayout="column">
+  <div fxLayout="row">
+    <button mat-icon-button [routerLink]="['/home']">
+      <mat-icon>arrow_left</mat-icon>
+    </button>
+    <h1>{{extension.name}}</h1>
+  </div>
+  <h3>{{extension.description}}</h3>
+</div>
