@@ -5,12 +5,15 @@ import { AppRoutingModule } from './/app-routing.module';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
 
 
 import { AppComponent } from './app.component';
 import { EthBalanceComponent } from './components/eth-balance/eth-balance.component';
 import { ExtensionListComponent } from './components/extension-list/extension-list.component';
 import { ExtensionListItemComponent } from './components/extension-list-item/extension-list-item.component';
+import { TransferEthComponent } from './components/transfer-eth/transfer-eth.component';
 
 
 @NgModule({
@@ -18,14 +21,17 @@ import { ExtensionListItemComponent } from './components/extension-list-item/ext
     AppComponent,
     ExtensionListComponent,
     ExtensionListItemComponent,
-    EthBalanceComponent
+    EthBalanceComponent,
+    TransferEthComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     MatExpansionModule,
-    MatCardModule
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   
   providers: [],
