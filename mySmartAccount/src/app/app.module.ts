@@ -11,10 +11,12 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from "@angular/material/list";
 import { MatIconModule } from '@angular/material/icon';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormsModule } from '@angular/forms';
+import { Angular2PromiseButtonModule } from 'angular2-promise-buttons/dist';
 
 import { LocalStorageService } from './services/local-storage.service';
 
-
+import { SimpleNotificationsModule } from 'angular2-notifications';
 import { AppComponent } from './app.component';
 import { EthBalanceComponent } from './components/eth-balance/eth-balance.component';
 import { ExtensionListComponent } from './components/extension-list/extension-list.component';
@@ -29,6 +31,9 @@ import { HomeComponent } from './components/home/home.component';
 import { TokenListItemComponent } from './components/token-list/token-list-item/token-list-item.component';
 import { AddTokenComponent } from './components/add-token/add-token.component';
 import { MetamaskAccountMonitorComponent } from './components/metamask-account-monitor/metamask-account-monitor.component';
+import { ImportAccountComponent } from './components/home/import-account/import-account.component';
+import { AccountComponent } from './components/account/account.component';
+import { TransferTokenComponent } from './components/transfer-token/transfer-token.component';
 
 
 @NgModule({
@@ -43,10 +48,14 @@ import { MetamaskAccountMonitorComponent } from './components/metamask-account-m
     HomeComponent,
     TokenListItemComponent,
     AddTokenComponent,
-    MetamaskAccountMonitorComponent
+    MetamaskAccountMonitorComponent,
+    ImportAccountComponent,
+    AccountComponent,
+    TransferTokenComponent
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     MatExpansionModule,
@@ -58,15 +67,24 @@ import { MetamaskAccountMonitorComponent } from './components/metamask-account-m
     MatListModule,
     MatIconModule,
     FlexLayoutModule,
-    EventsServiceModule.forRoot()
+    EventsServiceModule.forRoot(),
+    Angular2PromiseButtonModule
+      .forRoot({
+        spinnerTpl: '<span class="btn-spinner"></span>',
+        disableBtn: true,
+        btnLoadingClass: 'is-loading',
+        handleCurrentBtnOnly: true,
+      }),
+    SimpleNotificationsModule.forRoot(),
+    FormsModule
   ],
 
   providers: [
-	LocalStorageService,
+    LocalStorageService,
     Web3Service,
     SmartAccountService
   ],
-  
+
   bootstrap: [AppComponent]
 })
 export class AppModule { }
