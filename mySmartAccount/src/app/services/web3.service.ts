@@ -38,9 +38,9 @@ export class Web3Service {
   public getNetwork(): Observable<number> {
     let self = this;
     return new Observable(observer => {
-      self.web3.eth.net.getId().then(id => {
-        observer.next(id);
-      })
+      self.web3.version.getNetwork((err, network) => {
+        observer.next(network);
+      });
     })
   }
 

@@ -10,7 +10,7 @@ import { Web3Service } from "./web3.service";
 declare let window: any;
 
 @Injectable()
-export class MetamaskAccountService {
+export class SmartAccountService {
 
   public hasMetamask: boolean;
   private account: string;
@@ -70,7 +70,6 @@ export class MetamaskAccountService {
             }
             else {
               self.broadcastLoginConditionsSuccess();
-              this.createAccountSC();
               observer.next(true);
             }
           });
@@ -110,6 +109,10 @@ export class MetamaskAccountService {
       environment.smartAccountSCData, environment.chainId).subscribe(txId => {
         console.log(txId);
       });
+  }
+
+  getAccountETHBalance(): any {
+    
   }
 
 }

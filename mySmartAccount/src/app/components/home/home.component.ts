@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MetamaskAccountService } from '../../services/metamask-account.service';
+import { SmartAccountService } from '../../services/smart-account.service';
 
 @Component({
   selector: 'app-home',
