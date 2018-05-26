@@ -1,20 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { EventsService } from 'angular-event-service';
-import Web3 from 'web3';
 import { Observable } from 'rxjs/Observable';
+import { Unit } from 'web3/types';
 
 declare let window: any;
+declare let Web3: any;
 
 @Injectable()
 export class Web3Service {
 
-  private web3: Web3;
+  private web3: any;
 
   constructor(private router: Router, private eventsService: EventsService) {
   }
 
-  public getWeb3(): Observable<Web3> {
+  public getWeb3(): Observable<any> {
     let self = this;
     return new Observable(observer => {
       if (self.web3) {
@@ -37,9 +38,9 @@ export class Web3Service {
   public getNetwork(): Observable<number> {
     let self = this;
     return new Observable(observer => {
-      self.web3.version.getNetwork((err, netId) => {
-        observer.next(netId);
-      });
+      self.web3.eth.net.getId().then(id => {
+        observer.next(id);
+      })
     })
   }
 
@@ -59,41 +60,64 @@ export class Web3Service {
   }
 
   public toHex(val: string): string {
-    return this.web3.Web3Utils.toHex(val);
+    return this.web3.utils.toHex(val);
   }
 
-  public toWei(value: string, unit?: string) {
-    return this.web3.Web3Utils.toWei(value, unit);
+  public toWei(value: string, unit?: Unit) {
+    return this.web3.utils.toWei(value, unit);
   }
 
   public getContractMethodData(abi: string, contractAddress: string, method: string, ...params: any[]) {
-    var contractInstance = this.web3.eth.contract(JSON.parse(abi)).at(contractAddress);
+    var contractInstance = new this.web3.eth.Contract(JSON.parse(abi), contractAddress);
     var data = contractInstance[method].getData.apply(null, params);
     return data;
+  }
+
+  public getETHBalance(address) {
+    var result = this.web3.eth.getBalance(address);
+    var balanceBN = this.web3.utils.toBN(result).toString(); // Convert the result to a usable number string
+    var ether = this.web3.utils.fromWei(balanceBN, 'ether');
+    return parseFloat(ether);
+  }
+
+  public getTokenBalance(tknContractAddress : string, accountAddrs : string, cb) {
+    this.web3.eth.call({
+      to: tknContractAddress, // Contract address, used call the token balance of the address in question
+      data: '0x70a08231000000000000000000000000' + (accountAddrs).substring(2) // Combination of contractData and tknAddress, required to call the balance of an address 
+    }, this.web3.eth.defaultBlock, function (err, result) {
+      if (result) {
+        var tokens = this.web3.utils.toBN(result).toString(); // Convert the result to a usable number string
+        var tokensEther = this.web3.utils.fromWei(tokens, 'ether');
+        cb(err, parseFloat(tokensEther));
+      }
+      else {
+        cb(err);
+      }
+    });
   }
 
   public sendTransaction(gasPrice: number, gasLimit: number, from: string, to: string,
     value: number, data: string, chainId: string): Observable<string> {
 
-    const gasPriceWei = this.web3.Web3Utils.toWei(gasPrice.toString(), 'gwei');
-    const valueWei = this.web3.Web3Utils.toWei(value.toString(), 'ether');
+    const gasPriceWei = this.web3.utils.toWei(gasPrice.toString(), "ether");
+    const valueWei = this.web3.utils.toWei(value.toString(), 'ether');
 
     let self = this;
     return new Observable(observer => {
 
-      this.web3.eth.getTransactionCount(from,
+      this.web3.eth.getTransactionCount(from, this.web3.eth.defaultBlock,
         function (err, result) {
           if (err) observer.next(null);
           else {
             var transactionObj = {
-              nonce: this.web3.Web3Utils.toHex(result),
-              gasPrice: this.web3.Web3Utils.toHex(gasPriceWei),
-              gasLimit: this.web3.Web3Utils.toHex(gasLimit),
+              nonce: this.web3.utils.toHex(result),
+              gasPrice: this.web3.utils.toHex(gasPriceWei),
+              gasLimit: this.web3.utils.toHex(gasLimit),
               from: from,
               to: to,
-              value: this.web3.Web3Utils.toHex(valueWei),
+              value: this.web3.utils.toHex(valueWei),
               data: data,
-              chainId: this.web3.Web3Utils.toHex(chainId)
+              chainId: this.web3.utils.toHex(chainId)
             };
 
             self.web3.eth.sendTransaction(transactionObj,

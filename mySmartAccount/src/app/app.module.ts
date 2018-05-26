@@ -21,11 +21,13 @@ import { ExtensionListItemComponent } from './components/extension-list-item/ext
 import { TransferEthComponent } from './components/transfer-eth/transfer-eth.component';
 import { TokenListComponent } from './components/token-list/token-list.component';
 import { Web3Service } from './services/web3.service';
+import { MetamaskAccountService } from './services/metamask-account.service';
 import { EventsServiceModule } from 'angular-event-service';
 import { ExtensionEditComponent } from './components/extension-edit/extension-edit.component';
 import { HomeComponent } from './components/home/home.component';
 import { TokenListItemComponent } from './components/token-list/token-list-item/token-list-item.component';
 import { AddTokenComponent } from './components/add-token/add-token.component';
+import { MetamaskAccountMonitorComponent } from './components/metamask-account-monitor/metamask-account-monitor.component';
 
 
 @NgModule({
@@ -39,7 +41,8 @@ import { AddTokenComponent } from './components/add-token/add-token.component';
     ExtensionEditComponent,
     HomeComponent,
     TokenListItemComponent,
-    AddTokenComponent
+    AddTokenComponent,
+    MetamaskAccountMonitorComponent
   ],
   imports: [
     BrowserModule,
@@ -51,13 +54,14 @@ import { AddTokenComponent } from './components/add-token/add-token.component';
     MatInputModule,
     MatDividerModule,
     MatListModule,
-	MatIconModule,
+	  MatIconModule,
     EventsServiceModule.forRoot()
   ],
 
   providers: [
 	LocalStorageService,
-    Web3Service
+    Web3Service,
+    MetamaskAccountService
   ],
   
   bootstrap: [AppComponent]
