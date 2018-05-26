@@ -5,7 +5,7 @@ import "./IExtension.sol";
 import "../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 
-//TODO: add events, fix code smells
+//TODO: add events, comments, fix code smells
 contract RecurrentPayment is IExtension {
     using SafeMath for uint256;
     
@@ -158,9 +158,9 @@ contract RecurrentPayment is IExtension {
         paymentData[key].releasedAmount = paymentData[key].releasedAmount.add(_amount);
 
         if (configuration[_smartAccount][msg.sender].paymentInEther) {
-            transferEtherFrom(_smartAccount, _amount);
+            transferEtherFrom(_smartAccount, msg.sender, _amount);
         } else {
-            transferTokenFrom(_smartAccount, configuration[_smartAccount][msg.sender].tokenAddress, _amount);
+            transferTokenFrom(_smartAccount, configuration[_smartAccount][msg.sender].tokenAddress, msg.sender, _amount);
         }
     }
     
@@ -168,8 +168,8 @@ contract RecurrentPayment is IExtension {
         if (paymentData[_key].start == 0) {
             return (configuration[_smartAccount][_beneficiary].maximumAmountPerPeriod, 1);
         } else {
-    		uint256 secondsFromTheStart = now - paymentData[_key].start;
-            uint256 pendingPeriods = max(secondsFromTheStart.div(configuration[_smartAccount][_beneficiary].recurrenceTime), 
+    		uint256 secondsFromTheStart = now.sub(paymentData[_key].start);
+            uint256 pendingPeriods = min(secondsFromTheStart.div(configuration[_smartAccount][_beneficiary].recurrenceTime), 
                                         configuration[_smartAccount][msg.sender].numberPeriods).add(1)
                                         .sub(paymentData[_key].releasedPeriods);
                                         
@@ -182,7 +182,7 @@ contract RecurrentPayment is IExtension {
         }
 	}
 	
-	function max(uint256 x, uint256 y) internal pure returns (uint256) {
-		return x > y ? x : y;
+	function min(uint256 x, uint256 y) internal pure returns (uint256) {
+		return x < y ? x : y;
 	}
 }
