@@ -10,6 +10,7 @@ import { MatInputModule } from "@angular/material/input";
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from "@angular/material/list";
 import { MatIconModule } from '@angular/material/icon';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { LocalStorageService } from './services/local-storage.service';
 
@@ -51,10 +52,12 @@ import { MetamaskAccountMonitorComponent } from './components/metamask-account-m
     MatExpansionModule,
     MatCardModule,
     MatFormFieldModule,
+    MatButtonModule,
     MatInputModule,
     MatDividerModule,
     MatListModule,
-	  MatIconModule,
+    MatIconModule,
+    FlexLayoutModule,
     EventsServiceModule.forRoot()
   ],
 
