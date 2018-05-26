@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { EventsService } from 'angular-event-service';
 import { Observable } from 'rxjs/Observable';
 import { Unit } from 'web3/types';
-import { Web3Utils } from "web3-utils";
 
 declare let window: any;
 declare let Web3: any;
@@ -75,10 +74,10 @@ export class Web3Service {
   }
 
   public getETHBalance(address) {
+    var self = this;
     this.web3.eth.getBalance(address, function(error, result) {
       if (!error) {
-        var balanceBN = Web3Utils.toBN(result).toString(); // Convert the result to a usable number string
-        var ether = Web3Utils.fromWei(balanceBN, 'ether');
+        var ether = self.web3.fromWei(result, 'ether');
         return parseFloat(ether);
       }
     });
