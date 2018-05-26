@@ -20,6 +20,8 @@ import { ExtensionListComponent } from './components/extension-list/extension-li
 import { ExtensionListItemComponent } from './components/extension-list-item/extension-list-item.component';
 import { TransferEthComponent } from './components/transfer-eth/transfer-eth.component';
 import { TokenListComponent } from './components/token-list/token-list.component';
+import { Web3Service } from './services/web3.service';
+import { EventsServiceModule } from 'angular-event-service';
 import { ExtensionEditComponent } from './components/extension-edit/extension-edit.component';
 import { HomeComponent } from './components/home/home.component';
 import { TokenListItemComponent } from './components/token-list/token-list-item/token-list-item.component';
@@ -49,10 +51,15 @@ import { AddTokenComponent } from './components/add-token/add-token.component';
     MatInputModule,
     MatDividerModule,
     MatListModule,
-    MatIconModule
+	MatIconModule,
+    EventsServiceModule.forRoot()
   ],
 
-  providers: [LocalStorageService],
+  providers: [
+	LocalStorageService,
+    Web3Service
+  ],
+  
   bootstrap: [AppComponent]
 })
 export class AppModule { }
