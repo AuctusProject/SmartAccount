@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { EventsService } from 'angular-event-service';
 import { Observable } from 'rxjs/Observable';
 import { Unit } from 'web3/types';
+import { Web3Utils } from "web3-utils";
 
 declare let window: any;
 declare let Web3: any;
@@ -74,10 +75,15 @@ export class Web3Service {
   }
 
   public getETHBalance(address) {
-    var result = this.web3.eth.getBalance(address);
-    var balanceBN = this.web3.utils.toBN(result).toString(); // Convert the result to a usable number string
-    var ether = this.web3.utils.fromWei(balanceBN, 'ether');
-    return parseFloat(ether);
+    this.web3.eth.getBalance(address, function(error, result) {
+      if (!error) {
+        var balanceBN = Web3Utils.toBN(result).toString(); // Convert the result to a usable number string
+        var ether = Web3Utils.fromWei(balanceBN, 'ether');
+        return parseFloat(ether);
+      }
+    });
+    
+    return 0;
   }
 
   public getTokenBalance(tknContractAddress : string, accountAddrs : string, cb) {

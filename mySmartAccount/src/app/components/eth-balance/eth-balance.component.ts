@@ -13,6 +13,7 @@ export class EthBalanceComponent implements OnInit {
 
   constructor(private smartAccountService : SmartAccountService, private eventsService: EventsService) {
     this.eventsService.on("loginConditionsSuccess", this.onLoginConditionsSuccess);
+    this.ethBalance = 0;
 
    }
 

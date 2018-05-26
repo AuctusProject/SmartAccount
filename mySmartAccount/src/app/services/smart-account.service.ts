@@ -112,7 +112,7 @@ export class SmartAccountService {
   }
 
   getAccountETHBalance(): any {
-    
+    this.web3Service.getETHBalance(this.getAccount());
   }
 
 }
