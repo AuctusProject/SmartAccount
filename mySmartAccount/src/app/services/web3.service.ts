@@ -60,11 +60,11 @@ export class Web3Service {
   }
 
   public toHex(val: string): string {
-    return this.web3.utils.toHex(val);
+    return this.web3.toHex(val);
   }
 
   public toWei(value: string, unit?: Unit) {
-    return this.web3.utils.toWei(value, unit);
+    return this.web3.toWei(value, unit);
   }
 
   public getContractMethodData(abi: string, contractAddress: string, method: string, ...params: any[]) {
@@ -74,10 +74,15 @@ export class Web3Service {
   }
 
   public getETHBalance(address) {
-    var result = this.web3.eth.getBalance(address);
-    var balanceBN = this.web3.utils.toBN(result).toString(); // Convert the result to a usable number string
-    var ether = this.web3.utils.fromWei(balanceBN, 'ether');
-    return parseFloat(ether);
+    var self = this;
+    this.web3.eth.getBalance(address, function(error, result) {
+      if (!error) {
+        var ether = self.web3.fromWei(result, 'ether');
+        return parseFloat(ether);
+      }
+    });
+    
+    return 0;
   }
 
   public getTokenBalance(tknContractAddress: string, accountAddrs: string, cb) {
@@ -86,8 +91,8 @@ export class Web3Service {
       data: '0x70a08231000000000000000000000000' + (accountAddrs).substring(2) // Combination of contractData and tknAddress, required to call the balance of an address 
     }, this.web3.eth.defaultBlock, function (err, result) {
       if (result) {
-        var tokens = this.web3.utils.toBN(result).toString(); // Convert the result to a usable number string
-        var tokensEther = this.web3.utils.fromWei(tokens, 'ether');
+        //var tokens = this.web3.toBN(result).toString(); // Convert the result to a usable number string
+        var tokensEther = this.web3.fromWei(result, 'ether'); //this.web3.fromWei(tokens, 'ether');
         cb(err, parseFloat(tokensEther));
       }
       else {

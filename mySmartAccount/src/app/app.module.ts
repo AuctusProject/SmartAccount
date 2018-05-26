@@ -32,6 +32,7 @@ import { AddTokenComponent } from './components/add-token/add-token.component';
 import { MetamaskAccountMonitorComponent } from './components/metamask-account-monitor/metamask-account-monitor.component';
 import { ImportAccountComponent } from './components/home/import-account/import-account.component';
 import { AccountComponent } from './components/account/account.component';
+import { TransferTokenComponent } from './components/transfer-token/transfer-token.component';
 
 
 @NgModule({
@@ -48,7 +49,8 @@ import { AccountComponent } from './components/account/account.component';
     AddTokenComponent,
     MetamaskAccountMonitorComponent,
     ImportAccountComponent,
-    AccountComponent
+    AccountComponent,
+    TransferTokenComponent
   ],
   imports: [
     FormsModule,

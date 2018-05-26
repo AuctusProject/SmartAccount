@@ -139,6 +139,10 @@ export class SmartAccountService {
     this.contractAddress = contractAddress;
   }
 
+  public getAccountETHBalance(): any {
+    this.web3Service.getETHBalance(this.getAccount());
+  }
+
   public getContractAddress(){
     return this.contractAddress;
   }

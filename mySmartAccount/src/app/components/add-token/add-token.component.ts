@@ -14,7 +14,7 @@ export class AddTokenComponent implements OnInit {
   }
 
   ngOnInit() {
-  }
+  } 
 
   public add(){
     alert('Token Added');
