@@ -4,10 +4,8 @@ export class Extension{
     description: string;
     active: boolean;
 
-    constructor(address: string, name : string, description : string) {
+    constructor(address: string) {
         this.address = address;
-        this.name = name;
-        this.description = description;
         this.active = false;
       }
 }

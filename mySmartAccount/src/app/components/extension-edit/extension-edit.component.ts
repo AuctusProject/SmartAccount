@@ -19,5 +19,4 @@ export class ExtensionEditComponent implements OnInit {
       this.extension = JSON.parse(this.localStorageService.getLocalStorage("extension_"+params['address']));
    });
   }
-
 }
