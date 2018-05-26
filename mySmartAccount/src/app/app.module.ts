@@ -10,6 +10,7 @@ import { MatInputModule } from "@angular/material/input";
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from "@angular/material/list";
 import { MatIconModule } from '@angular/material/icon';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { LocalStorageService } from './services/local-storage.service';
 
@@ -21,7 +22,7 @@ import { ExtensionListItemComponent } from './components/extension-list-item/ext
 import { TransferEthComponent } from './components/transfer-eth/transfer-eth.component';
 import { TokenListComponent } from './components/token-list/token-list.component';
 import { Web3Service } from './services/web3.service';
-import { MetamaskAccountService } from './services/metamask-account.service';
+import { SmartAccountService } from './services/smart-account.service';
 import { EventsServiceModule } from 'angular-event-service';
 import { ExtensionEditComponent } from './components/extension-edit/extension-edit.component';
 import { HomeComponent } from './components/home/home.component';
@@ -53,17 +54,19 @@ import { TransferTokenComponent } from './components/transfer-token/transfer-tok
     MatExpansionModule,
     MatCardModule,
     MatFormFieldModule,
+    MatButtonModule,
     MatInputModule,
     MatDividerModule,
     MatListModule,
-	  MatIconModule,
+    MatIconModule,
+    FlexLayoutModule,
     EventsServiceModule.forRoot()
   ],
 
   providers: [
 	LocalStorageService,
     Web3Service,
-    MetamaskAccountService
+    SmartAccountService
   ],
   
   bootstrap: [AppComponent]

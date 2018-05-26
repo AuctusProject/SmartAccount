@@ -1,6 +1,6 @@
 import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { MetamaskAccountService } from "../../services/metamask-account.service";
+import { SmartAccountService } from "../../services/smart-account.service";
 // import { LoginService } from "../../services/login.service";
 import { EventsService } from "angular-event-service";
 
@@ -11,7 +11,7 @@ import { EventsService } from "angular-event-service";
 })
 export class MetamaskAccountMonitorComponent implements OnInit {
 
-  constructor(private metamaskAccount: MetamaskAccountService,
+  constructor(private metamaskAccount: SmartAccountService,
     private eventsService: EventsService,
     private router: Router,
     private zone: NgZone/*,

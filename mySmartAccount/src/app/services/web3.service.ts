@@ -38,9 +38,9 @@ export class Web3Service {
   public getNetwork(): Observable<number> {
     let self = this;
     return new Observable(observer => {
-      self.web3.eth.net.getId().then(id => {
-        observer.next(id);
-      })
+      self.web3.version.getNetwork((err, network) => {
+        observer.next(network);
+      });
     })
   }
 
@@ -74,10 +74,15 @@ export class Web3Service {
   }
 
   public getETHBalance(address) {
-    var result = this.web3.eth.getBalance(address);
-    var balanceBN = this.web3.utils.toBN(result).toString(); // Convert the result to a usable number string
-    var ether = this.web3.utils.fromWei(balanceBN, 'ether');
-    return parseFloat(ether);
+    var self = this;
+    this.web3.eth.getBalance(address, function(error, result) {
+      if (!error) {
+        var ether = self.web3.fromWei(result, 'ether');
+        return parseFloat(ether);
+      }
+    });
+    
+    return 0;
   }
 
   public getTokenBalance(tknContractAddress : string, accountAddrs : string, cb) {
