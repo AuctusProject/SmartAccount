@@ -17,6 +17,8 @@ import { ExtensionListComponent } from './components/extension-list/extension-li
 import { ExtensionListItemComponent } from './components/extension-list-item/extension-list-item.component';
 import { TransferEthComponent } from './components/transfer-eth/transfer-eth.component';
 import { TokenListComponent } from './components/token-list/token-list.component';
+import { Web3Service } from './services/web3.service';
+import { EventsServiceModule } from 'angular-event-service';
 
 
 @NgModule({
@@ -37,10 +39,13 @@ import { TokenListComponent } from './components/token-list/token-list.component
     MatFormFieldModule,
     MatInputModule,
     MatDividerModule,
-    MatListModule
+    MatListModule,
+    EventsServiceModule.forRoot()
   ],
 
-  providers: [],
+  providers: [
+    Web3Service
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
