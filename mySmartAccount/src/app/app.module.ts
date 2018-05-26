@@ -74,7 +74,7 @@ import { TransferTokenComponent } from './components/transfer-token/transfer-tok
         disableBtn: true,
         btnLoadingClass: 'is-loading',
         handleCurrentBtnOnly: true,
-      })
+      }),
     SimpleNotificationsModule.forRoot(),
     FormsModule
   ],
