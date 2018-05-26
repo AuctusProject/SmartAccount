@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { SmartAccountService } from '../../services/smart-account.service';
 import { EventsService } from 'angular-event-service';
+import { SmartAccountService } from '../../services/smart-account.service';
 
 @Component({
   selector: 'app-eth-balance',
@@ -9,24 +9,26 @@ import { EventsService } from 'angular-event-service';
 })
 export class EthBalanceComponent implements OnInit {
 
-  ethBalance : number;
+  ethBalance: number;
 
-  constructor(private smartAccountService : SmartAccountService, private eventsService: EventsService) {
+  constructor(private smartAccountService: SmartAccountService, private eventsService: EventsService) {
     this.eventsService.on("loginConditionsSuccess", this.onLoginConditionsSuccess);
-    this.ethBalance = 0;
-
-   }
+  }
 
   ngOnInit() {
-
+    this.smartAccountService.getAccountETHBalance().subscribe(balance => {
+      this.ethBalance = balance;
+    });
   }
 
   ngOnDestroy(): void {
-    this.eventsService.destroyListener("loginConditionsSuccess", this.onLoginConditionsSuccess);  
+    this.eventsService.destroyListener("loginConditionsSuccess", this.onLoginConditionsSuccess);
   }
 
   private onLoginConditionsSuccess: Function = (payload: any) => {
-    this.ethBalance = this.smartAccountService.getAccountETHBalance();
+    this.smartAccountService.getAccountETHBalance().subscribe(balance => {
+      this.ethBalance = balance;
+    });
   }
 
 }

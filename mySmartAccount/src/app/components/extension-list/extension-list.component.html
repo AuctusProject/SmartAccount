@@ -1,6 +1,6 @@
-<mat-list>
-  <mat-list-item  fxLayout="row" fxLayoutAlign="center center" *ngFor="let extension of extensionList">
-    <app-extension-list-item [extension]="extension"></app-extension-list-item>
+<mat-list fxFlex="100">
+  <mat-list-item fxFlex="100" *ngFor="let extension of extensionList">
+    <app-extension-list-item fxFlex="100" [extension]="extension"></app-extension-list-item>
     <mat-divider></mat-divider>
   </mat-list-item>
 </mat-list>

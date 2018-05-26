@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 // import { constants } from '../util/contants';
 import { Web3Service } from "./web3.service";
+import { LocalStorageService } from './local-storage.service';
 
 declare let window: any;
 
@@ -14,32 +15,33 @@ export class SmartAccountService {
 
   public hasMetamask: boolean;
   private account: string;
+  private contractAddress: string;
   private network: number;
+  private smartAccountAddress: string;
 
-  constructor(private router: Router, private eventsService: EventsService, private web3Service: Web3Service) {
+  constructor(private router: Router, private eventsService: EventsService, private web3Service: Web3Service, private localStorageService: LocalStorageService) {
     this.runChecks();
     this.monitoreAccount();
   }
 
   private monitoreAccount() {
     let self = this;
-    var accountInterval = setInterval(function () {
-      self.web3Service.getAccount().subscribe(
-        account => {
-          if (!self.getNetwork()){
-            return;
-          }
-          if (!self.isRinkeby()){
-            self.broadcastLoginConditionsFail();
-            return;
-          }
+    this.web3Service && this.web3Service.getAccount().subscribe(
+      account => {
+        if (!self.getNetwork()) {
+          return;
+        }
+        if (!self.isCorrectNetwork()) {
+          self.broadcastLoginConditionsFail();
+          return;
+        }
 
-          if (self.account && self.account != account) {
-            self.broadcastAccountChanged(account);
-          }
-          self.account = account;
-        })
-    }, 100);
+        if (self.account && self.account != account) {
+          self.broadcastAccountChanged(account);
+        }
+        self.account = account;
+      });
+    setTimeout(this.monitoreAccount, 5000);
   }
 
   private runChecks() {
@@ -51,7 +53,7 @@ export class SmartAccountService {
           self.broadcastLoginConditionsFail();
         }
         else {
-          self.checkAccountAndNetwork().subscribe(success => {});
+          self.checkAccountAndNetwork().subscribe(success => { });
         }
       })
   }
@@ -64,7 +66,7 @@ export class SmartAccountService {
           .subscribe(function handleValues(values) {
             self.network = values[0];
             self.account = values[1];
-            if (!self.network || !self.account || !self.isRinkeby()) {
+            if (!self.network || !self.account || !self.isCorrectNetwork()) {
               observer.next(false);
               self.broadcastLoginConditionsFail();
             }
@@ -96,23 +98,58 @@ export class SmartAccountService {
     return this.account;
   }
 
-  public isRinkeby(): boolean {
-    return this.network && this.network == 4;
+  public isCorrectNetwork(): boolean {
+    return this.network && this.network == Number.parseInt(environment.chainId);
   }
 
   public getNetwork(): number {
     return this.network;
   }
 
-  private createAccountSC(){
-    this.web3Service.sendTransaction(1, 3000000, this.getAccount(), "", 0, 
-      environment.smartAccountSCData, environment.chainId).subscribe(txId => {
-        console.log(txId);
+  public createAccountSC(): Observable<any> {
+    if (!this.getAccount()) {
+      return new Observable(observer => {
+        observer.next(null);
       });
+    }
+
+    var self = this;
+    return new Observable(observer => {
+      this.web3Service.sendTransaction(1, 3000000, this.getAccount(), "", 0,
+        environment.smartAccountSCData, environment.chainId).subscribe(txHash => {
+          if (txHash) {
+
+            Observable.interval(1000 * 5).subscribe(x => {
+              this.web3Service.getTransactionReceipt(txHash).subscribe(
+                receipt => {
+                  if (receipt) {
+                    self.setSmartAccount(receipt.contractAddress);
+                    observer.next(receipt.contractAddress);
+                  }
+                })
+            });
+          }
+          else {
+            observer.next(null);
+          }
+        });
+    })
   }
 
-  getAccountETHBalance(): any {
-    this.web3Service.getETHBalance(this.getAccount());
+  public setSmartAccount(contractAddress: string) {
+    this.localStorageService.setLocalStorage("smartAccountAddress", contractAddress);
+    this.contractAddress = contractAddress;
   }
 
+  public getAccountETHBalance(): any {
+    return this.web3Service.getETHBalance(this.getContractAddress());
+  }
+
+  public getContractAddress() {
+    var address = this.contractAddress;
+    if (!address) {
+      this.contractAddress, address = this.localStorageService.getLocalStorage("smartAccountAddress");
+    }
+    return address;
+  }
 }

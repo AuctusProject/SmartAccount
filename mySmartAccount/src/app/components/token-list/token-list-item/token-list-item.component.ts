@@ -13,9 +13,13 @@ export class TokenListItemComponent implements OnInit {
   @Input() tokenBalance : TokenBalance;
   @Output() selectedTokenEvent = new EventEmitter<TokenListVariables>();
 
-  constructor() { }
+  constructor() { 
+
+  }
 
   ngOnInit() {
+
+
   }
 
   public transferTokens(){
