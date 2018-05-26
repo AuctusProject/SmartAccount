@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { EventsService } from 'angular-event-service';
 import { Observable } from 'rxjs/Observable';
-import { Unit } from 'web3/types';
 
 declare let window: any;
 declare let Web3: any;
@@ -63,14 +62,30 @@ export class Web3Service {
     return this.web3.toHex(val);
   }
 
-  public toWei(value: string, unit?: Unit) {
+  public toWei(value: string, unit?: string) {
     return this.web3.toWei(value, unit);
   }
 
-  public getContractMethodData(abi: string, contractAddress: string, method: string, ...params: any[]) {
-    var contractInstance = new this.web3.eth.Contract(JSON.parse(abi), contractAddress);
+  public callConstMethod(contractInstance: any, methodName: string, ...params: string[]): Observable<any> {
+    return new Observable(observer => {
+      contractInstance[methodName].call(params, {}, this.web3.eth.defaultBlock,
+        function (err, result) {
+          observer.next(result);
+        })
+    })
+  }
+
+  public getContractMethodData(contractInstance : any, method: string, ...params: any[]) {
     var data = contractInstance[method].getData.apply(null, params);
     return data;
+  }
+
+  public getContract(abi: string, contractAddress: string): Observable<any> {
+    return new Observable(observer => {
+      this.getWeb3().subscribe(web3 => {
+        observer.next(web3.eth.contract(JSON.parse(abi)).at(contractAddress));
+      });
+    });
   }
 
   public getETHBalance(address): Observable<number> {

@@ -70,6 +70,7 @@ contract IExtension {
 	    addActions(getActions());
 	}
 	
+	function getName() pure external returns(string);
 	function getDescription() pure external returns(string);
     function getSetupParameters() pure internal returns(Setup);
     function getActions() pure internal returns(Action[]);

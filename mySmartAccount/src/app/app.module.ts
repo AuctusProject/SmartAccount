@@ -16,7 +16,6 @@ import { Angular2PromiseButtonModule } from 'angular2-promise-buttons/dist';
 
 import { LocalStorageService } from './services/local-storage.service';
 
-import { SimpleNotificationsModule } from 'angular2-notifications';
 import { AppComponent } from './app.component';
 import { EthBalanceComponent } from './components/eth-balance/eth-balance.component';
 import { ExtensionListComponent } from './components/extension-list/extension-list.component';
@@ -35,6 +34,7 @@ import { ImportAccountComponent } from './components/home/import-account/import-
 import { AccountComponent } from './components/account/account.component';
 import { TransferTokenComponent } from './components/transfer-token/transfer-token.component';
 import { RedirectProvider } from './provider/redirect.provider';
+import { ExtensionService } from './services/extension.service';
 
 
 @NgModule({
@@ -76,7 +76,6 @@ import { RedirectProvider } from './provider/redirect.provider';
         btnLoadingClass: 'is-loading',
         handleCurrentBtnOnly: true,
       }),
-    SimpleNotificationsModule.forRoot(),
     FormsModule
   ],
 
@@ -84,7 +83,8 @@ import { RedirectProvider } from './provider/redirect.provider';
     LocalStorageService,
     Web3Service,
     SmartAccountService,
-    RedirectProvider
+    RedirectProvider,
+    ExtensionService
   ],
 
   bootstrap: [AppComponent]
