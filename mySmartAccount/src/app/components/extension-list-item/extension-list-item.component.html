@@ -1,0 +1,6 @@
+<div class="button">
+  <span fxFlex="50">{{extension.name}}</span>
+  <button mat-raised-button class="btn pull-right" type="button" [routerLink]="['/extension', extension.id]"><mat-icon>chevron_right</mat-icon></button>
+  <span fxFlex="50" class="active pull-right" *ngIf="extension.active">ACTIVE</span>
+  <span fxFlex="50" class="inactive pull-right" *ngIf="!extension.active">INACTIVE</span>
+</div>
