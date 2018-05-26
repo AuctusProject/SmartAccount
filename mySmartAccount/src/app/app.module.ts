@@ -16,6 +16,7 @@ import { EthBalanceComponent } from './components/eth-balance/eth-balance.compon
 import { ExtensionListComponent } from './components/extension-list/extension-list.component';
 import { ExtensionListItemComponent } from './components/extension-list-item/extension-list-item.component';
 import { TransferEthComponent } from './components/transfer-eth/transfer-eth.component';
+import { TokenListComponent } from './components/token-list/token-list.component';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { TransferEthComponent } from './components/transfer-eth/transfer-eth.com
     ExtensionListComponent,
     ExtensionListItemComponent,
     EthBalanceComponent,
-    TransferEthComponent
+    TransferEthComponent,
+    TokenListComponent
   ],
   imports: [
     BrowserModule,

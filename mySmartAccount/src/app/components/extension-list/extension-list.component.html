@@ -4,7 +4,8 @@
       <mat-panel-title>
         {{extension.name}}
       </mat-panel-title>
-      <button mat-button>ADD</button>
+      <span class="active" *ngIf="extension.active">ACTIVE</span>
+      <span class="inactive" *ngIf="!extension.active">INACTIVE</span>
     </mat-expansion-panel-header>
   </mat-expansion-panel>
 </mat-accordion>

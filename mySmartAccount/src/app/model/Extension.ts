@@ -1,11 +1,11 @@
 export class Extension{
     name : string;
     description: string;
-    hasExtension: boolean;
+    active: boolean;
 
     constructor(name : string, description : string) {
         this.name = name;
         this.description = description;
-        this.hasExtension = false;
+        this.active = false;
       }
 }

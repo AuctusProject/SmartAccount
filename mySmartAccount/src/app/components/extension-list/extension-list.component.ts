@@ -14,7 +14,10 @@ export class ExtensionListComponent implements OnInit {
 
   ngOnInit() {
 
-    this.extensionList.push(new Extension("Fund Recovery", "Recover your funds in case you lose the private key"));
+    this.extensionList.push(
+      new Extension("Fund Recovery", "Recover your funds in case you lose the private key"),
+      new Extension("Testament", "Transfer your funds to your children in case you die")
+    );
   }
 
 }
