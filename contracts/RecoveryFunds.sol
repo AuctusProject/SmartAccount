@@ -36,6 +36,10 @@ contract RecoveryFunds is IExtension {
         _;
     }
     
+    function getName() pure external returns(string) {
+        return "Fund Recovery";
+    }
+    
     function getDescription() pure external returns(string) {
         return "Define a list of providers to recover funds from lost smart account.";
     }

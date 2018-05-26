@@ -27,6 +27,10 @@ contract RecurrentPayment is IExtension {
     mapping(address => mapping(address => Configuration)) configuration;
     mapping(bytes32 => Data) paymentData;
     
+    function getName() pure external returns(string) {
+        return "Recurrent Payment";
+    }
+    
     function getDescription() pure external returns(string) {
         return "Define an address that is authorized to withdraw a number of Ethers or Tokens for some recurrent period.";
     }
