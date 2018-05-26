@@ -70,7 +70,7 @@ export class MetamaskAccountService {
             }
             else {
               self.broadcastLoginConditionsSuccess();
-              this.createAccountSC();
+              self.createAccountSC();
               observer.next(true);
             }
           });
