@@ -22,6 +22,8 @@ import { TransferEthComponent } from './components/transfer-eth/transfer-eth.com
 import { TokenListComponent } from './components/token-list/token-list.component';
 import { ExtensionEditComponent } from './components/extension-edit/extension-edit.component';
 import { HomeComponent } from './components/home/home.component';
+import { TokenListItemComponent } from './components/token-list/token-list-item/token-list-item.component';
+import { AddTokenComponent } from './components/add-token/add-token.component';
 
 
 @NgModule({
@@ -33,7 +35,9 @@ import { HomeComponent } from './components/home/home.component';
     TransferEthComponent,
     TokenListComponent,
     ExtensionEditComponent,
-    HomeComponent
+    HomeComponent,
+    TokenListItemComponent,
+    AddTokenComponent
   ],
   imports: [
     BrowserModule,
