@@ -147,13 +147,13 @@ contract IExtension {
         return actions[index].baseData.parametersCount;
     }
 
-    function transferTokenFrom(address _smartAccount, address _tokenAddress, uint256 _amount) internal {
-        bytes memory data = abi.encodePacked(bytes4(keccak256("transfer(address,uint256)")), msg.sender, _amount);
+    function transferTokenFrom(address _smartAccount, address _tokenAddress, address _to, uint256 _amount) internal {
+        bytes memory data = abi.encodePacked(bytes4(keccak256("transfer(address,uint256)")), _to, _amount);
         ISmartAccount(_smartAccount).execute(_tokenAddress, 0, 0, data);
     }
     
-    function transferEtherFrom(address _smartAccount, uint256 _amount) internal {
-        ISmartAccount(_smartAccount).transfer(msg.sender, _amount);
+    function transferEtherFrom(address _smartAccount, address _to, uint256 _amount) internal {
+        ISmartAccount(_smartAccount).transfer(_to, _amount);
     }
 
     function getParameter(Parameter _parameter)
