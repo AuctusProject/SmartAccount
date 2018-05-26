@@ -16,7 +16,7 @@ import { Angular2PromiseButtonModule } from 'angular2-promise-buttons/dist';
 
 import { LocalStorageService } from './services/local-storage.service';
 
-
+import { SimpleNotificationsModule } from 'angular2-notifications';
 import { AppComponent } from './app.component';
 import { EthBalanceComponent } from './components/eth-balance/eth-balance.component';
 import { ExtensionListComponent } from './components/extension-list/extension-list.component';
@@ -75,7 +75,9 @@ import { RedirectProvider } from './provider/redirect.provider';
         disableBtn: true,
         btnLoadingClass: 'is-loading',
         handleCurrentBtnOnly: true,
-      })
+      }),
+    SimpleNotificationsModule.forRoot(),
+    FormsModule
   ],
 
   providers: [

@@ -10,6 +10,7 @@ contract SmartAccount is SignatureBouncer {
 	address[] public extensions;
 	
 	event Authorization(address plugin, bool authorized);
+	event TransferOwnership(address sender, address owner, address newOwner);
 	event Transfer(address sender, address destination, uint256 value);
 	event Execute(address sender, address destination, uint256 value, uint256 gasLimit, bytes data);
 
@@ -53,6 +54,12 @@ contract SmartAccount is SignatureBouncer {
 		extensionAuthorized[_extension] = _authorized;
 		emit Authorization(_extension, _authorized);
 	}
+	
+	function transferOwnership(address _newOwner) public authorized {
+        require(_newOwner != address(0));
+        owner = _newOwner;
+        emit TransferOwnership(msg.sender, owner, _newOwner);
+    }
 	
 	function transfer(address _destination, uint256 _value) authorized public {
 	    _destination.transfer(_value);
