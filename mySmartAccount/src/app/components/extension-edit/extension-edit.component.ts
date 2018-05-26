@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Extension } from '../../model/Extension';
 import { LocalStorageService } from '../../services/local-storage.service';
+import { ExtensionService } from '../../services/extension.service';
 
 @Component({
   selector: 'app-extension-edit',
@@ -12,11 +13,15 @@ export class ExtensionEditComponent implements OnInit {
 
   extension : Extension;
 
-  constructor(private route: ActivatedRoute, private localStorageService : LocalStorageService) { }
+  constructor(private route: ActivatedRoute, private localStorageService : LocalStorageService, private extensionService : ExtensionService) { }
 
   ngOnInit() {
+    var self = this;
     this.route.params.subscribe(params => {
-      this.extension = JSON.parse(this.localStorageService.getLocalStorage("extension_"+params['address']));
+      var extensionAddress = JSON.parse(this.localStorageService.getLocalStorage("extension_"+params['address']));
+      this.extensionService.getExtension(extensionAddress.address).subscribe(result => {
+        self.extension = result;
+      });
    });
   }
 }

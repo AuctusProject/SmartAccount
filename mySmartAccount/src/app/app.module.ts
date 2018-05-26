@@ -34,6 +34,7 @@ import { ImportAccountComponent } from './components/home/import-account/import-
 import { AccountComponent } from './components/account/account.component';
 import { TransferTokenComponent } from './components/transfer-token/transfer-token.component';
 import { RedirectProvider } from './provider/redirect.provider';
+import { ExtensionService } from './services/extension.service';
 
 
 @NgModule({
@@ -82,7 +83,8 @@ import { RedirectProvider } from './provider/redirect.provider';
     LocalStorageService,
     Web3Service,
     SmartAccountService,
-    RedirectProvider
+    RedirectProvider,
+    ExtensionService
   ],
 
   bootstrap: [AppComponent]
