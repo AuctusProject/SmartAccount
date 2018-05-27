@@ -25,6 +25,7 @@ export class TokenListItemComponent implements OnInit {
   public transferTokens(){
     let variables = new TokenListVariables();
     variables.selectedToken = this.tokenBalance.symbol;
+    variables.contractAddress = this.tokenBalance.contractAddress;
     variables.showList = false;
     
     this.selectedTokenEvent.emit(variables);

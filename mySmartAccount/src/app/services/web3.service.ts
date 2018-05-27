@@ -108,15 +108,35 @@ export class Web3Service {
     })
   }
 
-  public getTokenBalance(tknContractAddress: string, accountAddrs: string, cb, symbol: string) {
+  public getTokenBalance(tknContractAddress: string, accountAddrs: string, cb, symbol: string, caller) {
+    let localWeb3 = this.web3;
     this.web3.eth.call({
       to: tknContractAddress, // Contract address, used call the token balance of the address in question
       data: '0x70a08231000000000000000000000000' + (accountAddrs).substring(2) // Combination of contractData and tknAddress, required to call the balance of an address 
     }, this.web3.eth.defaultBlock, function (err, result) {
       if (result) {
         //var tokens = this.web3.toBN(result).toString(); // Convert the result to a usable number string
-        var tokensEther = this.web3.fromWei(result, 'ether'); //this.web3.fromWei(tokens, 'ether');
-        cb(err, parseFloat(tokensEther), symbol);
+        var tokensEther = localWeb3.fromWei(result, 'ether'); //this.web3.fromWei(tokens, 'ether');
+        cb(err, parseFloat(tokensEther), symbol, tknContractAddress, caller);
+      }
+      else {
+        cb(err);
+      }
+    });
+  }
+
+  public sendToken(tknContractAddress: string, to: string, amount: number, cb, caller) {
+    let localWeb3 = this.web3;
+    this.web3.eth.call({
+      to: tknContractAddress, // Contract address, used call the token balance of the address in question
+      data: '0xa9059cbb000000000000000000000000' 
+          + (to).substring(2)
+          + amount.toString(16).padStart(64,'0') // Combination of contractData and tknAddress, required to call the balance of an address 
+    }, this.web3.eth.defaultBlock, function (err, result) {
+      if (result) {
+        //var tokens = this.web3.toBN(result).toString(); // Convert the result to a usable number string
+
+        cb(err, to, amount, caller);
       }
       else {
         cb(err);
