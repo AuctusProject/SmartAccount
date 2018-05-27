@@ -30,6 +30,37 @@ export class ExtensionService {
     }
   }
 
+  public getExtensionByAddress(address) : Extension{
+    var extensionList = this.getExtensionList();
+    var ret : Extension;
+    extensionList.forEach(extension => {
+      if (extension.address == address) {
+        ret = extension;
+      }
+    });
+    return ret;
+  }
+
+  public getExtensionIndexByAddress(address) : number{
+    var extensionList = this.getExtensionList();
+    var ret : number = -1;
+    for (var i = 0; i < extensionList.length; ++i){
+      if (extensionList[i].address == address) {
+        ret = i;
+      }
+    }
+    return ret;
+  }
+
+  public updateExtension(extension : Extension){
+    var index = this.getExtensionIndexByAddress(extension.address);
+    if (index > -1){
+      var extensionList = this.getExtensionList();
+      extensionList[index] = extension;
+      this.localStorageService.setLocalStorage("extension_list", extensionList);
+    }
+  }
+
   public getSetupData(smartAddress: string, extensionAddress: string, returnTypes: string[]): Observable<any[]> {
     var self = this;
 

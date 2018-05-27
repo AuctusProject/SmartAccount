@@ -14,6 +14,7 @@ import { ExtensionData } from '../../model/ExtensionData';
 export class ExtensionEditComponent implements OnInit {
 
   extension: Extension;
+  extensionData: ExtensionData = new ExtensionData();
   loading: boolean;
 
   constructor(private route: ActivatedRoute, private zone: NgZone, 
@@ -25,34 +26,26 @@ export class ExtensionEditComponent implements OnInit {
     var self = this;
     this.route.params.subscribe(params => {
       var address = params['address'];
-      var extension: Extension = this.getExtensionByAddress(address);
+      this.extension = this.extensionService.getExtensionByAddress(address);
+      var active = this.extension.active;
       this.loading = true;
-      this.extensionService.getExtension(extension.address).subscribe(result => {
+      this.extensionService.getExtension(this.extension.address).subscribe(result => {
         self.zone.run(() => {
           self.extension = result;
+          self.extension.active = active;
           self.loading = false;
         })
         
         // self.extensionService.getSetupData(self.smartAccountService.getContractAddress(), 
         // self.extension.address, self.extension.returnSetupTypes()).subscribe(ret => {
-        //   self.extension.addSetupParameters(ret);
+        //   self.extensionData.addSetupParameters(ret);
         // });
       });
     });
   }
 
-  getExtensionByAddress(address) {
-    var extensionList = this.extensionService.getExtensionList();
-    var ret : Extension;
-    extensionList.forEach(extension => {
-      if (extension.address == address) {
-        ret = extension;
-      }
-    });
-    return ret;
-  }
-
-  onChangeActiveStatus(event) {
-
+  onChangeActiveStatus(active) {
+    this.extension.active = active;
+    this.extensionService.updateExtension(this.extension);
   }
 }
