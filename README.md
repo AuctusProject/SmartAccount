@@ -10,7 +10,7 @@ Smart accounts are smart contracts meant to be used as wallets (they hold and tr
 
 ## Getting Started
 
-The platform is being built in C#, using the .NET Core framework. The API that connects to the Ethereum testnet is in the folder /EthereumModule.
+Built using Angular ...
 
 ## For Developers
 
