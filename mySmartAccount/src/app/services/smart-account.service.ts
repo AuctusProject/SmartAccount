@@ -17,7 +17,6 @@ export class SmartAccountService {
   private account: string;
   private contractAddress: string;
   private network: number;
-  private smartAccountAddress: string;
 
   constructor(private router: Router, private eventsService: EventsService, private web3Service: Web3Service, private localStorageService: LocalStorageService) {
     this.runChecks();

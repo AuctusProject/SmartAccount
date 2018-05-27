@@ -1,7 +1,7 @@
-<div *ngIf="loading && !extension">
+<div *ngIf="loading">
   <mat-progress-spinner [color]="'primary'" [mode]="'indeterminate'" [value]="50" [diameter]="20"></mat-progress-spinner>
 </div>
-<div *ngIf="!loading && extension">
+<div *ngIf="!loading">
   <div fxLayout="column" *ngIf="extension">
     <div fxLayout="row">
       <button class="back" mat-icon-button [routerLink]="['/home']">
