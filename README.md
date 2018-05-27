@@ -38,6 +38,7 @@ We're proud of developing a tool that we ourselves would use and that could help
 ### What we learned
 We learned more about OpenZeppelin contracts, about RCN Network, about Toshi and about DAI and Oasis Dex.
 We also challenged ourselves to create a dapp without a traditional backend/database architecture which uses only Angular frontend and the Ethereum network.
+And of course, we learned how to prepare a good argentinian mate.
 
 ### What's next for Smart Accounts
 Improve the user experience;
