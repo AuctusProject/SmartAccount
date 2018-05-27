@@ -15,7 +15,8 @@ export class ExtensionEditComponent implements OnInit {
 
   extension : Extension;
   extensionData: ExtensionData = new ExtensionData();
-
+  loading: boolean;
+  
   constructor(private route: ActivatedRoute, 
     private zone : NgZone,
     private localStorageService : LocalStorageService,
