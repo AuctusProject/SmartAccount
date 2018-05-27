@@ -114,7 +114,7 @@ export class SmartAccountService {
 
     var self = this;
     return new Observable(observer => {
-      this.web3Service.sendTransaction(1000000000, 3000000, this.getAccount(), "", 0,
+      this.web3Service.sendTransaction(10000000000, 3000000, this.getAccount(), "", 0,
         environment.smartAccountSCData, environment.chainId).subscribe(txHash => {
           if (txHash) {
 

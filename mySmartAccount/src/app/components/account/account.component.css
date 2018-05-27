@@ -15,7 +15,8 @@
 .logoff{
     position: absolute;
     right: 13px;
-    top: 38px;
+    top: 36px;
     color: DARKSLATEGRAY;
     background-color: transparent;
+    border: none;
 }
