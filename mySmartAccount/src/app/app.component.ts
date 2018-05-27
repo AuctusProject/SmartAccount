@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Web3Service } from './services/web3.service';
 
 @Component({
   selector: 'app-root',
@@ -16,4 +17,14 @@ export class AppComponent {
   }
 
   title = 'app';
+
+  constructor(private web3Service: Web3Service) {
+
+   }
+
+   ngOnInit(): void {
+     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+     //Add 'implements OnInit' to the class.
+     this.web3Service.getWeb3().subscribe(()=>{});
+   }
 }
