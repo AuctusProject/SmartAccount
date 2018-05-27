@@ -3,7 +3,7 @@
 <div fxLayout="column" fxLayoutGap="20px">
   <p>We couldn't find any smart account associated to you.</p>
   <div fxLayout="column" fxLayoutGap="20px">
-    <button mat-raised-button color="primary" (click)="importing=!importing">IMPORT</button>
+    <button mat-raised-button (click)="importing=!importing">IMPORT</button>
     <app-import-account *ngIf="importing"></app-import-account>
     <form (ngSubmit)="onCreateAccount()" fxLayout="row">
       <button fxFlex="100" type="submit" mat-raised-button color="primary" *ngIf="!creating">CREATE</button>
