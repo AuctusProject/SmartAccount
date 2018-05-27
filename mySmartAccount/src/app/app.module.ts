@@ -13,6 +13,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
 import { Angular2PromiseButtonModule } from 'angular2-promise-buttons/dist';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { UiSwitchModule } from 'angular2-ui-switch'
 
 import { LocalStorageService } from './services/local-storage.service';
 
@@ -64,9 +66,11 @@ import { ExtensionService } from './services/extension.service';
     MatFormFieldModule,
     MatButtonModule,
     MatInputModule,
+    MatProgressSpinnerModule,
     MatDividerModule,
     MatListModule,
     MatIconModule,
+    UiSwitchModule,
     FlexLayoutModule,
     EventsServiceModule.forRoot(),
     Angular2PromiseButtonModule

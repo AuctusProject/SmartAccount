@@ -10,7 +10,7 @@
 
  <div *ngIf="!variables.showList" >
     <span>Send <strong>{{variables.selectedToken}}</strong></span>
-    <app-transfer-token  (returnEvent)="showListFrame()">
+    <app-transfer-token  (returnEvent)="showListFrame()" [contractAddress]="variables.contractAddress">
     </app-transfer-token>
  </div>
 

@@ -1,5 +1,7 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { TokenListVariables } from '../../model/TokenListVariables';
+import { TransferTokensVariables } from '../../model/TransferTokensVariable';
+import { SmartAccountService } from '../../services/smart-account.service';
 
 @Component({
   selector: 'app-transfer-token',
@@ -8,20 +10,28 @@ import { TokenListVariables } from '../../model/TokenListVariables';
 })
 export class TransferTokenComponent implements OnInit {
 
-
+  transferVariables = new TransferTokensVariables();
+  @Input() contractAddress = "";
   @Output() returnEvent = new EventEmitter();
 
-  constructor() { }
+  constructor(private smartAccountService: SmartAccountService) { }
 
   ngOnInit() {
 
   }
 
-  transferToken(){
-    this.returnEvent.emit();
+  public transferToken() {
+    this.smartAccountService.sendToken(
+      this.contractAddress,
+      this.transferVariables.toAddress,
+      this.transferVariables.amount, this.callBack, this);
   }
 
-  cancel(){
+  public callBack(amount, caller) {
+    caller.returnEvent.emit();
+  }
+
+  cancel() {
     this.returnEvent.emit();
   }
 }

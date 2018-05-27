@@ -3,6 +3,7 @@ export class ExtensionViewDataParameters{
     description : string;
     type: number;
     isArray: boolean;
+    value: string;
 
     constructor(funcSignature: string, description : string, type: number, isArray: boolean ) {
         this.funcSignature = funcSignature;

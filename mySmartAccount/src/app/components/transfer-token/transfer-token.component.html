@@ -1,8 +1,8 @@
 <mat-form-field class="full-width">
-    <input matInput placeholder="Recipient Address" />
+    <input matInput placeholder="Recipient Address" [(ngModel)]="transferVariables.toAddress" [ngModelOptions]="{standalone: true}" />
   </mat-form-field>
   <mat-form-field>
-    <input matInput placeholder="Amount" type="number" />
+    <input matInput placeholder="Amount" type="number" [(ngModel)]="transferVariables.amount" [ngModelOptions]="{standalone: true}" />
   </mat-form-field>
   <button mat-button (click)="transferToken()">SEND</button>
   <button mat-button (click)="cancel()">CANCEL</button>

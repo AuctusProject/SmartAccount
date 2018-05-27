@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Extension } from '../../model/Extension';
 import { LocalStorageService } from '../../services/local-storage.service';
@@ -17,6 +17,7 @@ export class ExtensionEditComponent implements OnInit {
   extensionData: ExtensionData = new ExtensionData();
 
   constructor(private route: ActivatedRoute, 
+    private zone : NgZone,
     private localStorageService : LocalStorageService,
     private extensionService : ExtensionService,
     private smartAccountService: SmartAccountService) { }
@@ -25,8 +26,12 @@ export class ExtensionEditComponent implements OnInit {
     var self = this;
     this.route.params.subscribe(params => {
       var extensionAddress = JSON.parse(this.localStorageService.getLocalStorage("extension_"+params['address']));
+      this.loading = true;
       this.extensionService.getExtension(extensionAddress.address).subscribe(result => {
-        self.extension = result;
+        self.zone.run(() => {
+          self.extension = result;
+          self.loading = false;
+        })
         
         self.extensionService.getSetupData(self.smartAccountService.getContractAddress(), 
         self.extension.address, self.extension.returnSetupTypes()).subscribe(ret => {
