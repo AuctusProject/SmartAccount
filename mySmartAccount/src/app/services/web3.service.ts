@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { EventsService } from 'angular-event-service';
 import { Observable } from 'rxjs/Observable';
+import * as SolidityCoder from 'web3/lib/solidity/coder';
 
 declare let window: any;
 declare let Web3: any;
@@ -68,14 +69,67 @@ export class Web3Service {
 
   public callConstMethod(contractInstance: any, methodName: string, ...params: string[]): Observable<any> {
     return new Observable(observer => {
-      contractInstance[methodName].call(params, {}, this.web3.eth.defaultBlock,
-        function (err, result) {
-          observer.next(result);
-        })
+      var transObj = {};
+      if (params && params.length > 0) {
+        transObj = {
+          data: this.getContractMethodData(contractInstance, methodName, params)
+        }
+      }
+      else {
+        contractInstance[methodName].call({}, transObj, this.web3.eth.defaultBlock,
+          function (err, result) {
+            observer.next(result);
+          })
+      }
     })
   }
 
-  public getContractMethodData(contractInstance : any, method: string, ...params: any[]) {
+  public callConstMethodWithAbi(to: string, abi: string, methodName: string, returnTypes: string[], ...params: string[]): Observable<any> {
+    var self = this;
+    return new Observable(observer => {
+      var transObj = {};
+      this.getContract(abi, to).subscribe(instance => {
+        self.callConstMethodWithData(instance[methodName].getData.apply(null, params), to, returnTypes).subscribe(r => {
+          observer.next(r);
+        });
+      });
+    })
+  }
+
+  public callConstMethodWithData(data: string, to: string, returnTypes: string[]): Observable<any> {
+    var self = this;
+    return new Observable(observer => {
+        var transObj = {
+          to: to,
+          data: data
+        };
+        this.web3.eth.call(transObj,
+          function (err, result) {
+            var decoded = SolidityCoder.decodeParams(returnTypes, result.substring(2));
+            observer.next(self.parseReturn(returnTypes, decoded));
+          });
+    })
+  }
+
+  private parseReturn(returnTypes: string[], decoded: any[]) {
+    var returns = [];
+    for (var i = 0; i < returnTypes.length; ++i){
+      switch (returnTypes[i]) {
+        case "uint256":
+          returns.push(Number.parseInt(decoded[i].toString()));
+          break;
+        case "bool":
+          returns.push(decoded[i]);
+          break;
+        default:
+          returns.push(decoded[i].toString());
+          break;
+      }
+    }
+    return returns;
+  }
+
+  public getContractMethodData(contractInstance: any, method: string, ...params: any[]) {
     var data = contractInstance[method].getData.apply(null, params);
     return data;
   }

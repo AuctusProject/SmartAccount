@@ -1,4 +1,6 @@
 import { ExtensionSetupParameters } from "./ExtensionSetupParameters";
+import { ExtensionViewDataParameters } from "./ExtensionViewDataParameters";
+import { ExtensionAction } from "./ExtensionAction";
 
 export class Extension{
     address: string;
@@ -8,7 +10,9 @@ export class Extension{
     actionsCount: number;
     viewDatasCount: number;
     setupParametersCount: number;
-    setupParameters: ExtensionSetupParameters[];
+    setupParameters: ExtensionSetupParameters[] = new Array<ExtensionSetupParameters>();
+    viewDataParameters: ExtensionViewDataParameters[] = new Array<ExtensionViewDataParameters>();
+    actions: ExtensionAction[] = new Array<ExtensionAction>();
 
     constructor(address: string, name? : string, description? : string) {
         this.address = address;
@@ -19,5 +23,11 @@ export class Extension{
 
     addSetupParameter(setupParameter : ExtensionSetupParameters){
         this.setupParameters.push(setupParameter);
+    }
+    addViewDataParameter(viewDataParameter : ExtensionViewDataParameters){
+        this.viewDataParameters.push(viewDataParameter);
+    }
+    addAction(action : ExtensionAction){
+        this.actions.push(action);
     }
 }
