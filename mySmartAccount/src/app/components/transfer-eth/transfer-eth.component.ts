@@ -13,7 +13,7 @@ export class TransferEthComponent implements OnInit {
   ngOnInit() {
   }
 
-  private transferEth(): void {
+  public  transferEth(): void {
     this.web3Service.getWeb3().subscribe(
       web3 => {
         if (web3) {

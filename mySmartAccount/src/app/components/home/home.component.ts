@@ -11,7 +11,8 @@ import { Subscription } from 'rxjs/Subscription';
 export class HomeComponent implements OnInit {
 
   creating: boolean;
-
+  importing: boolean;
+  
   constructor(private smartAccountService: SmartAccountService, private router: Router, private zone : NgZone) {
   }
 
