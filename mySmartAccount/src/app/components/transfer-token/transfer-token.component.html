@@ -1,8 +1,14 @@
-<mat-form-field class="full-width">
-    <input matInput placeholder="Recipient Address" [(ngModel)]="transferVariables.toAddress" [ngModelOptions]="{standalone: true}" />
+<div fxLayout="column">
+  <mat-form-field class="full-width">
+    <input matInput placeholder="Recipient Address" [(ngModel)]="transferVariables.toAddress" [ngModelOptions]="{standalone: true}"
+    />
   </mat-form-field>
   <mat-form-field>
-    <input matInput placeholder="Amount" type="number" [(ngModel)]="transferVariables.amount" [ngModelOptions]="{standalone: true}" />
+    <input matInput placeholder="Amount" type="number" [(ngModel)]="transferVariables.amount" [ngModelOptions]="{standalone: true}"
+    />
   </mat-form-field>
-  <button color="primary" style="margin: 0 10px;" class="mat-raised-button mat-primary send-button" mat-button (click)="transferToken()">SEND</button>
-  <button class="mat-raised-button" style="width:100%" mat-button (click)="cancel()">CANCEL</button>
+</div>
+<div fxLayout="row" fxLayoutGap="10px">
+  <button class="mat-raised-button" fxFlex="50" mat-button (click)="cancel()">CANCEL</button>
+  <button color="primary" fxFlex="50" class="mat-raised-button mat-primary send-button" mat-button (click)="transferToken()">SEND</button>
+</div>
