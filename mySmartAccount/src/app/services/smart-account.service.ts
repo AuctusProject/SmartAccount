@@ -148,7 +148,7 @@ export class SmartAccountService {
   public sendToken(tokenAddress : string, to: string, amount: number, cb, caller) {
     let self = this;
     this.web3Service.getWeb3().subscribe( web3 => {
-        self.web3Service.sendToken(tokenAddress, to, amount, cb, caller);
+        self.web3Service.sendToken(self.getContractAddress(), self.getAccount(), to, amount, cb, caller);
     });
   }
 
