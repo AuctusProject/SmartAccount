@@ -11,22 +11,38 @@ import { ExtensionService } from '../../services/extension.service';
 })
 export class ExtensionEditComponent implements OnInit {
 
-  extension : Extension;
-  loading : boolean;
+  extension: Extension;
+  loading: boolean;
 
-  constructor(private route: ActivatedRoute, private zone : NgZone, private localStorageService : LocalStorageService, private extensionService : ExtensionService) { }
+  constructor(private route: ActivatedRoute, private zone: NgZone, private localStorageService: LocalStorageService, private extensionService: ExtensionService) { }
 
   ngOnInit() {
     var self = this;
     this.route.params.subscribe(params => {
-      var extensionAddress = JSON.parse(this.localStorageService.getLocalStorage("extension_"+params['address']));
+      var address = params['address'];
+      var extension: Extension = this.getExtensionByAddress(address);
       this.loading = true;
-      this.extensionService.getExtension(extensionAddress.address).subscribe(result => {
+      this.extensionService.getExtension(extension.address).subscribe(result => {
         self.zone.run(() => {
           self.extension = result;
           self.loading = false;
         })
       });
-   });
+    });
+  }
+
+  getExtensionByAddress(address) {
+    var extensionList = this.extensionService.getExtensionList();
+    var ret : Extension;
+    extensionList.forEach(extension => {
+      if (extension.address == address) {
+        ret = extension;
+      }
+    });
+    return ret;
+  }
+
+  onChangeActiveStatus(event) {
+
   }
 }
