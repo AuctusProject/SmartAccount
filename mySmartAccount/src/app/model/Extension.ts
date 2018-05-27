@@ -30,4 +30,12 @@ export class Extension{
     addAction(action : ExtensionAction){
         this.actions.push(action);
     }
+
+    public returnSetupTypes(): string[] {
+        var ret = [];
+        this.setupParameters.forEach(element => {
+            ret.push(element.getType());
+        });
+        return ret;
+    }
 }

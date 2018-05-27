@@ -16,6 +16,50 @@ export class ExtensionService {
 
   constructor(private web3Service: Web3Service) { }
 
+  public getSetupData(smartAddress: string, extensionAddress: string, returnTypes: string[]): Observable<any[]> {
+    var self = this;
+
+    return new Observable(observer => {
+      this.web3Service.getWeb3().subscribe(web3 => {
+
+        this.web3Service.callConstMethodWithAbi(extensionAddress, self.baseAbi, "getIdentifiersCount", ["uint256"], smartAddress).subscribe(
+          result => {
+            if (result[0] == 0) observer.next([]);
+            var array = [];
+            for (var i = 0; i < result[0]; ++i) {
+              array.push(this.web3Service.callConstMethodWithAbi(extensionAddress, self.baseAbi, "getIdentifierByIndex", ["bytes32"], i + ""));
+            }
+  
+            Observable.combineLatest(array)
+              .subscribe(function handleValues(values) {
+                var array2 = [];
+                values.forEach(identifier => {
+                  array2.push(this.web3Service.getValueSetupData(smartAddress, extensionAddress, identifier, returnTypes));
+                });
+                Observable.combineLatest(array2)
+                .subscribe(function handleValues(values2) {
+                  var ret = [];
+                  values2.forEach(d => {
+                    ret.push(d);
+                  });
+                  observer.next(ret);
+                });
+              });
+          }
+        );
+      });
+    });
+  }
+
+  public getValueSetupData(smartAddress: string, extensionAddress: string, identifier: string, returnTypes: string[]) : Observable<any[]> {
+    var data = this.web3Service.getSetupData(smartAddress, identifier);
+    return new Observable(observer => {
+      this.web3Service.callConstMethodWithData(data, extensionAddress, returnTypes).subscribe(ret => {
+        observer.next(ret);
+      });
+    });
+  }
+
   public getExtension(extensionAddress: string): Observable<Extension> {
     var self = this;
 

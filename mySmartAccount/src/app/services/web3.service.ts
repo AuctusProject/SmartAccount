@@ -35,6 +35,10 @@ export class Web3Service {
     });
   }
 
+  public getSetupData(address: string, identifier: string): string {
+    return "0x519a1a41" + SolidityCoder.encodeParams(["address", "bytes32"], [address, identifier]);
+  }
+
   public getNetwork(): Observable<number> {
     let self = this;
     return new Observable(observer => {
