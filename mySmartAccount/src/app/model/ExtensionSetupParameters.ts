@@ -3,6 +3,7 @@ export class ExtensionSetupParameters{
     description : string;
     type: number;
     isArray: boolean;
+    value: string;
 
     constructor(isEditable: boolean, description : string, type: number, isArray: boolean ) {
         this.isEditable = isEditable;

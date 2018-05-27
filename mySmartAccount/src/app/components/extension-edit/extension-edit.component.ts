@@ -12,6 +12,7 @@ import { ExtensionService } from '../../services/extension.service';
 export class ExtensionEditComponent implements OnInit {
 
   extension : Extension;
+  loading : boolean;
 
   constructor(private route: ActivatedRoute, private localStorageService : LocalStorageService, private extensionService : ExtensionService) { }
 
@@ -19,8 +20,10 @@ export class ExtensionEditComponent implements OnInit {
     var self = this;
     this.route.params.subscribe(params => {
       var extensionAddress = JSON.parse(this.localStorageService.getLocalStorage("extension_"+params['address']));
+      this.loading = true;
       this.extensionService.getExtension(extensionAddress.address).subscribe(result => {
         self.extension = result;
+        this.loading = false;
       });
    });
   }

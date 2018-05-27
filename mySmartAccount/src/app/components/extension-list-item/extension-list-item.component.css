@@ -23,3 +23,7 @@
 span {
     line-height: 40px;
 }
+
+mat-icon{
+    margin-top: 7px;
+}
