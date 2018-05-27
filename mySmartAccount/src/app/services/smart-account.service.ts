@@ -144,12 +144,20 @@ export class SmartAccountService {
     return this.web3Service.getETHBalance(this.getContractAddress());
   }
 
-  public getAccountTokenBalance(tokenAddress : string, symbol: string, cb) {
+  public sendToken(tokenAddress : string, to: string, amount: number, cb, caller) {
     let self = this;
     this.web3Service.getWeb3().subscribe( web3 => {
-        self.web3Service.getTokenBalance(tokenAddress, this.getContractAddress(), cb, symbol);
+        self.web3Service.sendToken(self.getContractAddress(), self.getAccount(), to, amount, cb, caller);
     });
   }
+
+  public getAccountTokenBalance(tokenAddress : string, symbol: string, cb, caller) {
+    let self = this;
+    this.web3Service.getWeb3().subscribe( web3 => {
+        self.web3Service.getTokenBalance(tokenAddress, this.getContractAddress(), cb, symbol, caller);
+    });
+  }
+
 
   public getContractAddress() {
     var address = this.contractAddress;

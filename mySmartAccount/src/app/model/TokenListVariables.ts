@@ -1,8 +1,9 @@
-export class TokenListVariables{
-    selectedToken : string;
+export class TokenListVariables {
+    selectedToken: string;
+    contractAddress: string;
     showList: boolean;
 
     constructor() {
-        this.showList =true;
-      }
+        this.showList = true;
+    }
 }
