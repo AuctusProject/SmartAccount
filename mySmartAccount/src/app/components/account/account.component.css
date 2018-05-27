@@ -11,3 +11,8 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.logoff{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}

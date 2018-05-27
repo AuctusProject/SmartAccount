@@ -17,7 +17,6 @@ export class SmartAccountService {
   private account: string;
   private contractAddress: string;
   private network: number;
-  private smartAccountAddress: string;
 
   constructor(private router: Router, private eventsService: EventsService, private web3Service: Web3Service, private localStorageService: LocalStorageService) {
     this.runChecks();
@@ -119,11 +118,12 @@ export class SmartAccountService {
         environment.smartAccountSCData, environment.chainId).subscribe(txHash => {
           if (txHash) {
 
-            Observable.interval(1000 * 5).subscribe(x => {
+            var subscription = Observable.interval(1000 * 5).subscribe(x => {
               this.web3Service.getTransactionReceipt(txHash).subscribe(
                 receipt => {
                   if (receipt) {
                     self.setSmartAccount(receipt.contractAddress);
+                    subscription.unsubscribe();
                     observer.next(receipt.contractAddress);
                   }
                 })
@@ -139,6 +139,11 @@ export class SmartAccountService {
   public setSmartAccount(contractAddress: string) {
     this.localStorageService.setLocalStorage("smartAccountAddress", contractAddress);
     this.contractAddress = contractAddress;
+  }
+
+  public removeSmartAccount() {
+    this.localStorageService.removeLocalStorage("smartAccountAddress");
+    this.contractAddress = null;
   }
 
   public getAccountETHBalance(): any {

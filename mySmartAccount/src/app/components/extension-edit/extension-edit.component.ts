@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Extension } from '../../model/Extension';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { ExtensionService } from '../../services/extension.service';
+import { SmartAccountService } from '../../services/smart-account.service';
+import { ExtensionData } from '../../model/ExtensionData';
 
 @Component({
   selector: 'app-extension-edit',
@@ -11,20 +13,39 @@ import { ExtensionService } from '../../services/extension.service';
 })
 export class ExtensionEditComponent implements OnInit {
 
-  extension : Extension;
-  loading : boolean;
+  extension: Extension;
+  extensionData: ExtensionData = new ExtensionData();
+  loading: boolean;
 
-  constructor(private route: ActivatedRoute, private localStorageService : LocalStorageService, private extensionService : ExtensionService) { }
+  constructor(private route: ActivatedRoute, private zone: NgZone, 
+    private localStorageService: LocalStorageService, 
+    private extensionService: ExtensionService,
+    private smartAccountService : SmartAccountService) { }
 
   ngOnInit() {
     var self = this;
     this.route.params.subscribe(params => {
-      var extensionAddress = JSON.parse(this.localStorageService.getLocalStorage("extension_"+params['address']));
+      var address = params['address'];
+      this.extension = this.extensionService.getExtensionByAddress(address);
+      var active = this.extension.active;
       this.loading = true;
-      this.extensionService.getExtension(extensionAddress.address).subscribe(result => {
-        self.extension = result;
-        this.loading = false;
+      this.extensionService.getExtension(this.extension.address).subscribe(result => {
+        self.zone.run(() => {
+          self.extension = result;
+          self.extension.active = active;
+          self.loading = false;
+        })
+        
+        // self.extensionService.getSetupData(self.smartAccountService.getContractAddress(), 
+        // self.extension.address, self.extension.returnSetupTypes()).subscribe(ret => {
+        //   self.extensionData.addSetupParameters(ret);
+        // });
       });
-   });
+    });
+  }
+
+  onChangeActiveStatus(active) {
+    this.extension.active = active;
+    this.extensionService.updateExtension(this.extension);
   }
 }

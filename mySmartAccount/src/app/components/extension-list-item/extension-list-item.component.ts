@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, NgZone } from '@angular/core';
 import { Extension } from '../../model/Extension';
 import { Router } from '@angular/router';
 
@@ -11,12 +11,12 @@ export class ExtensionListItemComponent implements OnInit {
 
   @Input() extension : Extension;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private zone: NgZone) { }
 
   ngOnInit() {
   }
 
   navigate(){
-    this.router.navigate(['/extension', this.extension.address.toString()]);
+    this.zone.run(() => this.router.navigate(['extension', this.extension.address.toString()]));
   }
 }

@@ -1,5 +1,9 @@
-<h1>My Smart Account, <div class="address-container" ><a class="address" href="https://ropsten.etherscan.io/address/{{smartAccount.contractAddress}}" target="_blank">{{smartAccount.contractAddress}}</a></div></h1>
-
+<div fxLayout="row">
+    <h1>My Smart Account, <div class="address-container"><a class="address" href="https://ropsten.etherscan.io/address/{{smartAccount.contractAddress}}" target="_blank">{{smartAccount.contractAddress}}</a></div></h1>
+    <button mat-raised-button class="logoff" (click)="logoff()">
+        LOGOFF
+    </button>
+</div>
 <mat-accordion>
   <mat-expansion-panel>
     <mat-expansion-panel-header>
@@ -20,7 +24,7 @@
   <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title>
-        Extensions
+        Extensions Marketplace
       </mat-panel-title>
     </mat-expansion-panel-header>
     <app-extension-list></app-extension-list>

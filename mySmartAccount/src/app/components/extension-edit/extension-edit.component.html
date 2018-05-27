@@ -1,7 +1,7 @@
-<div *ngIf="loading && !extension">
+<div *ngIf="loading">
   <mat-progress-spinner [color]="'primary'" [mode]="'indeterminate'" [value]="50" [diameter]="20"></mat-progress-spinner>
 </div>
-<div *ngIf="!loading && extension">
+<div *ngIf="!loading">
   <div fxLayout="column" *ngIf="extension">
     <div fxLayout="row">
       <button class="back" mat-icon-button [routerLink]="['/home']">
@@ -11,7 +11,7 @@
         <h1>{{extension.name}}</h1>
         <h3>{{extension.description}}</h3>
       </div>
-      <ui-switch [(ngModel)]="extension.active"></ui-switch>
+      <ui-switch [(ngModel)]="extension.active" (change)="onChangeActiveStatus($event)"></ui-switch>
     </div>
   </div>
 
@@ -44,7 +44,7 @@
             </mat-form-field>
           </div>
         </div>
-        <button mat-button color="primary" type="submit" class="pull-right">SAVE</button>
+        <button mat-raised-button color="primary" type="submit" class="pull-right">SAVE</button>
       </form>
     </mat-expansion-panel>
     <mat-expansion-panel>
