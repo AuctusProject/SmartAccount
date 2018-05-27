@@ -7,6 +7,7 @@ import { ExtensionSetupParameters } from '../model/ExtensionSetupParameters';
 import { ExtensionViewDataParameters } from '../model/ExtensionViewDataParameters';
 import { ExtensionAction } from '../model/ExtensionAction';
 import { ExtensionActionParameter } from '../model/ExtensionActionParameter';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable()
 export class ExtensionService {
@@ -14,7 +15,51 @@ export class ExtensionService {
   contractInstance: any;
   baseAbi: string = '[{"constant":true,"inputs":[{"name":"_reference","type":"address"}],"name":"getIdentifiersCount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"baseExtensionVersion","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getName","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"pure","type":"function"},{"constant":true,"inputs":[],"name":"getDescription","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"pure","type":"function"},{"constant":true,"inputs":[{"name":"index","type":"uint256"}],"name":"getSetupParametersByIndex","outputs":[{"name":"","type":"bool"},{"name":"","type":"string"},{"name":"","type":"uint256"},{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_reference","type":"address"},{"name":"_index","type":"uint256"}],"name":"getIdentifierByIndex","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_reference","type":"address"}],"name":"getIdentifiers","outputs":[{"name":"","type":"bytes32[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"actionIndex","type":"uint256"},{"name":"parameterIndex","type":"uint256"}],"name":"getActionParameterByIndexes","outputs":[{"name":"","type":"string"},{"name":"","type":"uint256"},{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"index","type":"uint256"}],"name":"getViewDataByIndex","outputs":[{"name":"","type":"bytes4"},{"name":"","type":"string"},{"name":"","type":"uint256"},{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"viewDatasCount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"actionsCount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getSetupFunction","outputs":[{"name":"","type":"bytes4"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"index","type":"uint256"}],"name":"getActionByIndex","outputs":[{"name":"","type":"bytes4"},{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"index","type":"uint256"}],"name":"actionParametersCountByIndex","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"setupParametersCount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"}]';
 
-  constructor(private web3Service: Web3Service) { }
+  constructor(private web3Service: Web3Service, private localStorageService : LocalStorageService) { }
+
+  public getExtensionList() : Extension[]{
+    var extensionList = this.localStorageService.getLocalStorage("extension_list");
+    if (extensionList) {
+      return JSON.parse(extensionList);
+    }
+    else {
+      return [
+        new Extension("0xACf9CA0765A688dd358543080B684cCf50E82926", "Fund Recovery"),
+        new Extension("0x05D1D91B68C20032c09265FC14a5c9e1Ddf08341", "Recurrent Payment")
+      ]
+    }
+  }
+
+  public getExtensionByAddress(address) : Extension{
+    var extensionList = this.getExtensionList();
+    var ret : Extension;
+    extensionList.forEach(extension => {
+      if (extension.address == address) {
+        ret = extension;
+      }
+    });
+    return ret;
+  }
+
+  public getExtensionIndexByAddress(address) : number{
+    var extensionList = this.getExtensionList();
+    var ret : number = -1;
+    for (var i = 0; i < extensionList.length; ++i){
+      if (extensionList[i].address == address) {
+        ret = i;
+      }
+    }
+    return ret;
+  }
+
+  public updateExtension(extension : Extension){
+    var index = this.getExtensionIndexByAddress(extension.address);
+    if (index > -1){
+      var extensionList = this.getExtensionList();
+      extensionList[index] = extension;
+      this.localStorageService.setLocalStorage("extension_list", extensionList);
+    }
+  }
 
   public getSetupData(smartAddress: string, extensionAddress: string, returnTypes: string[]): Observable<any[]> {
     var self = this;

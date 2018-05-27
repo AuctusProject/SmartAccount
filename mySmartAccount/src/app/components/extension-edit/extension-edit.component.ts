@@ -13,32 +13,39 @@ import { ExtensionData } from '../../model/ExtensionData';
 })
 export class ExtensionEditComponent implements OnInit {
 
-  extension : Extension;
+  extension: Extension;
   extensionData: ExtensionData = new ExtensionData();
   loading: boolean;
-  
-  constructor(private route: ActivatedRoute, 
-    private zone : NgZone,
-    private localStorageService : LocalStorageService,
-    private extensionService : ExtensionService,
-    private smartAccountService: SmartAccountService) { }
+
+  constructor(private route: ActivatedRoute, private zone: NgZone, 
+    private localStorageService: LocalStorageService, 
+    private extensionService: ExtensionService,
+    private smartAccountService : SmartAccountService) { }
 
   ngOnInit() {
     var self = this;
     this.route.params.subscribe(params => {
-      var extensionAddress = JSON.parse(this.localStorageService.getLocalStorage("extension_"+params['address']));
+      var address = params['address'];
+      this.extension = this.extensionService.getExtensionByAddress(address);
+      var active = this.extension.active;
       this.loading = true;
-      this.extensionService.getExtension(extensionAddress.address).subscribe(result => {
+      this.extensionService.getExtension(this.extension.address).subscribe(result => {
         self.zone.run(() => {
           self.extension = result;
+          self.extension.active = active;
           self.loading = false;
         })
         
-        self.extensionService.getSetupData(self.smartAccountService.getContractAddress(), 
-        self.extension.address, self.extension.returnSetupTypes()).subscribe(ret => {
-          self.extensionData.addSetupParameters(ret);
-        });
+        // self.extensionService.getSetupData(self.smartAccountService.getContractAddress(), 
+        // self.extension.address, self.extension.returnSetupTypes()).subscribe(ret => {
+        //   self.extensionData.addSetupParameters(ret);
+        // });
       });
-   });
+    });
+  }
+
+  onChangeActiveStatus(active) {
+    this.extension.active = active;
+    this.extensionService.updateExtension(this.extension);
   }
 }
