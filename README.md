@@ -45,3 +45,4 @@ Improve the user experience;
 Add more plugins;
 Thoroughly testing / auditing;
 Add governance in the plugin creation and offering process to avoid malicious behavior.
+Create a plugin marketplace where third-party developers can create their own functionalaties, submit it for public evaluation, get ranked and even rewarded for their work.
