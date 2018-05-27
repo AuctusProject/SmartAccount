@@ -171,7 +171,7 @@ contract RecurringPaymentWithDAI is IExtension {
         paymentData[key].releasedAmount = paymentData[key].releasedAmount.add(_amount);
 
         if (configuration[_smartAccount][msg.sender].convertToDAI) {
-            address daiAddress = 0xc4375b7de8af5a38a93548eb8453a498222c4ff2;
+            address daiAddress = 0xC4375B7De8af5a38a93548eb8453a498222C4fF2;
             
             convertEthToDai(_smartAccount, daiAddress, _amount);
             
@@ -183,8 +183,17 @@ contract RecurringPaymentWithDAI is IExtension {
         }
     }
     
-    function convertEthToDai(address _smartAccount, address _daiAddress, uint256 _amount) {
-        //TODO
+    function convertEthToDai(address _smartAccount, address _daiAddress, uint256 _amount) internal {
+        address oasisDexAddress = 0x8cf1Cab422A0b6b554077A361f8419cDf122a9F9;
+        
+        //TODO: wrap ETH (convert to WETH)
+        address wethAddress = 0xd0A1E359811322d97991E03f863a0C30C2cF029C;
+        
+        //TODO: calculate max WETH amount based on price/offers
+        bytes memory data = abi.encodePacked(bytes4(keccak256(abi.encodePacked("buyAllAmount(ERC20,uint,ERC20,uint)"))), 
+                                        bytes32(_daiAddress), bytes32(_amount), bytes32(wethAddress), bytes32(10));
+                                        
+        ISmartAccount(_smartAccount).execute(oasisDexAddress, 0, 0, data);
     }
     
     function getAllowedAmountAndPendingPeriods(address _smartAccount, address _beneficiary, bytes32 _key) internal view returns (uint256, uint256) {
