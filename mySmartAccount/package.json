@@ -28,6 +28,7 @@
     "angular-event-service": "^1.2.0",
     "angular2-notifications": "^0.9.6",
     "angular2-promise-buttons": "^2.1.1",
+    "angular2-ui-switch": "^1.2.0",
     "core-js": "^2.4.1",
     "ethereumjs-abi": "^0.6.5",
     "rxjs": "5.5.2",
