@@ -5,6 +5,7 @@
 # Smart Accounts & Pluggable Smart Contracts 
 ## ETHBuenosAires Project
 ### Auctus Team (Ariny, Gusman, Vitorino, Duarte)
+Thanks to @PhABC (Philippe Castonguay) that brought the idea in previous discussions and was an inspiration when we were brainstorming about what to build in the hackathon.
 
 Smart accounts are smart contracts meant to be used as wallets (they hold and transfer ETH and tokens) and that can be expanded using external plugins.
 
@@ -46,3 +47,16 @@ Add more plugins;
 Thoroughly testing / auditing;
 Add governance in the plugin creation and offering process to avoid malicious behavior.
 Create a plugin marketplace where third-party developers can create their own functionalaties, submit it for public evaluation, get ranked and even rewarded for their work.
+
+## For Developers
+
+Clone the git repo and execute the following command to install the dependencies:
+```
+npm install  
+```
+
+To build and run locally:
+```
+ng serve
+```
+
