@@ -1,7 +1,11 @@
+<div fxLayout="column">
   <mat-form-field class="full-width">
     <input matInput placeholder="Recipient Address" />
   </mat-form-field>
-  <mat-form-field>
-    <input matInput placeholder="Amount" type="number" />
-  </mat-form-field>
-  <button color="primary" class="mat-raised-button mat-primary" style="margin: 0 10px;" mat-button (click)="transferEth()">SEND</button>
+  <div fxLayout="row" fxLayoutGap="10px">
+    <mat-form-field fxFlex="50">
+      <input matInput placeholder="Amount" type="number" />
+    </mat-form-field>
+    <button color="primary" fxFlex="50" class="mat-raised-button mat-primary" mat-button (click)="transferEth()">SEND</button>
+  </div>
+</div>

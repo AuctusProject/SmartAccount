@@ -1,25 +1,29 @@
 <div fxLayout="column">
   <div fxLayout="row">
-    <button mat-icon-button [routerLink]="['/home']">
-      <mat-icon>arrow_left</mat-icon>
+    <button class="back" mat-icon-button [routerLink]="['/home']">
+      <mat-icon>chevron_left</mat-icon>
     </button>
     <h1>New Token</h1>
   </div>
-  <form>
-    <mat-form-field class="full-width">
-      <input matInput placeholder="Contract Address" [ngModelOptions]="{standalone: true}" 
-      [(ngModel)]="variables.contractAddress" />
-    </mat-form-field>
-    <mat-form-field class="full-width">
-      <input matInput placeholder="Symbol" [ngModelOptions]="{standalone: true}" 
-      [(ngModel)]="variables.symbol" />
-    </mat-form-field>
-    <mat-form-field class="full-width">
-      <input matInput placeholder="Decimals" type="number" [ngModelOptions]="{standalone: true}" 
-      [(ngModel)]="variables.decimals" />
-    </mat-form-field>
-    <br/>
-    <button mat-button (click)="add()">ADD</button>
-    <button mat-button [routerLink]="['../']">CANCEL</button>
-  </form>
+  <mat-card>
+    <form>
+      <mat-form-field class="full-width">
+        <input matInput placeholder="Contract Address" [ngModelOptions]="{standalone: true}" [(ngModel)]="variables.contractAddress"
+        />
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <input matInput placeholder="Symbol" [ngModelOptions]="{standalone: true}" [(ngModel)]="variables.symbol" />
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <input matInput placeholder="Decimals" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="variables.decimals"
+        />
+      </mat-form-field>
+      <br/>
+      <div fxLayout="row" fxLayoutGap="10px">
+        <button mat-raised-button fxFlex [routerLink]="['../']">CANCEL</button>
+        <button mat-raised-button fxFlex color="primary" (click)="add()">ADD</button>
+      </div>
+    </form>
+  </mat-card>
+
 </div>
