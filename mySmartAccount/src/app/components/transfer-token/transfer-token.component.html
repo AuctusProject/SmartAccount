@@ -4,5 +4,5 @@
   <mat-form-field>
     <input matInput placeholder="Amount" type="number" [(ngModel)]="transferVariables.amount" [ngModelOptions]="{standalone: true}" />
   </mat-form-field>
-  <button mat-button (click)="transferToken()">SEND</button>
-  <button mat-button (click)="cancel()">CANCEL</button>
+  <button color="primary" style="margin: 0 10px;" class="mat-raised-button mat-primary send-button" mat-button (click)="transferToken()">SEND</button>
+  <button class="mat-raised-button" style="width:100%" mat-button (click)="cancel()">CANCEL</button>

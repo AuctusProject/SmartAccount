@@ -24,7 +24,8 @@ export class TransferTokenComponent implements OnInit {
     this.smartAccountService.sendToken(
       this.contractAddress,
       this.transferVariables.toAddress,
-      this.transferVariables.amount, this.callBack, this);
+      this.transferVariables.amount * (10**18)
+      , this.callBack, this);
   }
 
   public callBack(amount, caller) {

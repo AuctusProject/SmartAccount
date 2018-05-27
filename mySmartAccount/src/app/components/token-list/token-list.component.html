@@ -5,7 +5,7 @@
     (selectedTokenEvent)="updateFrame($event)">
 </app-token-list-item>
 <mat-divider></mat-divider>
-<button [routerLink]="['/add-token']">add new token</button>
+<button color="primary" class="mat-raised-button mat-primary" style="width: 100%;" [routerLink]="['/add-token']">add new token</button>
  </mat-list>
 
  <div *ngIf="!variables.showList" >

@@ -188,10 +188,11 @@ export class Web3Service {
 
     this.sendTransaction(1000000000, 300000, from, tknContractAddress, 0, dataArray, environment.chainId)
       .subscribe(ret => {
+        //for debug only
         if (ret)
           ret.toString();
         else
-          (10).toString();
+          (1).toString();
 
       });
     //   to: tknContractAddress, // Contract address, used call the token balance of the address in question
