@@ -1,6 +1,6 @@
 <div fxLayout="row">
-    <h1>My Smart Account, <div class="address-container"><a class="address" href="https://ropsten.etherscan.io/address/{{smartAccount.contractAddress}}" target="_blank">{{smartAccount.contractAddress}}</a></div></h1>
-    <button mat-raised-button class="logoff" (click)="logoff()">
+    <h1>My Smart Account <div class="address-container"><a class="address" href="https://ropsten.etherscan.io/address/{{smartAccount.contractAddress}}" target="_blank">{{smartAccount.contractAddress}}</a></div></h1>
+    <button class="logoff" (click)="logoff()">
         LOGOFF
     </button>
 </div>
