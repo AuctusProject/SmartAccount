@@ -2,10 +2,9 @@ pragma solidity 0.4.24;
 
 
 import "./IExtension.sol";
-import "../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "./SafeMath.sol";
 
 
-//TODO: add events, comments, fix code smells
 contract RecoveryFunds is IExtension {
     using SafeMath for uint256;
     
@@ -37,27 +36,27 @@ contract RecoveryFunds is IExtension {
     }
     
     function getName() pure external returns(string) {
-        return "Fund Recovery";
+        return "Recovery Funds";
     }
     
     function getDescription() pure external returns(string) {
-        return "Define a list of providers to recover funds from lost smart account.";
+        return "Define a list of providers to recover your funds from a lost smart account.";
     }
     
     function getSetupParameters() pure internal returns(Setup) {
         ConfigParameter[] memory parameters = new ConfigParameter[](3);
-        parameters[0] = ConfigParameter(true, Parameter("Time to disprove in seconds", UINT, false));
-        parameters[1] = ConfigParameter(true, Parameter("Number of confirmations", UINT, false));
-        parameters[2] = ConfigParameter(true, Parameter("Providers addresses", ADDRESS, true));
+        parameters[0] = ConfigParameter(true, Parameter(false, INTEGER, 86400, "Time to disprove in days"));
+        parameters[1] = ConfigParameter(true, Parameter(false, INTEGER, 1, "Number of confirmations"));
+        parameters[2] = ConfigParameter(true, Parameter(true, ADDRESS, 0, "Providers addresses"));
         return Setup(bytes4(keccak256("setup(uint256,uint256,address[])")), parameters);
     }
     
     function getActions() pure internal returns(Action[]) {
         Parameter[] memory parameters1 = new Parameter[](2);
-        parameters1[0] = Parameter("Smart account", ADDRESS, false);
-        parameters1[1] = Parameter("Destination", ADDRESS, false);
+        parameters1[0] = Parameter(false, SMARTACCOUNTADDRESS, 0, "Smart account");
+        parameters1[1] = Parameter(false, ADDRESS, 0, "Destination");
         Parameter[] memory parameters2 = new Parameter[](1);
-        parameters2[0] = Parameter("Smart account", ADDRESS, false);
+        parameters2[0] = Parameter(false, SMARTACCOUNTADDRESS, 0, "Smart account");
         Action[] memory action = new Action[](5);
         action[0].description = "Start recovery process";
         action[0].parameters = parameters1;
@@ -79,14 +78,20 @@ contract RecoveryFunds is IExtension {
     function getViewDatas() pure internal returns(ViewData[]) {
         ViewData[] memory viewData = new ViewData[](4);
         viewData[0].functionSignature = bytes4(keccak256("isStarted(address,bytes32)"));
-        viewData[0].output = Parameter("Recovery process is started", BOOL, false);
+        viewData[0].output = Parameter(false, BOOL, 0, "Recovery process is started");
         viewData[1].functionSignature = bytes4(keccak256("destinationAddress(address,bytes32)"));
-        viewData[1].output = Parameter("Destination address", ADDRESS, false);
+        viewData[1].output = Parameter(false, ADDRESS, 0, "Destination address");
         viewData[2].functionSignature = bytes4(keccak256("getConfirmations(address,bytes32)"));
-        viewData[2].output = Parameter("Confirmations", ADDRESS, true);
+        viewData[2].output = Parameter(true, ADDRESS, 0, "Confirmations");
         viewData[3].functionSignature = bytes4(keccak256("timeToDisprove(address,bytes32)"));
-        viewData[3].output = Parameter("Time in seconds to disprove", UINT, false);
+        viewData[3].output = Parameter(false, INTEGER, 86400, "Time in seconds to disprove");
         return viewData;
+    }
+    
+    function getRoles() pure public returns(bytes32[]) {
+        bytes32[] memory roles = new bytes32[](1); 
+        roles[0] = ROLE_TRANSFER_OWNERSHIP;
+        return roles;
     }
     
     function setup(uint256 _delay,  uint256 _confirmations, address[] _providers) external {
