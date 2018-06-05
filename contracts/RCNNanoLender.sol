@@ -13,7 +13,6 @@ contract RCNNanoLender is IExtension {
     
     struct Configuration {
         uint256 maxAmount;
-        uint256 lentAmount;
         uint256 minInterestRate;
         uint256 minPunitoryInterestRate;
         
@@ -21,24 +20,34 @@ contract RCNNanoLender is IExtension {
         uint256 maxEndNonPunitory;
         
         address nanoLoanEngineAddress;
-        mapping(address => bool) whitelist;
+        address[] whitelist;
+    }
+    
+    struct Data {
+        uint256 lentAmount;
     }
     
     mapping(address => mapping(address => Configuration)) configuration;
+    mapping(bytes32 => Data) loanData;
+    
+    function getName() pure external returns(string) {
+        return "RCN Nano Lender";
+    }
     
     function getDescription() pure external returns(string) {
         return "Define desired params (max amount, interest rates, expiration time and cancelable date) to allow anyone to borrow RCN from the smart account.";
     }
     
     function getSetupParameters() pure internal returns(Setup) {
-        ConfigParameter[] memory parameters = new ConfigParameter[](6);
-        parameters[0] = ConfigParameter(true, Parameter("Max Loan Amount", UINT, false));
-        parameters[1] = ConfigParameter(true, Parameter("Minimum Interest Rate", UINT, false));
-        parameters[2] = ConfigParameter(true, Parameter("Minimum Punitory Interest Rate", UINT, false));
-        parameters[3] = ConfigParameter(true, Parameter("Max Lending Time", UINT, false));
-        parameters[4] = ConfigParameter(true, Parameter("Max Cancelable Date", UINT, false));
-        parameters[5] = ConfigParameter(true, Parameter("NanoLoanEngine Address", ADDRESS, false));
-        return Setup(bytes4(keccak256("setup(uint256,uint256,uint256,uint256,uint256,address)")), parameters);
+        ConfigParameter[] memory parameters = new ConfigParameter[](7);
+        parameters[0] = ConfigParameter(false, Parameter("Max Loan Amount", UINT, false));
+        parameters[1] = ConfigParameter(false, Parameter("Minimum Interest Rate", UINT, false));
+        parameters[2] = ConfigParameter(false, Parameter("Minimum Punitory Interest Rate", UINT, false));
+        parameters[3] = ConfigParameter(false, Parameter("Max Lending Time", UINT, false));
+        parameters[4] = ConfigParameter(false, Parameter("Max Cancelable Date", UINT, false));
+        parameters[5] = ConfigParameter(false, Parameter("NanoLoanEngine Address", ADDRESS, false));
+        parameters[6] = ConfigParameter(false, Parameter("Loan Creator Whitelist", ADDRESS, true));
+        return Setup(bytes4(keccak256("setup(uint256,uint256,uint256,uint256,uint256,address,address[])")), parameters);
     }
     
     function getActions() pure internal returns(Action[]) {
@@ -59,7 +68,7 @@ contract RCNNanoLender is IExtension {
         paramWithdraw[2] = Parameter("Loan Index", UINT, false);
         paramWithdraw[3] = Parameter("RCN Amount", UINT, false);
         
-        action[1].description = "Cancel recurrent payment";
+        action[1].description = "Withdraw Returned Loan";
         action[1].parameters = paramWithdraw;
         action[1].functionSignature = bytes4(keccak256("withdrawReturnedLoan(address,address,uint,uint256)"));
         
@@ -74,13 +83,9 @@ contract RCNNanoLender is IExtension {
     }
     
     function getViewDatas() pure internal returns(ViewData[]) {
-        ViewData[] memory viewData = new ViewData[](3);
-        viewData[0].functionSignature = bytes4(keccak256("getAvailableAmountWithdrawal(address,bytes32)"));
-        viewData[0].output = Parameter("Available amount to withdrawal", UINT, false);
-        viewData[1].functionSignature = bytes4(keccak256("getAmountWithdrawal(address,bytes32)"));
-        viewData[1].output = Parameter("Amount already withdrawal", UINT, false);
-        viewData[2].functionSignature = bytes4(keccak256("getPeriodsWithdrawal(address,bytes32)"));
-        viewData[2].output = Parameter("Amount of periods withdrawal", UINT, false);
+        ViewData[] memory viewData = new ViewData[](0);
+        
+        //TODO - show useful info on dapp (lent amount, limits...)
         return viewData;
     }
     
@@ -90,7 +95,8 @@ contract RCNNanoLender is IExtension {
         uint256 _minPunitoryInterestRate,
         uint256 _maxLendingTime,
         uint256 _maxEndNonPunitory,
-        address _nanoLoanEngineAddress
+        address _nanoLoanEngineAddress,
+        address[] _whitelist
     )
         external
     {
@@ -102,63 +108,78 @@ contract RCNNanoLender is IExtension {
         require(_maxEndNonPunitory > 0);
         
         configuration[msg.sender][_nanoLoanEngineAddress].maxAmount = _maxAmount;
-        configuration[msg.sender][_nanoLoanEngineAddress].lentAmount = 0;
         configuration[msg.sender][_nanoLoanEngineAddress].minInterestRate = _minInterestRate;
         configuration[msg.sender][_nanoLoanEngineAddress].minPunitoryInterestRate = _minPunitoryInterestRate;
         configuration[msg.sender][_nanoLoanEngineAddress].maxLendingTime = _maxLendingTime;
         configuration[msg.sender][_nanoLoanEngineAddress].maxEndNonPunitory = _maxEndNonPunitory;
         configuration[msg.sender][_nanoLoanEngineAddress].nanoLoanEngineAddress = _nanoLoanEngineAddress;
+        configuration[msg.sender][_nanoLoanEngineAddress].whitelist = _whitelist;
+        setIdentifier(msg.sender, bytes32(_nanoLoanEngineAddress));
     }
         
     function getSetup(address _smartAccount, bytes32 _engineAddress) 
         view 
         external 
-        returns (uint256, uint256, uint256, uint256, uint256, address) 
+        returns (uint256, uint256, uint256, uint256, uint256, address, address[]) 
     {
-        return (configuration[_smartAccount][address(_engineAddress)].maxAmount,
-            configuration[_smartAccount][address(_engineAddress)].minInterestRate,
-            configuration[_smartAccount][address(_engineAddress)].minPunitoryInterestRate,
-            configuration[_smartAccount][address(_engineAddress)].maxLendingTime,
-            configuration[_smartAccount][address(_engineAddress)].maxEndNonPunitory,
-            configuration[_smartAccount][address(_engineAddress)].nanoLoanEngineAddress);
+        Configuration memory config = configuration[_smartAccount][address(_engineAddress)];
+        
+        return (config.maxAmount,
+            config.minInterestRate,
+            config.minPunitoryInterestRate,
+            config.maxLendingTime,
+            config.maxEndNonPunitory,
+            config.nanoLoanEngineAddress,
+            config.whitelist);
     }
     
-    function lendRCN(address _smartAccount, address _engineAddress, uint _index)
-    {
+    function lendRCN(address _smartAccount, address _engineAddress, uint _index) external {
         NanoLoanEngine engine = NanoLoanEngine(_engineAddress);
         
-        require(engine.getAmount(_index) <= configuration[_smartAccount][address(_engineAddress)].lentAmount + configuration[_smartAccount][address(_engineAddress)].maxAmount);
+        bytes32 key = keccak256(abi.encodePacked(_smartAccount, bytes32(_engineAddress)));
+        require(engine.getAmount(_index) <= loanData[key].lentAmount + configuration[_smartAccount][address(_engineAddress)].maxAmount);
         require(engine.getInterestRate(_index) <= configuration[_smartAccount][address(_engineAddress)].minInterestRate);
         require(engine.getInterestRatePunitory(_index) <= configuration[_smartAccount][address(_engineAddress)].minPunitoryInterestRate);
         require(engine.getDueTime(_index) <= configuration[_smartAccount][address(_engineAddress)].maxLendingTime);
         require(engine.getCancelableAt(_index) <= configuration[_smartAccount][address(_engineAddress)].maxEndNonPunitory);
-        require(configuration[_smartAccount][address(_engineAddress)].whitelist[engine.getCreator(_index)]);
+        bool isWhitelisted = false;
+        for (uint i = 0; i < configuration[_smartAccount][address(_engineAddress)].whitelist.length; i++) {
+            if (configuration[_smartAccount][address(_engineAddress)].whitelist[i] == engine.getCreator(_index)) {
+                isWhitelisted = true;
+                break;
+            }
+        }
+        require(isWhitelisted);
         
         bytes memory data = abi.encodePacked(bytes4(keccak256(abi.encodePacked("lend(uint,bytes,Cosigner,bytes)"))), 
                                         bytes32(_index), bytes32(0x0), bytes32(0x0), bytes32(0x0));
                                         
         ISmartAccount(_smartAccount).execute(_engineAddress, 0, 0, data);
         
-        configuration[_smartAccount][address(_engineAddress)].lentAmount.add(engine.getAmount(_index));
+        loanData[key].lentAmount.add(engine.getAmount(_index));
     }
     
-    function withdrawReturnedLoan(address _smartAccount, address _engineAddress, uint _index, uint256 _amount) {
+    function withdrawReturnedLoan(address _smartAccount, address _engineAddress, uint _index, uint256 _amount) external {
+        bytes32 key = keccak256(abi.encodePacked(_smartAccount, bytes32(_engineAddress)));
+        
         bytes memory data = abi.encodePacked(bytes4(keccak256(abi.encodePacked("withdrawal(uint,address,uint256)"))), 
                                         bytes32(_index), bytes32(_smartAccount), bytes32(_amount));
                                         
         ISmartAccount(_smartAccount).execute(_engineAddress, 0, 0, data);
         
-        if (_amount > configuration[_smartAccount][address(_engineAddress)].lentAmount) {
-            configuration[_smartAccount][address(_engineAddress)].lentAmount = 0;
+        if (_amount > loanData[key].lentAmount) {
+            loanData[key].lentAmount = 0;
         } else {
-            configuration[_smartAccount][address(_engineAddress)].lentAmount = configuration[_smartAccount][address(_engineAddress)].lentAmount.sub(_amount);
+            loanData[key].lentAmount = loanData[key].lentAmount.sub(_amount);
         }
     }
     
     function cancelNanoLending(bytes32 _identifier) external {
         require(configuration[msg.sender][address(_identifier)].maxAmount > 0);
+        
+        bytes32 key = keccak256(abi.encodePacked(msg.sender, _identifier));
         configuration[msg.sender][address(_identifier)].maxAmount = 0;
-        configuration[msg.sender][address(_identifier)].lentAmount = 0;
+        loanData[key] = Data(0);
         configuration[msg.sender][address(_identifier)].maxLendingTime = 0;
         configuration[msg.sender][address(_identifier)].nanoLoanEngineAddress = address(0);
         removeIdentifier(msg.sender, _identifier);

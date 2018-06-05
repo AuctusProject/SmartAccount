@@ -8,6 +8,11 @@
     color: #4a90e2;
 }
 
+.back {
+    font-size: 30px;
+    margin-top: 18px !important;
+}
+
 html {
     height: 100%;
     background: #f7f7f7;

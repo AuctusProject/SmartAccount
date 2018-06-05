@@ -114,15 +114,16 @@ export class SmartAccountService {
 
     var self = this;
     return new Observable(observer => {
-      this.web3Service.sendTransaction(1000000000, 3000000, this.getAccount(), "", 0,
+      this.web3Service.sendTransaction(10000000000, 3000000, this.getAccount(), "", 0,
         environment.smartAccountSCData, environment.chainId).subscribe(txHash => {
           if (txHash) {
 
-            Observable.interval(1000 * 5).subscribe(x => {
+            var subscription = Observable.interval(1000 * 5).subscribe(x => {
               this.web3Service.getTransactionReceipt(txHash).subscribe(
                 receipt => {
                   if (receipt) {
                     self.setSmartAccount(receipt.contractAddress);
+                    subscription.unsubscribe();
                     observer.next(receipt.contractAddress);
                   }
                 })
@@ -138,6 +139,11 @@ export class SmartAccountService {
   public setSmartAccount(contractAddress: string) {
     this.localStorageService.setLocalStorage("smartAccountAddress", contractAddress);
     this.contractAddress = contractAddress;
+  }
+
+  public removeSmartAccount() {
+    this.localStorageService.removeLocalStorage("smartAccountAddress");
+    this.contractAddress = null;
   }
 
   public getAccountETHBalance(): any {
