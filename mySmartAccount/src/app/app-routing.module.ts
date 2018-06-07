@@ -10,8 +10,7 @@ const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
     { path: 'home', component: HomeComponent, canActivate: [RedirectProvider] },
     { path: 'account/:address', component: AccountComponent },
-    { path: 'extension/:address', component: ExtensionEditComponent },
-    { path: 'add-token', component: AddTokenComponent }
+    { path: 'account/:smartAccount/extension/:extensionAddress/:identifier', component: ExtensionEditComponent }
 ];
 
 @NgModule({

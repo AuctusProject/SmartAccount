@@ -9,10 +9,7 @@ export class RedirectProvider implements CanActivate {
   constructor(private localStorageService : LocalStorageService, private router: Router) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    //var smartAccountAddress = this.localStorageService.getLocalStorage("smartAccountAddress");
-    //if (smartAccountAddress) {
-    //  this.router.navigate(['/account', smartAccountAddress]);
-    //} 
+    //this.router.navigate(['/account', smartAccountAddress]);
     return true;
   }
 }

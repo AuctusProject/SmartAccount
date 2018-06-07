@@ -22,7 +22,11 @@ export class LocalStorageService {
 
   public getAccountData(): AccountDataStorage {
     let data = this.getLocalStorage(this.accountData);
-    return data ? JSON.parse(data) : new AccountDataStorage();
+    if (data) {
+      return Object.assign(new AccountDataStorage, JSON.parse(data));
+    } else {
+      return new AccountDataStorage();
+    }
   }
 
   public setAccountData(storage: AccountDataStorage): void {

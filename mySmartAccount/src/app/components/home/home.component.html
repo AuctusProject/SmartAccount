@@ -3,11 +3,21 @@
 <div fxLayout="column" fxLayoutGap="20px">
   <p>We couldn't find any smart account associated to you.</p>
   <div fxLayout="column" fxLayoutGap="20px">
-    <button mat-raised-button (click)="importing=!importing">IMPORT</button>
-    <app-import-account *ngIf="importing"></app-import-account>
-    <form (ngSubmit)="onCreateAccount()" fxLayout="row">
-      <button fxFlex="100" type="submit" mat-raised-button color="primary" *ngIf="!creating">CREATE</button>
-      <button fxFlex="100" type="submit" mat-raised-button color="primary" *ngIf="creating" disabled>CREATING...</button>
+    <form (ngSubmit)="save()" *ngIf="adding">
+      <mat-form-field class="full-width">
+        <input matInput name="name" [(ngModel)]="name" placeholder="Set a name" />
+      </mat-form-field>
+      <mat-form-field class="full-width" *ngIf="importing">
+        <input matInput name="address" [(ngModel)]="contractAddress" ng-pattern="^(0x)?[0-9a-fA-F]{40}$" placeholder="Account address" />
+      </mat-form-field>
+      <div fxLayout="column" fxLayoutGap="20px">
+        <button mat-raised-button fxFlex="50" type="submit" color="primary" *ngIf="!executing">{{getAction()}}</button>
+        <button mat-raised-button fxFlex="50" color="primary" *ngIf="executing" disabled>{{getAction()}}...</button>
+        <button mat-raised-button fxFlex="50" *ngIf="!executing" (click)="clearAdding()">CANCEL</button>
+        <button mat-raised-button fxFlex="50" *ngIf="executing" disabled>CANCEL</button>
+      </div>
     </form>
+    <button mat-raised-button fxFlex="100" (click)="import()" *ngIf="!adding">IMPORT EXISTING</button>
+    <button mat-raised-button fxFlex="100" color="primary" (click)="create()" *ngIf="!adding">CREATE NEW</button>
   </div>
 </div>
