@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
+import { AccountDataStorage } from '../model/AccountDataStorage';
 
 
 @Injectable()
 export class LocalStorageService {
+  accountData: string = 'accountData';
 
   constructor() { }
 
@@ -18,4 +20,12 @@ export class LocalStorageService {
     if (window) window.localStorage.removeItem(key);
   }
 
+  public getAccountData(): AccountDataStorage {
+    let data = this.getLocalStorage(this.accountData);
+    return data ? JSON.parse(data) : new AccountDataStorage();
+  }
+
+  public setAccountData(storage: AccountDataStorage): void {
+    this.setLocalStorage(this.accountData, storage);
+  }
 }

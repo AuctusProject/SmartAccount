@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { SmartAccountService } from '../../../services/smart-account.service';
 import { Router } from '@angular/router';
-import { SmartAccount } from '../../../model/SmartAccount';
+//import { SmartAccount } from '../../../model/SmartAccount';
 
 @Component({
   selector: 'app-import-account',
@@ -10,7 +10,7 @@ import { SmartAccount } from '../../../model/SmartAccount';
 })
 export class ImportAccountComponent implements OnInit {
 
-  public account: SmartAccount = new SmartAccount();
+  contractAddress: string;
 
   constructor(private smartAccountService: SmartAccountService,
     private router: Router) { }
@@ -19,9 +19,13 @@ export class ImportAccountComponent implements OnInit {
   }
 
   public import() {
-    if (this.account.contractAddress) {
-      this.smartAccountService.setSmartAccount(this.account.contractAddress);
-      this.router.navigate(['/account', this.account.contractAddress])
+    if (this.contractAddress) {
+      this.smartAccountService.getSmartAccountVersion(this.contractAddress);
+      this.smartAccountService.getSmartAccountVersion(this.contractAddress).subscribe(ret => {
+        if (ret) {
+          this.router.navigate(['/account', this.contractAddress])
+        }
+      });
     }
   }
 }

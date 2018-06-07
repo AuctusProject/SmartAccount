@@ -1,12 +1,17 @@
+
+import { ExtensionIdentifier } from "./ExtensionIdentifier";
 import { ExtensionSetupParameters } from "./ExtensionSetupParameters";
 import { ExtensionViewDataParameters } from "./ExtensionViewDataParameters";
 import { ExtensionAction } from "./ExtensionAction";
 
-export class Extension{
+export class Extension {
     address: string;
+    dateUnix: number;
+    rolesIds: string[] = new Array<string>();
+    identifiers: ExtensionIdentifier[] = new Array<ExtensionIdentifier>();
+
     name : string;
     description: string;
-    active: boolean;
     actionsCount: number;
     viewDatasCount: number;
     setupParametersCount: number;
@@ -14,12 +19,18 @@ export class Extension{
     viewDataParameters: ExtensionViewDataParameters[] = new Array<ExtensionViewDataParameters>();
     actions: ExtensionAction[] = new Array<ExtensionAction>();
 
-    constructor(address: string, name? : string, description? : string) {
+    constructor(address?: string, dateUnix?: number) {
         this.address = address;
-        this.name = name;
-        this.description = description;
-        this.active = false;
-      }
+        this.dateUnix = dateUnix;
+    }
+
+    addRoleId(roleId: string) {
+        this.rolesIds.push(roleId);
+    }
+
+    addIdentifier(identifier: string) {
+        this.identifiers.push(new ExtensionIdentifier(identifier));
+    }
 
     addSetupParameter(setupParameter : ExtensionSetupParameters){
         this.setupParameters.push(setupParameter);

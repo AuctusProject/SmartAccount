@@ -21,7 +21,8 @@ export class ExtensionEditComponent implements OnInit {
     private localStorageService: LocalStorageService,
     private extensionService: ExtensionService,
     private smartAccountService: SmartAccountService) { }
-
+    ngOnInit() {}
+/*
   ngOnInit() {
     var self = this;
     this.route.params.subscribe(params => {
@@ -58,5 +59,5 @@ export class ExtensionEditComponent implements OnInit {
   onChangeActiveStatus(active) {
     this.extension.active = active;
     this.extensionService.updateExtension(this.extension);
-  }
+  }*/
 }

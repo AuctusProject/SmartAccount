@@ -21,11 +21,12 @@ export class TransferTokenComponent implements OnInit {
   }
 
   public transferToken() {
+    /*
     this.smartAccountService.sendToken(
       this.contractAddress,
       this.transferVariables.toAddress,
       this.transferVariables.amount * (10**18)
-      , this.callBack, this);
+      , this.callBack, this);*/
   }
 
   public callBack(amount, caller) {

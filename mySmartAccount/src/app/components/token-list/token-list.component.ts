@@ -29,7 +29,7 @@ export class TokenListComponent implements OnInit {
   }
 
   checkTokenBalance(address: string, symbol: string) {
-    let value = this.smartAccountServiec.getAccountTokenBalance(address, symbol, this.pushTokenBalance, this);
+    //let value = this.smartAccountServiec.getAccountTokenBalance(address, symbol, this.pushTokenBalance, this);
 
   }
 

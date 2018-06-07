@@ -16,7 +16,7 @@ export class ExtensionListComponent implements OnInit {
   constructor(private localStorageService: LocalStorageService, private extensionService : ExtensionService) { }
 
   ngOnInit() {
-    this.extensionList = this.extensionService.getExtensionList();
+    //this.extensionList = this.extensionService.getExtensionList();
   }
 
 }

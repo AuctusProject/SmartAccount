@@ -16,9 +16,10 @@ export class EthBalanceComponent implements OnInit {
   }
 
   ngOnInit() {
+    /*
     this.smartAccountService.getAccountETHBalance().subscribe(balance => {
       this.ethBalance = balance;
-    });
+    });*/
   }
 
   ngOnDestroy(): void {
@@ -26,9 +27,11 @@ export class EthBalanceComponent implements OnInit {
   }
 
   private onLoginConditionsSuccess: Function = (payload: any) => {
+    /*
     this.smartAccountService.getAccountETHBalance().subscribe(balance => {
       this.ethBalance = balance;
     });
+    */
   }
 
 }
