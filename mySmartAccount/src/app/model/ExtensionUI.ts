@@ -3,7 +3,8 @@ import { ParameterUI } from "./ParameterUI";
 import { ActionUI } from "./ActionUI";
 
 export class ExtensionUI {
-    name : string;
+    address: string;
+    name: string;
     description: string;
     actionsCount: number;
     viewDatasCount: number;

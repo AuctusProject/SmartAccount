@@ -1,18 +1,11 @@
 <div fxLayout="row">
     <h1>My Smart Account <div class="address-container"><a class="address" href="https://ropsten.etherscan.io/address/{{smartAccount.contractAddress}}" target="_blank">{{smartAccount.contractAddress}}</a></div></h1>
-    <button class="logoff" (click)="logoff()">
+    <button class="logoff" (click)="back()">
         <mat-icon>exit_to_app</mat-icon>
     </button>
 </div>
 <mat-accordion>
-  <mat-expansion-panel>
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        <app-eth-balance></app-eth-balance>
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <app-transfer-eth></app-transfer-eth>
-  </mat-expansion-panel>
+  <app-eth-balance [smartAccountAddress]="smartAccount.address" [ethBalance]="smartAccount.balance"></app-eth-balance>
   <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title>
