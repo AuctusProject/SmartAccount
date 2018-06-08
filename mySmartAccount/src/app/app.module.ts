@@ -19,10 +19,9 @@ import { UiSwitchModule } from 'angular2-ui-switch'
 import { LocalStorageService } from './services/local-storage.service';
 
 import { AppComponent } from './app.component';
-import { EthBalanceComponent } from './components/eth-balance/eth-balance.component';
+import { EthBalanceComponent } from './components/account/eth-balance/eth-balance.component';
 import { ExtensionListComponent } from './components/extension-list/extension-list.component';
 import { ExtensionListItemComponent } from './components/extension-list-item/extension-list-item.component';
-import { TransferEthComponent } from './components/transfer-eth/transfer-eth.component';
 import { TokenListComponent } from './components/token-list/token-list.component';
 import { Web3Service } from './services/web3.service';
 import { SmartAccountService } from './services/smart-account.service';
@@ -44,7 +43,6 @@ import { ExtensionService } from './services/extension.service';
     ExtensionListComponent,
     ExtensionListItemComponent,
     EthBalanceComponent,
-    TransferEthComponent,
     TokenListComponent,
     ExtensionEditComponent,
     HomeComponent,

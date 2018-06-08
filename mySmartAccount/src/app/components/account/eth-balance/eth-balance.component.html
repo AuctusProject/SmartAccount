@@ -1,0 +1,21 @@
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+        <div class="eth-balance">
+          <div fxLayout="row">
+            <span class="balance">{{ethBalance}}</span>&nbsp;<span class="coin">ETH</span>
+          </div>
+        </div>
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+  <div fxLayout="column">
+    <mat-form-field class="full-width">
+      <input matInput placeholder="Recipient Address" [(ngModel)]="recipient" />
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Amount" type="number" [(ngModel)]="value" />
+    </mat-form-field>
+    <button color="primary" class="mat-raised-button mat-primary" mat-button [disabled]="executing" (click)="transferEth()">SEND</button>
+  </div>
+</mat-expansion-panel>
+

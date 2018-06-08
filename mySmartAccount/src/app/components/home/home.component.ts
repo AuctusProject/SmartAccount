@@ -6,6 +6,7 @@ import { LocalStorageService } from '../../services/local-storage.service';
 import { AccountDataStorage } from '../../model/AccountDataStorage';
 import { SmartAccountStorage } from '../../model/SmartAccountStorage';
 import { Observable } from 'rxjs/Observable';
+import { AddressUtil } from '../../util/addressUtil';
 
 @Component({
   selector: 'app-home',
@@ -100,7 +101,7 @@ export class HomeComponent implements OnInit {
       let self = this;
       this.executing = true;
       if (this.importing) {
-        if (this.contractAddress) {
+        if (this.contractAddress && AddressUtil.isValid(this.contractAddress)) {
           this.contractAddress = this.contractAddress.toLowerCase();
           this.smartAccountService.getSmartAccountVersion(this.contractAddress).subscribe(ret => {
             if (ret) {
@@ -129,14 +130,8 @@ export class HomeComponent implements OnInit {
     let accountData = this.localStorageService.getAccountData();
     accountData.addSmartAccount(this.name, this.contractAddress);
     this.localStorageService.setAccountData(accountData);
-    let smartAccount;
-    for(let i = 0; i < accountData.smartAccounts.length; ++i) {
-      if (accountData.smartAccounts[i].address == this.contractAddress) {
-        smartAccount = accountData.smartAccounts[i];
-        break;
-      }
-    }
+    let address = this.contractAddress;
     this.clearAdding();
-    this.zone.run(() => this.router.navigate(['/account', smartAccount]));
+    this.zone.run(() => this.router.navigate(['account', address]));
   }
 }

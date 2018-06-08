@@ -1,12 +1,10 @@
 import { ExtensionIdentifierStorage } from "./ExtensionIdentifierStorage";
-import { ExtensionUI } from "./ExtensionUI";
 
 export class ExtensionStorage {
     address: string;
     dateUnix: number;
     rolesIds: string[] = new Array<string>();
     identifiers: ExtensionIdentifierStorage[] = new Array<ExtensionIdentifierStorage>();
-    ui: ExtensionUI;
 
     constructor(address?: string, dateUnix?: number) {
         this.address = address;

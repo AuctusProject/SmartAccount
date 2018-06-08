@@ -1,9 +1,22 @@
 import { SmartAccountStorage } from "./SmartAccountStorage";
+import { ExtensionUI } from "./ExtensionUI";
 
 export class AccountDataStorage {
     smartAccounts: SmartAccountStorage[] = new Array<SmartAccountStorage>();
+    extensionUIs: ExtensionUI[] = new Array<ExtensionUI>();
 
     constructor() {
+    }
+
+    setExtensionUI(extensionUI: ExtensionUI): boolean {
+        for(let i = 0; i < this.extensionUIs.length; ++i) {
+            if (this.extensionUIs[i].address == extensionUI.address) {
+                this.extensionUIs[i] = extensionUI;
+                return true;
+            }
+        }
+        this.extensionUIs.push(extensionUI);
+        return true;
     }
 
     addSmartAccount(name: string, address: string): boolean {
@@ -40,7 +53,7 @@ export class AccountDataStorage {
     getSmartAccount(address: string): SmartAccountStorage {
         for(let i = 0; i < this.smartAccounts.length; ++i) {
             if (this.smartAccounts[i].address == address) {
-                return this.smartAccounts[i];
+                return Object.assign(new SmartAccountStorage, this.smartAccounts[i]);
             }
         }
         return null;

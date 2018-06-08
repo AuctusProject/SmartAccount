@@ -22,12 +22,15 @@ export class AccountComponent implements OnInit {
     private zone : NgZone) { }
 
   ngOnInit() {
-    this.smartAccount = this.route.snapshot.data["smartAccount"];
-    if (!this.smartAccount) {
-      this.back();
-    } else {
-      this.load();
-    }
+    let self = this;
+    this.route.params.subscribe(params => {
+      self.smartAccount = self.localStorageService.getAccountData().getSmartAccount(params["address"]);
+      if (!self.smartAccount) {
+        self.back();
+      } else {
+        self.load();
+      }
+    });
   }
 
   load() {

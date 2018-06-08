@@ -4,6 +4,7 @@ import { EventsService } from 'angular-event-service';
 import { Observable } from 'rxjs/Observable';
 import * as SolidityCoder from 'web3/lib/solidity/coder';
 import { environment } from '../../environments/environment';
+import * as utils from 'web3-utils';
 
 declare let window: any;
 declare let Web3: any;
@@ -43,12 +44,17 @@ export class Web3Service {
       });
     });
   }
+  
   public toHex(val: string): string {
-    return this.internalWeb3.toHex(val);
+    return utils.toHex(val);
   }
 
-  public toWei(value: string, unit?: string) {
-    return this.internalWeb3.toWei(value, unit);
+  public toWei(value: string, decimals?: number) {
+    return utils.toWei(value, this.getUnit(decimals));
+  }
+
+  public fromWei(value: string, decimals?: number) {
+    return utils.fromWei(value, this.getUnit(decimals));
   }
 
   public getSetupData(address: string, identifier: string): string {
@@ -172,7 +178,7 @@ export class Web3Service {
       self.getWeb3().subscribe(web3 => {
         web3.eth.getBalance(address, function (error, result) {
           if (!error) {
-            var ether = web3.fromWei(result, 'ether');
+            var ether = self.fromWei(result.toString());
             observer.next(parseFloat(ether));
           }
           else {
@@ -189,15 +195,15 @@ export class Web3Service {
     return new Observable(observer => {
       self.getWeb3().subscribe(web3 => {
         self.callConstMethodWithData(data, tokenAddress, ["uint256"]).subscribe(ret => {
-          var amount = web3.fromWei(ret, 'ether');
+          var amount = self.fromWei(ret.toString(), decimals);
           observer.next(parseFloat(amount));
         });
       });
     });
   }
 
-  public transferToken(smartAccountAddress: string, loggedWallet: string, tokenAddress: string, to: string, amount: number, chainId: number): Observable<string> {
-    let tokenData = this.getTransferTokenData(to, amount);
+  public transferToken(smartAccountAddress: string, loggedWallet: string, tokenAddress: string, to: string, amount: number, decimals: number, chainId: number): Observable<string> {
+    let tokenData = this.getTransferTokenData(to, this.toWei(amount.toString(), decimals));
     let data = this.getExecuteCallData(tokenAddress, 0, 0, tokenData);
     let self = this;
     return new Observable(observer => {
@@ -208,7 +214,7 @@ export class Web3Service {
   }
 
   public sendEther(smartAccountAddress: string, loggedWallet: string, to: string, amount: number, chainId: number): Observable<string> {
-    let data = this.getExecuteCallData(to, amount, 0, "");
+    let data = this.getExecuteCallData(to, this.toWei(amount.toString()), 0, "");
     let self = this;
     return new Observable(observer => {
       self.sendTransaction(loggedWallet, smartAccountAddress, 0, data, environment.defaultGasPrice, 150000, chainId).subscribe(ret => {
@@ -233,6 +239,34 @@ export class Web3Service {
     });
   }
 
+  private getUnit(decimals?: number): string {
+    if (!decimals || decimals == 18) {
+      return 'ether';
+    } else if (decimals == 1) {
+      return 'wei';
+    } else if (decimals == 3) {
+      return 'kwei';
+    } else if (decimals == 6) {
+      return 'mwei';
+    } else if (decimals == 9) {
+      return 'gwei';
+    } else if (decimals == 12) {
+      return 'szabo';
+    } else if (decimals == 15) {
+      return 'finney';
+    } else if (decimals == 21) {
+      return 'kether';
+    } else if (decimals == 24) {
+      return 'mether';
+    } else if (decimals == 27) {
+      return 'gether';
+    } else if (decimals == 30) {
+      return 'tether';
+    } else {
+      return undefined;
+    }
+  }
+
   public sendTransaction(from: string, to: string, value: number, data: string, 
     gasPrice: number, gasLimit: number, chainId: number): Observable<string> {
 
@@ -250,7 +284,7 @@ export class Web3Service {
               gasLimit: web3.toHex(gasLimit),
               from: from,
               to: to,
-              value: web3.toHex(web3.toWei(value.toString(), "ether")),
+              value: web3.toHex(self.toWei(value.toString())),
               data: data,
               chainId: web3.toHex(chainId)
             };
