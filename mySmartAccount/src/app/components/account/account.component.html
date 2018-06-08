@@ -6,14 +6,7 @@
 </div>
 <mat-accordion>
   <app-eth-balance [smartAccountAddress]="smartAccount.address" [ethBalance]="smartAccount.balance"></app-eth-balance>
-  <mat-expansion-panel>
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        Tokens
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <app-token-list></app-token-list>
-  </mat-expansion-panel>
+  <app-token-list [smartAccountAddress]="smartAccount.address" [tokenBalanceList]="smartAccount.tokens"></app-token-list>
   <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title>

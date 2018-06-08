@@ -44,7 +44,7 @@ export class Web3Service {
       });
     });
   }
-  
+
   public toHex(val: string): string {
     return utils.toHex(val);
   }
@@ -164,7 +164,7 @@ export class Web3Service {
 
   private parseType(type: string, decoded: any): any {
     if (type.indexOf("int") >= 0) {
-        return Number.parseInt(decoded.toString());
+        return Number.parseInt(decoded.toString(10));
     } else if (type.indexOf("bool") >= 0) {
         return decoded;
     } else {
@@ -178,7 +178,7 @@ export class Web3Service {
       self.getWeb3().subscribe(web3 => {
         web3.eth.getBalance(address, function (error, result) {
           if (!error) {
-            var ether = self.fromWei(result.toString());
+            var ether = self.fromWei(result.toString(10));
             observer.next(parseFloat(ether));
           }
           else {
@@ -195,7 +195,7 @@ export class Web3Service {
     return new Observable(observer => {
       self.getWeb3().subscribe(web3 => {
         self.callConstMethodWithData(data, tokenAddress, ["uint256"]).subscribe(ret => {
-          var amount = self.fromWei(ret.toString(), decimals);
+          var amount = self.fromWei(ret[0].toPrecision(80).split('.')[0], decimals);
           observer.next(parseFloat(amount));
         });
       });
