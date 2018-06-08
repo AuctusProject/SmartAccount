@@ -3,6 +3,7 @@ import { Web3Service } from './web3.service';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { LocalStorageService } from './local-storage.service';
+import { ExtensionUI } from "../model/ExtensionUI"; 
 
 @Injectable()
 export class ExtensionService {
@@ -12,7 +13,7 @@ export class ExtensionService {
 
   constructor(private web3Service: Web3Service, private localStorageService : LocalStorageService) { }
 
-  public getExtension(extensionAddress: string): Observable<Extension> {
+  public getExtension(extensionAddress: string): Observable<ExtensionUI> {
     var self = this;
 
     return new Observable(observer => {

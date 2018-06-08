@@ -30,12 +30,11 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.executing = false;
+    /*this.executing = false;
     this.adding = false;
     this.importing = false;
     this.contractAddress = "";
-    this.load();
-    //this.load();
+    this.load();*/
     this.loadExtension();
   }
 
