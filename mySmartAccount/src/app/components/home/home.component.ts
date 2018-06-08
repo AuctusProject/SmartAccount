@@ -1,5 +1,6 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { SmartAccountService } from '../../services/smart-account.service';
+import { ExtensionService } from '../../services/extension.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { LocalStorageService } from '../../services/local-storage.service';
@@ -22,18 +23,26 @@ export class HomeComponent implements OnInit {
   importing: boolean;
   accountData: AccountDataStorage;
   
-  constructor(private smartAccountService: SmartAccountService, 
+  constructor(private smartAccountService: SmartAccountService,
+    private extensionService: ExtensionService,
     private localStorageService: LocalStorageService,
     private router: Router, 
     private zone : NgZone) {
   }
 
   ngOnInit() {
-    this.executing = false;
+    /*this.executing = false;
     this.adding = false;
     this.importing = false;
     this.contractAddress = "";
-    this.load();
+    this.load();*/
+    this.loadExtension();
+  }
+
+  loadExtension() {
+    this.extensionService.getExtension("0x018ad16649D90F4A3A8195b57677491C687b5309").subscribe(test => {
+      
+    });
   }
 
   clearAdding() {
