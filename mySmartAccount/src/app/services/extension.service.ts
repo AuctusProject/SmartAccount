@@ -16,6 +16,36 @@ export class ExtensionService {
   baseAbi: string = '[{"constant":true,"inputs":[{"name":"_reference","type":"address"}],"name":"getIdentifiersCount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"baseExtensionVersion","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getName","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"pure","type":"function"},{"constant":true,"inputs":[],"name":"getDescription","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"pure","type":"function"},{"constant":true,"inputs":[{"name":"index","type":"uint256"}],"name":"getSetupParametersByIndex","outputs":[{"name":"","type":"bool"},{"name":"","type":"string"},{"name":"","type":"uint256"},{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_reference","type":"address"},{"name":"_index","type":"uint256"}],"name":"getIdentifierByIndex","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_reference","type":"address"}],"name":"getIdentifiers","outputs":[{"name":"","type":"bytes32[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"actionIndex","type":"uint256"},{"name":"parameterIndex","type":"uint256"}],"name":"getActionParameterByIndexes","outputs":[{"name":"","type":"string"},{"name":"","type":"uint256"},{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"index","type":"uint256"}],"name":"getViewDataByIndex","outputs":[{"name":"","type":"bytes4"},{"name":"","type":"string"},{"name":"","type":"uint256"},{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"viewDatasCount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"actionsCount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getSetupFunction","outputs":[{"name":"","type":"bytes4"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"index","type":"uint256"}],"name":"getActionByIndex","outputs":[{"name":"","type":"bytes4"},{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"index","type":"uint256"}],"name":"actionParametersCountByIndex","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"setupParametersCount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"}]';
 
   constructor(private web3Service: Web3Service, private localStorageService : LocalStorageService) { }
+
+  public getExtension(extensionAddress: string): Observable<Extension> {
+    var self = this;
+
+    return new Observable(observer => {
+      this.web3Service.callConstMethodWithAbi(extensionAddress, this.baseAbi, "getName", ["string"]).subscribe(
+        contractInstance => {
+          self.contractInstance = contractInstance;
+          /*Observable.combineLatest(this.web3Service.callConstMethod(contractInstance, "getName"),
+            this.web3Service.callConstMethod(contractInstance, "getDescription"))
+            .subscribe(function handleValues(values) {
+              var extension = new Extension(extensionAddress, values[0], values[1]);
+              self.getSetupParameters(extension).subscribe(setup => {
+                self.getViewDatas(extension).subscribe(viewDatas => {
+                  self.getActions(extension).subscribe(actions => {
+                    var array = [];
+                    for (var i = 0; i < actions.length; ++i) {
+                      array.push(self.getActionParameters(i, actions[i], extension));
+                    }
+                    Observable.combineLatest(array)
+                      .subscribe(function handleValues(values) {
+                        observer.next(extension);
+                      });
+                  });
+                })
+              });
+            });*/
+        });
+    });
+  };
 /*
   public getExtensionList() : Extension[]{
     var extensionList = this.localStorageService.getLocalStorage("extension_list");
@@ -105,35 +135,7 @@ export class ExtensionService {
     });
   }
 
-  public getExtension(extensionAddress: string): Observable<Extension> {
-    var self = this;
-
-    return new Observable(observer => {
-      this.web3Service.getContract(this.baseAbi, extensionAddress).subscribe(
-        contractInstance => {
-          self.contractInstance = contractInstance;
-          Observable.combineLatest(this.web3Service.callConstMethod(contractInstance, "getName"),
-            this.web3Service.callConstMethod(contractInstance, "getDescription"))
-            .subscribe(function handleValues(values) {
-              var extension = new Extension(extensionAddress, values[0], values[1]);
-              self.getSetupParameters(extension).subscribe(setup => {
-                self.getViewDatas(extension).subscribe(viewDatas => {
-                  self.getActions(extension).subscribe(actions => {
-                    var array = [];
-                    for (var i = 0; i < actions.length; ++i) {
-                      array.push(self.getActionParameters(i, actions[i], extension));
-                    }
-                    Observable.combineLatest(array)
-                      .subscribe(function handleValues(values) {
-                        observer.next(extension);
-                      });
-                  });
-                })
-              });
-            });
-        });
-    });
-  };
+  //getExtension moved
 
   public getActionParameters(index: number, action: ExtensionAction, extension: Extension): Observable<boolean> {
     var self = this;
