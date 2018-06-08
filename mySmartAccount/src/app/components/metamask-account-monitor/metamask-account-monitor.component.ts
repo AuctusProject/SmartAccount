@@ -32,16 +32,16 @@ export class MetamaskAccountMonitorComponent implements OnInit {
   }
 
   private onLoginConditionsFail: Function = (payload: any) => {
-    if (this.router.url != "/required") {
+    //if (this.router.url != "/required") {
       //this.loginService.logoutWithoutRedirect();
-      this.zone.run(() => this.router.navigateByUrl('required'));
-    }
+      //this.zone.run(() => this.router.navigateByUrl('required'));
+    //}
   }
 
   private onLoginConditionsSuccess: Function = (payload: any) => {
-    if (this.router.url == "/required") {
+    //if (this.router.url == "/required") {
       this.zone.run(() => this.router.navigate(['home']));
-    }
+    //}
   }
 
   private onAccountChanged: Function = (payload: any) => {

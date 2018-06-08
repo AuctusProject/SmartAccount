@@ -8,7 +8,7 @@ import { Web3Service } from "./web3.service";
 import { LocalStorageService } from './local-storage.service';
 import { Subscriber } from 'rxjs';
 import { AccountDataStorage } from '../model/AccountDataStorage';
-import { Extension } from '../model/Extension';
+import { ExtensionStorage } from '../model/ExtensionStorage';
 
 declare let window: any;
 
@@ -23,11 +23,11 @@ export class SmartAccountService {
     private eventsService: EventsService, 
     private web3Service: Web3Service, 
     private localStorageService: LocalStorageService) {
+      this.runChecks();
+      this.monitoreAccount();
   }
 
   ngOnInit() {
-    this.runChecks();
-    this.monitoreAccount();
   }
 
   private monitoreAccount() {
@@ -100,7 +100,7 @@ export class SmartAccountService {
     return this.network;
   }
 
-  public createAccountSC(name: string): Observable<any> {
+  public createAccountSC(): Observable<any> {
     if (!this.getAccount()) {
       return new Observable(observer => {
         observer.next(null);
@@ -112,7 +112,7 @@ export class SmartAccountService {
       self.web3Service.sendTransaction(self.getAccount(), "", 0, environment.smartAccountSCData, environment.defaultGasPrice, 3300000, self.getNetwork())
         .subscribe(txHash => {
           if (txHash) {
-            self.monitoringSmartAccountCreation(observer, name, txHash);
+            self.monitoringSmartAccountCreation(observer, txHash);
           }
           else {
             observer.next(null);
@@ -127,34 +127,26 @@ export class SmartAccountService {
       self.web3Service.sendTransaction(self.getAccount(), "", 0, environment.smartAccountSCData, environment.defaultGasPrice, 3300000, self.getNetwork())
         .subscribe(txHash => {
           if (txHash) {
-            self.monitoringSmartAccountCreation(observer, name, txHash);
-          }
-          else {
+            self.monitoringSmartAccountCreation(observer, txHash);
+          } else {
             observer.next(null);
           }
         });
     });
   } 
 
-  private monitoringSmartAccountCreation(observer: Subscriber<any>, name: string, txHash: string) {
+  private monitoringSmartAccountCreation(observer: Subscriber<any>, txHash: string) {
     var self = this;
     self.web3Service.getTransactionReceipt(txHash).subscribe(
       receipt => {
         if (receipt) {
-          self.setSmartAccount(name, receipt.contractAddress);
           observer.next(receipt.contractAddress);
         } else {
           setTimeout(() => {
-            self.monitoringSmartAccountCreation(observer, name, txHash);
+            self.monitoringSmartAccountCreation(observer, txHash);
           }, 5000);
         }
       });
-  }
-
-  public setSmartAccount(name: string, contractAddress: string) {
-    let accountData = this.localStorageService.getAccountData();
-    accountData.addSmartAccount(name, contractAddress);
-    this.localStorageService.setAccountData(accountData);
   }
 
   public removeSmartAccount(contractAddress: string) {
@@ -197,8 +189,8 @@ export class SmartAccountService {
       });
   }
 
-  public getTokenBalance(smartAccountAddress: string, tokenAddress: string): Observable<number> {
-    return this.web3Service.getTokenBalance(tokenAddress, smartAccountAddress);
+  public getTokenBalance(smartAccountAddress: string, tokenAddress: string, decimals: number): Observable<number> {
+    return this.web3Service.getTokenBalance(tokenAddress, smartAccountAddress, decimals);
   }
 
   public getETHBalance(smartAccountAddress: string): Observable<number> {
@@ -215,7 +207,7 @@ export class SmartAccountService {
     });
   }
 
-  public getExtensions(smartAccountAddress: string): Observable<Extension[]> {
+  public getExtensions(smartAccountAddress: string): Observable<ExtensionStorage[]> {
     let self = this;
     return new Observable(observer => {
         let dataCount = self.web3Service.getExtensionsCountData();
@@ -230,7 +222,7 @@ export class SmartAccountService {
             .subscribe(function handleValues(values) {
               var array2 = [];
               values.forEach(item => {
-                let ext = new Extension(item[0], item[1]);
+                let ext = new ExtensionStorage(item[0], item[1]);
                 for (var j = 0; j < item[2].length; ++j) {
                   ext.addRoleId(item[2][j]);
                 }
@@ -251,7 +243,7 @@ export class SmartAccountService {
     });
   }
 
-  private getExtensionIdentifiers(smartAccountAddress: string, extension: Extension): Observable<Extension> {
+  private getExtensionIdentifiers(smartAccountAddress: string, extension: ExtensionStorage): Observable<ExtensionStorage> {
     let self = this;
     return new Observable(observer => {
       self.web3Service.callConstMethodWithAbi(extension.address, environment.extensionBaseAbi, "getIdentifiersCount", ["uint256"], smartAccountAddress).subscribe(
@@ -264,7 +256,7 @@ export class SmartAccountService {
           Observable.combineLatest(array)
             .subscribe(function handleValues(values) {
               values.forEach(item => {
-                extension.addIdentifier(item);
+                extension.addIdentifier(undefined, item);
               });
               observer.next(extension);
             });

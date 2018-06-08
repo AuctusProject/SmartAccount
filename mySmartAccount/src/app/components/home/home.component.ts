@@ -15,7 +15,10 @@ import { Observable } from 'rxjs/Observable';
 })
 export class HomeComponent implements OnInit {
 
-  creating: boolean;
+  contractAddress: string;
+  name: string;
+  executing: boolean;
+  adding: boolean;
   importing: boolean;
   accountData: AccountDataStorage;
   
@@ -27,6 +30,11 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.executing = false;
+    this.adding = false;
+    this.importing = false;
+    this.contractAddress = "";
+    this.load();
     //this.load();
     this.loadExtension();
   }
@@ -37,15 +45,24 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  clearAdding() {
+    this.executing = false;
+    this.adding = false;
+    this.importing = false;
+    this.contractAddress = "";
+    this.name = "";
+  }
+
   load() {
     this.accountData = this.localStorageService.getAccountData();
     let array = [];
     for(let i = 0; i < this.accountData.smartAccounts.length; ++i) {
       array.push(this.setSmartAccountData(this.accountData.smartAccounts[i]));
     }
+    let self = this;
     Observable.combineLatest(array)
     .subscribe(function handleValues(values) {
-      this.localStorageService.setAccountData(this.accountData);
+      self.localStorageService.setAccountData(self.accountData);
     });
   }
 
@@ -53,34 +70,83 @@ export class HomeComponent implements OnInit {
     let self = this;
     return new Observable(observer => {
       self.smartAccountService.getSmartAccountVersion(smartAccountStorage.address).subscribe(ret => {
-        smartAccountStorage.version = ret;
-        if (smartAccountStorage.version) {
+        smartAccountStorage["version"] = ret;
+        if (ret) {
           self.smartAccountService.getETHBalance(smartAccountStorage.address).subscribe(ret => {
-            smartAccountStorage.balance = ret;
+            smartAccountStorage["balance"] = ret;
             observer.next(smartAccountStorage);
           });
         } else {
-          smartAccountStorage.balance = 0;
+          smartAccountStorage["balance"] = 0;
           observer.next(smartAccountStorage);
         }
       });
     });
   }
 
-  onCreateAccount() {
-    this.creating = true;
-    this.smartAccountService.getExtensions('0x51D6818d19b6933F73724c55fcAa2cFe1bA2b5a0').subscribe(ret =>
-    {
-      let x = ret;
+  removeSmartAccount(address: string) {
+    this.accountData.removeSmartAccount(address);
+    this.load();
+  }
 
-    });
-    /*
-    this.smartAccountService.createAccountSC().subscribe(contractAddress => {
-      this.creating = false;
-      if (contractAddress) {
-        this.zone.run(() => this.router.navigate(['/account', contractAddress]));
+  create() {
+    this.adding = true;
+    this.importing = false;
+    this.executing = false;
+  }
+
+  import() {
+    this.adding = true;
+    this.importing = true;
+    this.executing = false;
+  }
+
+  getAction() {
+    return this.importing ? "IMPORT" : "CREATE";
+  }
+
+  save() {
+    if (this.name) {
+      let self = this;
+      this.executing = true;
+      if (this.importing) {
+        if (this.contractAddress) {
+          this.contractAddress = this.contractAddress.toLowerCase();
+          this.smartAccountService.getSmartAccountVersion(this.contractAddress).subscribe(ret => {
+            if (ret) {
+              self.redirect();
+            } else {
+              this.executing = false;
+            }
+          });
+        } else {
+          this.executing = false;
+        }
+      } else {
+        this.smartAccountService.createAccountSC().subscribe(contractAddress => {
+          if (contractAddress) {
+            self.contractAddress = contractAddress;
+            self.redirect();
+          } else {
+            this.executing = false;
+          }
+        });
       }
-    })
-    */
+    }
+  }
+
+  redirect() {
+    let accountData = this.localStorageService.getAccountData();
+    accountData.addSmartAccount(this.name, this.contractAddress);
+    this.localStorageService.setAccountData(accountData);
+    let smartAccount;
+    for(let i = 0; i < accountData.smartAccounts.length; ++i) {
+      if (accountData.smartAccounts[i].address == this.contractAddress) {
+        smartAccount = accountData.smartAccounts[i];
+        break;
+      }
+    }
+    this.clearAdding();
+    this.zone.run(() => this.router.navigate(['/account', smartAccount]));
   }
 }

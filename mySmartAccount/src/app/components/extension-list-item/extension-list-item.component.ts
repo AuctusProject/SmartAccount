@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, NgZone } from '@angular/core';
-import { Extension } from '../../model/Extension';
 import { Router } from '@angular/router';
 
 @Component({
@@ -9,7 +8,7 @@ import { Router } from '@angular/router';
 })
 export class ExtensionListItemComponent implements OnInit {
 
-  @Input() extension : Extension;
+  //@Input() extension : Extension;
 
   constructor(private router: Router, private zone: NgZone) { }
 
@@ -17,6 +16,6 @@ export class ExtensionListItemComponent implements OnInit {
   }
 
   navigate(){
-    this.zone.run(() => this.router.navigate(['extension', this.extension.address.toString()]));
+    //this.zone.run(() => this.router.navigate(['extension', this.extension.address.toString()]));
   }
 }

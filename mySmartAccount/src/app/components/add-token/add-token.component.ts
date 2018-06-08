@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { LocalStorageService } from '../../services/local-storage.service';
-import { AddTokenVariables } from '../../model/AddTokenVariables';
 import { AddressUtil } from '../../util/addressUtil';
-import { TokenBalance } from '../../model/TokenBalance';
 
 
 @Component({
@@ -13,8 +11,6 @@ import { TokenBalance } from '../../model/TokenBalance';
   styleUrls: ['./add-token.component.css']
 })
 export class AddTokenComponent implements OnInit {
-
-  public variables: AddTokenVariables = new AddTokenVariables();
 
   constructor(
     private router: Router,
@@ -37,6 +33,7 @@ export class AddTokenComponent implements OnInit {
   }
 
   private insertToken(): boolean {
+    /*
     let tokensJson: TokenBalance[] = JSON.parse(this.localStorageService.getLocalStorage("token_list"));
     if (tokensJson == null){
       tokensJson = new Array<TokenBalance>();
@@ -56,9 +53,12 @@ export class AddTokenComponent implements OnInit {
       this.localStorageService.setLocalStorage("token_list", JSON.stringify(tokensJson));
       return true;
     }
+    */
+   return true;
   }
 
   private validate(): boolean {
+    /*
     if (!AddressUtil.isValid(this.variables.contractAddress)) {
       alert("Invalid Contract Address");
       return false;
@@ -73,6 +73,8 @@ export class AddTokenComponent implements OnInit {
     }
 
     return true;
+    */
+   return true;
   }
 
 }

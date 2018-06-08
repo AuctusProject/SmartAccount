@@ -1,11 +1,33 @@
 import { ExtensionIdentifierStorage } from "./ExtensionIdentifierStorage";
+import { ExtensionUI } from "./ExtensionUI";
 
 export class ExtensionStorage {
     address: string;
+    dateUnix: number;
+    rolesIds: string[] = new Array<string>();
     identifiers: ExtensionIdentifierStorage[] = new Array<ExtensionIdentifierStorage>();
+    ui: ExtensionUI;
 
-    constructor(address?: string) {
+    constructor(address?: string, dateUnix?: number) {
         this.address = address;
+    }
+
+    getIdentifiersList(): string[] {
+        let array = [];
+        for(let i = 0; i < this.identifiers.length; ++i) {
+            array.push(this.identifiers[i].identifier);
+        }
+        return array;
+    }
+
+    addRoleId(roleId: string): boolean {
+        for(let i = 0; i < this.rolesIds.length; ++i) {
+            if (this.rolesIds[i] == roleId) {
+                return false;
+            }
+        }
+        this.rolesIds.push(roleId);
+        return true;
     }
 
     addIdentifier(name: string, identifier: string): boolean {

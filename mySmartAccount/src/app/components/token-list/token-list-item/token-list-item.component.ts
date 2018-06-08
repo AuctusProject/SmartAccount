@@ -1,6 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { TokenBalance } from '../../../model/TokenBalance';
-import { TokenListVariables } from '../../../model/TokenListVariables';
 import { VariableAst } from '@angular/compiler';
 
 @Component({
@@ -10,8 +8,8 @@ import { VariableAst } from '@angular/compiler';
 })
 export class TokenListItemComponent implements OnInit {
 
-  @Input() tokenBalance : TokenBalance;
-  @Output() selectedTokenEvent = new EventEmitter<TokenListVariables>();
+ // @Input() tokenBalance : TokenBalance;
+ // @Output() selectedTokenEvent = new EventEmitter<TokenListVariables>();
 
   constructor() { 
 
@@ -23,11 +21,13 @@ export class TokenListItemComponent implements OnInit {
   }
 
   public transferTokens(){
+    /*
     let variables = new TokenListVariables();
     variables.selectedToken = this.tokenBalance.symbol;
     variables.contractAddress = this.tokenBalance.contractAddress;
     variables.showList = false;
     
     this.selectedTokenEvent.emit(variables);
+    */
   }
 }

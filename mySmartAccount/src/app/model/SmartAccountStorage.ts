@@ -7,9 +7,6 @@ export class SmartAccountStorage {
     tokens: TokenStorage[] = new Array<TokenStorage>();
     extensions: ExtensionStorage[] = new Array<ExtensionStorage>();
 
-    balance: number;
-    version: string;
-
     constructor(name?: string, address?: string){
         this.name = name;
         this.address = address;

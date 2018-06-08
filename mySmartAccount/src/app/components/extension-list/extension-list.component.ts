@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Extension } from '../../model/Extension';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { environment } from '../../../environments/environment';
 import { ExtensionService } from '../../services/extension.service';
@@ -10,8 +9,6 @@ import { ExtensionService } from '../../services/extension.service';
   styleUrls: ['./extension-list.component.css']
 })
 export class ExtensionListComponent implements OnInit {
-
-  extensionList: Extension[];
 
   constructor(private localStorageService: LocalStorageService, private extensionService : ExtensionService) { }
 

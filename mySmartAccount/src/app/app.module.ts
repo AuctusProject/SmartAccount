@@ -32,7 +32,6 @@ import { HomeComponent } from './components/home/home.component';
 import { TokenListItemComponent } from './components/token-list/token-list-item/token-list-item.component';
 import { AddTokenComponent } from './components/add-token/add-token.component';
 import { MetamaskAccountMonitorComponent } from './components/metamask-account-monitor/metamask-account-monitor.component';
-import { ImportAccountComponent } from './components/home/import-account/import-account.component';
 import { AccountComponent } from './components/account/account.component';
 import { TransferTokenComponent } from './components/transfer-token/transfer-token.component';
 import { RedirectProvider } from './provider/redirect.provider';
@@ -52,7 +51,6 @@ import { ExtensionService } from './services/extension.service';
     TokenListItemComponent,
     AddTokenComponent,
     MetamaskAccountMonitorComponent,
-    ImportAccountComponent,
     AccountComponent,
     TransferTokenComponent
   ],
