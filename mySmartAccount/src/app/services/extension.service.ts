@@ -1,12 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Web3Service } from './web3.service';
-import { Extension } from '../model/Extension';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { ExtensionSetupParameters } from '../model/ExtensionSetupParameters';
-import { ExtensionViewDataParameters } from '../model/ExtensionViewDataParameters';
-import { ExtensionAction } from '../model/ExtensionAction';
-import { ExtensionActionParameter } from '../model/ExtensionActionParameter';
 import { LocalStorageService } from './local-storage.service';
 
 @Injectable()

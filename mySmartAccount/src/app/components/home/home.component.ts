@@ -101,6 +101,7 @@ export class HomeComponent implements OnInit {
       this.executing = true;
       if (this.importing) {
         if (this.contractAddress) {
+          this.contractAddress = this.contractAddress.toLowerCase();
           this.smartAccountService.getSmartAccountVersion(this.contractAddress).subscribe(ret => {
             if (ret) {
               self.redirect();
@@ -128,8 +129,14 @@ export class HomeComponent implements OnInit {
     let accountData = this.localStorageService.getAccountData();
     accountData.addSmartAccount(this.name, this.contractAddress);
     this.localStorageService.setAccountData(accountData);
-    let sa = this.contractAddress;
+    let smartAccount;
+    for(let i = 0; i < accountData.smartAccounts.length; ++i) {
+      if (accountData.smartAccounts[i].address == this.contractAddress) {
+        smartAccount = accountData.smartAccounts[i];
+        break;
+      }
+    }
     this.clearAdding();
-    this.zone.run(() => this.router.navigate(['/account', sa]));
+    this.zone.run(() => this.router.navigate(['/account', smartAccount]));
   }
 }

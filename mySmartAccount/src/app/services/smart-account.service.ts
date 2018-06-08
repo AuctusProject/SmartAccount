@@ -8,7 +8,7 @@ import { Web3Service } from "./web3.service";
 import { LocalStorageService } from './local-storage.service';
 import { Subscriber } from 'rxjs';
 import { AccountDataStorage } from '../model/AccountDataStorage';
-import { Extension } from '../model/Extension';
+import { ExtensionStorage } from '../model/ExtensionStorage';
 
 declare let window: any;
 
@@ -189,8 +189,8 @@ export class SmartAccountService {
       });
   }
 
-  public getTokenBalance(smartAccountAddress: string, tokenAddress: string): Observable<number> {
-    return this.web3Service.getTokenBalance(tokenAddress, smartAccountAddress);
+  public getTokenBalance(smartAccountAddress: string, tokenAddress: string, decimals: number): Observable<number> {
+    return this.web3Service.getTokenBalance(tokenAddress, smartAccountAddress, decimals);
   }
 
   public getETHBalance(smartAccountAddress: string): Observable<number> {
@@ -207,7 +207,7 @@ export class SmartAccountService {
     });
   }
 
-  public getExtensions(smartAccountAddress: string): Observable<Extension[]> {
+  public getExtensions(smartAccountAddress: string): Observable<ExtensionStorage[]> {
     let self = this;
     return new Observable(observer => {
         let dataCount = self.web3Service.getExtensionsCountData();
@@ -222,7 +222,7 @@ export class SmartAccountService {
             .subscribe(function handleValues(values) {
               var array2 = [];
               values.forEach(item => {
-                let ext = new Extension(item[0], item[1]);
+                let ext = new ExtensionStorage(item[0], item[1]);
                 for (var j = 0; j < item[2].length; ++j) {
                   ext.addRoleId(item[2][j]);
                 }
@@ -243,7 +243,7 @@ export class SmartAccountService {
     });
   }
 
-  private getExtensionIdentifiers(smartAccountAddress: string, extension: Extension): Observable<Extension> {
+  private getExtensionIdentifiers(smartAccountAddress: string, extension: ExtensionStorage): Observable<ExtensionStorage> {
     let self = this;
     return new Observable(observer => {
       self.web3Service.callConstMethodWithAbi(extension.address, environment.extensionBaseAbi, "getIdentifiersCount", ["uint256"], smartAccountAddress).subscribe(
@@ -256,7 +256,7 @@ export class SmartAccountService {
           Observable.combineLatest(array)
             .subscribe(function handleValues(values) {
               values.forEach(item => {
-                extension.addIdentifier(item);
+                extension.addIdentifier(undefined, item);
               });
               observer.next(extension);
             });

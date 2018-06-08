@@ -15,6 +15,13 @@ export class SmartAccountStorage {
         this.address = address;
     }
 
+    setInvalidAccount() {
+        this.balance = 0;
+        this.version = null;
+        this.tokens = new Array<TokenStorage>();
+        this.extensions = new Array<ExtensionStorage>();
+    }
+
     addTokenData(symbol: string, decimals: number, address: string): boolean {
         for(let i = 0; i < this.tokens.length; ++i) {
             if (this.tokens[i].address == address) {

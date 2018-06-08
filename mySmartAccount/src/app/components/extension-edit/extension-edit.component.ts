@@ -1,6 +1,5 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Extension } from '../../model/Extension';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { ExtensionService } from '../../services/extension.service';
 import { SmartAccountService } from '../../services/smart-account.service';
@@ -13,7 +12,6 @@ import { ExtensionData } from '../../model/ExtensionData';
 })
 export class ExtensionEditComponent implements OnInit {
 
-  extension: Extension;
   extensionData: ExtensionData = new ExtensionData();
   loading: boolean;
 

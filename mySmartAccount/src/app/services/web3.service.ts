@@ -183,7 +183,7 @@ export class Web3Service {
     });
   }
 
-  public getTokenBalance(tokenAddress: string, accountAddress: string): Observable<number> {
+  public getTokenBalance(tokenAddress: string, accountAddress: string, decimals: number): Observable<number> {
     let data = this.getTokenBalanceData(accountAddress);
     let self = this;
     return new Observable(observer => {

@@ -27,6 +27,16 @@ export class AccountDataStorage {
         return false;
     }
 
+    updateSmartAccount(smartAccountStorage: SmartAccountStorage): boolean {
+        for(let i = 0; i < this.smartAccounts.length; ++i) {
+            if (this.smartAccounts[i].address == smartAccountStorage.address) {
+                this.smartAccounts[i] = smartAccountStorage;
+                return true;
+            }
+        }
+        return false;
+    }
+
     getSmartAccount(address: string): SmartAccountStorage {
         for(let i = 0; i < this.smartAccounts.length; ++i) {
             if (this.smartAccounts[i].address == address) {

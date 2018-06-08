@@ -1,6 +1,4 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { TokenListVariables } from '../../model/TokenListVariables';
-import { TransferTokensVariables } from '../../model/TransferTokensVariable';
 import { SmartAccountService } from '../../services/smart-account.service';
 
 @Component({
@@ -10,7 +8,6 @@ import { SmartAccountService } from '../../services/smart-account.service';
 })
 export class TransferTokenComponent implements OnInit {
 
-  transferVariables = new TransferTokensVariables();
   @Input() contractAddress = "";
   @Output() returnEvent = new EventEmitter();
 
