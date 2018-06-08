@@ -40,7 +40,7 @@ export class HomeComponent implements OnInit {
   }
 
   loadExtension() {
-    this.extensionService.getExtension("0x018ad16649D90F4A3A8195b57677491C687b5309").subscribe(ret => {
+    this.extensionService.getExtension("0x018ad16649D90F4A3A8195b57677491C687b5309").subscribe(test => {
       
     });
   }
