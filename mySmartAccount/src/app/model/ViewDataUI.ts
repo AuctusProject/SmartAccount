@@ -1,6 +1,6 @@
 import { ParameterDataUI } from "./ParameterDataUI";
 
-export class ViewDataParameter {
+export class ViewDataUI {
     funcSignature: string;
     output: ParameterDataUI;
 

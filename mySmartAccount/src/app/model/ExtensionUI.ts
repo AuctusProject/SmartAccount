@@ -1,6 +1,6 @@
-import { ViewDataParameter } from "./ViewDataParameter";
+import { ViewDataUI } from "./ViewDataUI";
 import { ParameterDataUI } from "./ParameterDataUI";
-import { ActionParameter } from "./ActionParameter";
+import { ActionUI } from "./ActionUI";
 
 export class ExtensionUI {
     name : string;
@@ -9,8 +9,8 @@ export class ExtensionUI {
     viewDatasCount: number;
     setupParametersCount: number;
     setupParameters: ParameterDataUI[] = new Array<ParameterDataUI>();
-    viewDataParameters: ViewDataParameter[] = new Array<ViewDataParameter>();
-    actions: ActionParameter[] = new Array<ActionParameter>();
+    viewDataParameters: ViewDataUI[] = new Array<ViewDataUI>();
+    actions: ActionUI[] = new Array<ActionUI>();
 
     constructor() {
     }
@@ -19,11 +19,11 @@ export class ExtensionUI {
         this.setupParameters.push(setupParameter);
     }
 
-    addViewDataParameter(viewDataParameter : ViewDataParameter){
+    addViewDataParameter(viewDataParameter : ViewDataUI){
         this.viewDataParameters.push(viewDataParameter);
     }
 
-    addAction(action : ActionParameter){
+    addAction(action : ActionUI){
         this.actions.push(action);
     }
 

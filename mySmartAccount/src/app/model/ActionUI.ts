@@ -1,6 +1,6 @@
 import { ParameterUI } from "./ParameterUI";
 
-export class ActionParameter {
+export class ActionUI {
     funcSignature: string;
     description: string;
     args: ParameterUI[] = new Array<ParameterUI>();
