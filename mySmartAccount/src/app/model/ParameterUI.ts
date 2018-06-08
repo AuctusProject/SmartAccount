@@ -14,23 +14,17 @@ export class ParameterUI {
     }
 
     getWeb3Type() {
-        switch (this.type) {
-            case 1:
-                return "uint256";
-            case 2:
-                return "uint256";
-            case 3:
-                return "address";
-            case 4:
-                return "bool";
-            case 5:
-                return "uint256";
-            case 6:
-                return "string";
-            case 8:
-                return "address";
-            default:
-                return "bytes32";
-          }
+        let append = this.isArray ?  "[]" : "";
+        if (this.type == 1 || this.type == 2 || this.type == 5) {
+            return "uint256" + append;
+        } else if (this.type == 4) {
+            return "bool" + append;
+        } else if (this.type == 3 || this.type == 8) {
+            return "address" + append;
+        } else if (this.type == 6) {
+            return "string";
+        } else {
+            return "bytes";
+        }
     }
 }

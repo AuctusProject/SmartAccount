@@ -60,14 +60,14 @@ export class HomeComponent implements OnInit {
     let self = this;
     return new Observable(observer => {
       self.smartAccountService.getSmartAccountVersion(smartAccountStorage.address).subscribe(ret => {
-        smartAccountStorage.version = ret;
-        if (smartAccountStorage.version) {
+        smartAccountStorage["version"] = ret;
+        if (ret) {
           self.smartAccountService.getETHBalance(smartAccountStorage.address).subscribe(ret => {
-            smartAccountStorage.balance = ret;
+            smartAccountStorage["balance"] = ret;
             observer.next(smartAccountStorage);
           });
         } else {
-          smartAccountStorage.balance = 0;
+          smartAccountStorage["balance"] = 0;
           observer.next(smartAccountStorage);
         }
       });

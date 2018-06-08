@@ -1,10 +1,10 @@
-import { ParameterDataUI } from "./ParameterDataUI";
+import { ParameterUI } from "./ParameterUI";
 
 export class ViewDataUI {
     funcSignature: string;
-    output: ParameterDataUI;
+    output: ParameterUI;
 
-    constructor(funcSignature?: string, output?: ParameterDataUI) {
+    constructor(funcSignature?: string, output?: ParameterUI) {
         this.funcSignature = funcSignature;
         this.output = output;
       }

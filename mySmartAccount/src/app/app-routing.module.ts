@@ -9,7 +9,7 @@ import { RedirectProvider } from './provider/redirect.provider';
 const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
     { path: 'home', component: HomeComponent, canActivate: [RedirectProvider] },
-    { path: 'account', component: AccountComponent },
+    { path: 'account', component: AccountComponent, data: {smartAccount:{}} },
     { path: 'extension', component: ExtensionEditComponent }
 ];
 

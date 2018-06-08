@@ -1,9 +1,10 @@
 <mat-list *ngIf="variables.showList">
+    <!--
 <app-token-list-item 
     *ngFor="let tokenBalanceItem of tokenBalanceList" 
     [tokenBalance]="tokenBalanceItem" 
     (selectedTokenEvent)="updateFrame($event)">
-</app-token-list-item>
+</app-token-list-item> !-->
 <mat-divider></mat-divider>
 <button color="primary" class="mat-raised-button mat-primary" style="width: 100%;" [routerLink]="['/add-token']">add new token</button>
  </mat-list>

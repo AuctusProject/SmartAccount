@@ -1,5 +1,5 @@
 import { ViewDataUI } from "./ViewDataUI";
-import { ParameterDataUI } from "./ParameterDataUI";
+import { ParameterUI } from "./ParameterUI";
 import { ActionUI } from "./ActionUI";
 
 export class ExtensionUI {
@@ -8,14 +8,14 @@ export class ExtensionUI {
     actionsCount: number;
     viewDatasCount: number;
     setupParametersCount: number;
-    setupParameters: ParameterDataUI[] = new Array<ParameterDataUI>();
+    setupParameters: ParameterUI[] = new Array<ParameterUI>();
     viewDataParameters: ViewDataUI[] = new Array<ViewDataUI>();
     actions: ActionUI[] = new Array<ActionUI>();
 
     constructor() {
     }
 
-    addSetupParameter(setupParameter : ParameterDataUI){
+    addSetupParameter(setupParameter : ParameterUI){
         this.setupParameters.push(setupParameter);
     }
 
@@ -30,7 +30,7 @@ export class ExtensionUI {
     getSetupWeb3Types(): string[] {
         var ret = [];
         this.setupParameters.forEach(element => {
-            ret.push(element.ui.getWeb3Type());
+            ret.push(element.getWeb3Type());
         });
         return ret;
     }

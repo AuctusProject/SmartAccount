@@ -7,19 +7,9 @@ export class SmartAccountStorage {
     tokens: TokenStorage[] = new Array<TokenStorage>();
     extensions: ExtensionStorage[] = new Array<ExtensionStorage>();
 
-    balance: number;
-    version: string;
-
     constructor(name?: string, address?: string){
         this.name = name;
         this.address = address;
-    }
-
-    setInvalidAccount() {
-        this.balance = 0;
-        this.version = null;
-        this.tokens = new Array<TokenStorage>();
-        this.extensions = new Array<ExtensionStorage>();
     }
 
     addTokenData(symbol: string, decimals: number, address: string): boolean {

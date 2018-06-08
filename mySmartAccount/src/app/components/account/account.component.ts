@@ -3,7 +3,7 @@ import { SmartAccountService } from '../../services/smart-account.service';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { SmartAccountStorage } from '../../model/SmartAccountStorage';
 import { TokenStorage } from '../../model/TokenStorage';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
@@ -13,15 +13,17 @@ import { Observable } from 'rxjs/Observable';
 })
 export class AccountComponent implements OnInit {
 
-  @Input() smartAccount: SmartAccountStorage;
+  smartAccount: SmartAccountStorage;
 
   constructor(private smartAccountService: SmartAccountService, 
     private localStorageService: LocalStorageService,
     private router: Router, 
+    private route: ActivatedRoute,
     private zone : NgZone) { }
 
   ngOnInit() {
-    if (!this.smartAccount || !this.smartAccount.version) {
+    this.smartAccount = this.route.snapshot.data["smartAccount"];
+    if (!this.smartAccount) {
       this.back();
     } else {
       this.load();
@@ -31,7 +33,7 @@ export class AccountComponent implements OnInit {
   load() {
     let self = this;
     this.smartAccountService.getETHBalance(this.smartAccount.address).subscribe(ret => {
-      self.smartAccount.balance = ret;
+      self.smartAccount["balance"] = ret;
     });
     for(let i = 0; i < this.smartAccount.tokens.length; ++i) {
       self.setTokenBalance(this.smartAccount.address, this.smartAccount.tokens[i]);
@@ -48,7 +50,7 @@ export class AccountComponent implements OnInit {
 
   setTokenBalance(smartAddress: string, token: TokenStorage) {
     this.smartAccountService.getTokenBalance(smartAddress, token.address, token.decimals).subscribe(ret => {
-      token.balance = ret;
+      token["balance"] = ret;
     });
   }
 
