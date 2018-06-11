@@ -6,6 +6,8 @@ import { environment } from '../../environments/environment';
 import { LocalStorageService } from './local-storage.service';
 import { ExtensionUI } from "../model/ExtensionUI";
 import { ActionUI } from "../model/ActionUI";
+import { ParameterUI } from "../model/ParameterUI";
+import { ViewDataUI } from "../model/ViewDataUI";
 
 @Injectable()
 export class ExtensionService {
@@ -34,34 +36,15 @@ export class ExtensionService {
         extensionUi.viewDatasCount = values[3];
         extensionUi.setupParametersCount = values[4];
         combineLatest(self.getActions(extensionAddress, extensionUi.actionsCount),
-        self.getActions(extensionAddress, extensionUi.actionsCount)).subscribe(function handleValues(values) {
-          var test = values;
+        self.getViewDataParams(extensionAddress, extensionUi.viewDatasCount),
+        self.getSetupParameters(extensionAddress, extensionUi.setupParametersCount)).subscribe(function handleValues(values) {
+          extensionUi.actions = values[0];
+          extensionUi.viewDataParameters = values[1];
+          extensionUi.setupParameters = values[2];
+          observer.next(extensionUi);
         });
-
       });
-      observer.next(extensionUi);
     });
-          /*Observable.combineLatest(this.web3Service.callConstMethod(contractInstance, "getName"),
-            this.web3Service.callConstMethod(contractInstance, "getDescription"))
-            .subscribe(function handleValues(values) {
-              var extension = new Extension(extensionAddress, values[0], values[1]);
-              self.getSetupParameters(extension).subscribe(setup => {
-                self.getViewDatas(extension).subscribe(viewDatas => {
-                  self.getActions(extension).subscribe(actions => {
-                    var array = [];
-                    for (var i = 0; i < actions.length; ++i) {
-                      array.push(self.getActionParameters(i, actions[i], extension));
-                    }
-                    Observable.combineLatest(array)
-                      .subscribe(function handleValues(values) {
-                        observer.next(extension);
-                      });
-                  });
-                })
-              });
-            });
-        });
-    });*/
   }
 
   public callExtensionMethodWithSingleReturn(extensionAddress: string, methodName: string, returnType: string): Observable<any> {
@@ -78,13 +61,57 @@ export class ExtensionService {
     return new Observable(observer => {
       var array = [];
       for (var i = 0; i < actionsCount; ++i) {
-        self.web3Service.callConstMethodWithAbi(extensionAddress, environment.extensionBaseAbi, "getActionByIndex", ["bytes4", "string"], i + "").subscribe(r => {
-          let action = new ActionUI(r[0], r[1]);
-          array.push(action);
-        });
+        array.push(self.web3Service.callConstMethodWithAbi(extensionAddress, environment.extensionBaseAbi, "getActionByIndex", ["bytes4", "string"], i + ""));
       }
-      observer.next(array);
+      Observable.combineLatest(array).subscribe(function handleValues(values) {
+        var array2 = [];
+        values.forEach(param => {
+          let action = new ActionUI(param[0], param[1]);
+          array2.push(action);
+        });
+        observer.next(array2);
+      });
+    });
   }
+  
+  public getViewDataParams(extensionAddress: string, viewDataCount: number): Observable<any[]> {
+    var self = this;
+    return new Observable(observer => {
+      var array = [];
+      for (var i = 0; i < viewDataCount; ++i) {
+        array.push(self.web3Service.callConstMethodWithAbi(extensionAddress, environment.extensionBaseAbi, "getActionByIndex", ["bytes4", "bool", "uint256", "uint256", "string"], i + ""));
+      }
+      Observable.combineLatest(array).subscribe(function handleValues(values) {
+        var array2 = [];
+        values.forEach(param => {
+          let output = new ParameterUI(param[4], param[2], param[3], param[1], false);
+          let viewData = new ViewDataUI(param[0], output);
+          array2.push(viewData);
+        });
+        observer.next(array2);
+      });
+    });
+  }
+  
+  public getSetupParameters(extensionAddress: string, setupParametersCount: number): Observable<any[]> {
+    var self = this;
+    return new Observable(observer => {
+      var array = [];
+      for (var i = 0; i < setupParametersCount; ++i) {
+        array.push(self.web3Service.callConstMethodWithAbi(extensionAddress, environment.extensionBaseAbi, "getSetupParametersByIndex", ["bool", "bool", "uint256", "uint256", "string"], i + ""));
+      }
+      Observable.combineLatest(array).subscribe(function handleValues(values) {
+        var array2 = [];
+        values.forEach(param => {
+          let setupParam = new ParameterUI(param[4], param[2], param[3], param[1], param[0]);
+          array2.push(setupParam);
+        });
+        observer.next(array2);
+      });
+    });
+  }
+
+  
 /*
   public getExtensionList() : Extension[]{
     var extensionList = this.localStorageService.getLocalStorage("extension_list");
@@ -220,50 +247,6 @@ export class ExtensionService {
               observer.next(actionArray);
             });
         });
-    });
-  }
-
-  public getViewDatas(extension: Extension): Observable<boolean> {
-    var self = this;
-    return new Observable(observer => {
-      this.web3Service.callConstMethodWithAbi(extension.address, this.baseAbi, "viewDatasCount", ["uint256"]).subscribe(
-        result => {
-          var array = [];
-          for (var i = 0; i < result[0]; ++i) {
-            array.push(this.web3Service.callConstMethodWithAbi(extension.address, this.baseAbi, "getViewDataByIndex", ["bytes4", "string", "uint256", "bool"], i + ""));
-          }
-
-          Observable.combineLatest(array)
-            .subscribe(function handleValues(values) {
-              values.forEach(viewData => {
-                extension.addViewDataParameter(new ExtensionViewDataParameters(viewData[0], viewData[1], viewData[2], viewData[3]));
-              });
-              observer.next(true);
-            });
-        }
-      );
-    });
-  }
-
-  public getSetupParameters(extension: Extension): Observable<boolean> {
-    var self = this;
-    return new Observable(observer => {
-      this.web3Service.callConstMethodWithAbi(extension.address, this.baseAbi, "setupParametersCount", ["uint256"]).subscribe(
-        result => {
-          var array = [];
-          for (var i = 0; i < result[0]; ++i) {
-            array.push(this.web3Service.callConstMethodWithAbi(extension.address, this.baseAbi, "getSetupParametersByIndex", ["bool", "string", "uint256", "bool"], i + ""));
-          }
-
-          Observable.combineLatest(array)
-            .subscribe(function handleValues(values) {
-              values.forEach(setup => {
-                extension.addSetupParameter(new ExtensionSetupParameters(setup[0], setup[1], setup[2], setup[3]));
-              });
-              observer.next(true);
-            });
-        }
-      );
     });
   }*/
 }
