@@ -1,18 +1,13 @@
+<app-header [backDestination]="getBackDestination()"></app-header>
 <div fxLayout="row">
-    <h1>My Smart Account <div class="address-container"><a class="address" href="https://ropsten.etherscan.io/address/{{smartAccount.contractAddress}}" target="_blank">{{smartAccount.contractAddress}}</a></div></h1>
-    <button class="logoff" (click)="back()">
-        <mat-icon>exit_to_app</mat-icon>
-    </button>
+    <h2>{{smartAccount.name}} 
+      <div class="address-container">
+        <a class="address" href="{{getAddressLink()}}" target="_blank">{{smartAccount.address}}</a>
+      </div>
+    </h2>
 </div>
 <mat-accordion>
   <app-eth-balance [smartAccountAddress]="smartAccount.address" [ethBalance]="smartAccount.balance"></app-eth-balance>
   <app-token-list [smartAccountAddress]="smartAccount.address" [tokenBalanceList]="smartAccount.tokens"></app-token-list>
-  <mat-expansion-panel>
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        Extensions Marketplace
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <app-extension-list></app-extension-list>
-  </mat-expansion-panel>
+  <app-extension-list [smartAccountAddress]="smartAccount.address" [extensionList]="smartAccount.extensions"></app-extension-list>
 </mat-accordion>

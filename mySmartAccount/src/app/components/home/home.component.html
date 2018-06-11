@@ -1,7 +1,15 @@
-<h1>My Smart Account</h1>
-
+<app-header></app-header>
 <div fxLayout="column" fxLayoutGap="20px">
-  <p>We couldn't find any smart account associated to you.</p>
+  <mat-expansion-panel [disabled]="true" [hideToggle]="true" [expanded]="true">
+    <mat-list>
+      <mat-list-item *ngFor="let smartAccount of accountData.smartAccounts" (click)="goToSmartAccount(smartAccount.address)" >
+        <span fxFlex="70">{{smartAccount.name}}</span>
+        <span fxFlex="20" *ngIf="!smartAccount.version"><mat-icon>warning</mat-icon></span>
+        <span fxFlex="20" *ngIf="smartAccount.version"><small>{{smartAccount.balance}} ETH</small></span>
+        <span class="pull-right" (click)="remove(smartAccount.address)"><mat-icon>clear</mat-icon></span>
+      </mat-list-item>
+    </mat-list>
+  </mat-expansion-panel>
   <div fxLayout="column" fxLayoutGap="20px">
     <form (ngSubmit)="save()" *ngIf="adding">
       <mat-form-field class="full-width">
@@ -15,7 +23,7 @@
         <button mat-raised-button fxFlex="50" [disabled]="executing" (click)="clearAdding()">CANCEL</button>
       </div>
     </form>
-    <button mat-raised-button fxFlex="100" (click)="import()" *ngIf="!adding">IMPORT EXISTING</button>
     <button mat-raised-button fxFlex="100" color="primary" (click)="create()" *ngIf="!adding">CREATE NEW</button>
+    <button mat-raised-button fxFlex="100" (click)="import()" *ngIf="!adding">IMPORT EXISTING</button>
   </div>
 </div>

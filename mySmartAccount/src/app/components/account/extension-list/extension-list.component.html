@@ -1,0 +1,35 @@
+<mat-expansion-panel>
+    <mat-expansion-panel-header>
+        <mat-panel-title>Extensions</mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-list *ngIf="showList">
+        <mat-list-item *ngFor="let extension of extensionList" (click)="extensionDetails(extension.address)" >
+            <span fxFlex="72">{{getName(extension.address)}}</span>
+            <span fxFlex="25" class="bold active" *ngIf="isActive(extension.address)">ACTIVE</span>
+            <span fxFlex="25" class="bold inactive" *ngIf="!isActive(extension.address)">INACTIVE</span>
+            <span class="pull-right"><mat-icon>chevron_right</mat-icon></span>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+        <div fxLayout="row">
+            <button fxFlex="100" color="primary" class="mat-raised-button mat-primary" (click)="setNewExtension()">ADD NEW EXTENSION</button>
+        </div>
+    </mat-list>
+    <div *ngIf="showIdentifiers">
+        <div fxLayout="column">
+            <div fxLayout="row">
+                <span fxFlex="75">{{getName(selectedExtension.address)}}</span>
+                <ui-switch fxFlex="25" [(ngModel)]="selectedActive" (change)="onChangeActiveStatus($event)"></ui-switch>
+            </div>
+            <mat-list fxFlex="100">
+                <mat-list-item *ngFor="let identifier of selectedExtension.identifiers" (click)="goToIdentifier()" >
+                    <span fxFlex="90">{{identifier.name}}</span>
+                    <span class="pull-right"><mat-icon>chevron_right</mat-icon></span>
+                </mat-list-item>
+            </mat-list>
+        </div>
+        <div fxLayout="row" fxLayoutGap="10px">
+            <button class="mat-raised-button" fxFlex="50" mat-button (click)="back()">BACK</button>
+            <button color="primary" fxFlex="50" class="mat-raised-button mat-primary" mat-button (click)="setNewConfiguration()">NEW CONFIGURATION</button>
+        </div>
+    </div>
+</mat-expansion-panel>

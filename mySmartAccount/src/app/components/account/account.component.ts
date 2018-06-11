@@ -26,7 +26,7 @@ export class AccountComponent implements OnInit {
     this.route.params.subscribe(params => {
       self.smartAccount = self.localStorageService.getAccountData().getSmartAccount(params["address"]);
       if (!self.smartAccount) {
-        self.back();
+        this.zone.run(() => this.router.navigate(['home']));
       } else {
         self.load();
       }
@@ -42,8 +42,25 @@ export class AccountComponent implements OnInit {
       self.setTokenBalance(this.smartAccount.address, this.smartAccount.tokens[i]);
     }
     this.smartAccountService.getExtensions(this.smartAccount.address).subscribe(extension => {
-      for(let i = 0; i < extension.length; ++i) {
-        self.smartAccount.setExtensionIdentifiers(extension[i].address, extension[i].getIdentifiersList());
+      for(let i = 0; i < self.smartAccount.extensions.length; ++i) {
+        let isRemoved = true;
+        if (extension) {
+          for(let j = 0; j < extension.length; ++j) {
+            if (self.smartAccount.extensions[i].address == extension[j].address) {
+              isRemoved = false;
+              break;
+            }
+          }
+        }
+        if (isRemoved) {
+          self.smartAccount.removeExtension(self.smartAccount.extensions[i].address);
+        }
+      }
+      if (extension) {
+        for(let i = 0; i < extension.length; ++i) {
+          self.smartAccount.addExtension(extension[i].address);
+          self.smartAccount.setExtensionIdentifiers(extension[i].address, extension[i].getIdentifiersList());
+        }
       }
       let account = self.localStorageService.getAccountData();
       account.updateSmartAccount(self.smartAccount);
@@ -57,7 +74,29 @@ export class AccountComponent implements OnInit {
     });
   }
 
-  back(){
-    this.zone.run(() => this.router.navigate(['home']));
+  getBackDestination(){
+    return ['home'];
+  }
+
+  getAddressLink() {
+    let chainId = this.smartAccountService.getNetwork();
+    let start;
+    switch (chainId) {
+      case "1":
+        start = "";
+        break;
+      case "2":
+        start = "ropsten.";
+        break;
+      case "3":
+        start = "kovan.";
+        break;
+      case "4":
+        start = "rinkeby.";
+        break;
+      default: 
+        return "#";
+    }
+    return "https://" + start + "etherscan.io/address/" + this.smartAccount.address;
   }
 }

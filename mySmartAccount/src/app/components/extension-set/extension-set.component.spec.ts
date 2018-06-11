@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ExtensionListItemComponent } from './extension-list-item.component';
+import { ExtensionSetComponent } from './extension-set.component';
 
-describe('ExtensionListItemComponent', () => {
-  let component: ExtensionListItemComponent;
-  let fixture: ComponentFixture<ExtensionListItemComponent>;
+describe('ExtensionSetComponent', () => {
+  let component: ExtensionSetComponent;
+  let fixture: ComponentFixture<ExtensionSetComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ExtensionListItemComponent ]
+      declarations: [ ExtensionSetComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ExtensionListItemComponent);
+    fixture = TestBed.createComponent(ExtensionSetComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

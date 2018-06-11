@@ -44,6 +44,16 @@ export class SmartAccountStorage {
         return true;
     }
 
+    removeExtension(address: string): boolean {
+        for(let i = 0; i < this.extensions.length; ++i) {
+            if (this.extensions[i].address == address) {
+                this.extensions.splice(i, 1);
+                return true;
+            }
+        }
+        return false;
+    }
+
     setExtensionIdentifiers(extensionAddress: string, readIdentifiers: string[]): boolean {
         for(let i = 0; i < this.extensions.length; ++i) {
             if (this.extensions[i].address == extensionAddress) {
