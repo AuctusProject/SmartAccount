@@ -31,18 +31,11 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    /*this.executing = false;
+    this.executing = false;
     this.adding = false;
     this.importing = false;
     this.contractAddress = "";
-    this.load();*/
-    this.loadExtension();
-  }
-
-  loadExtension() {
-    this.extensionService.getExtension("0x018ad16649D90F4A3A8195b57677491C687b5309").subscribe(test => {
-      
-    });
+    this.load();
   }
 
   clearAdding() {
@@ -135,12 +128,22 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  remove(address: string) {
+    let accountData = this.localStorageService.getAccountData();
+    accountData.removeSmartAccount(address);
+    this.localStorageService.setAccountData(accountData);
+  }
+
+  goToSmartAccount(address: string) {
+    this.zone.run(() => this.router.navigate(['account', address]));
+  }
+
   redirect() {
     let accountData = this.localStorageService.getAccountData();
     accountData.addSmartAccount(this.name, this.contractAddress);
     this.localStorageService.setAccountData(accountData);
     let address = this.contractAddress;
     this.clearAdding();
-    this.zone.run(() => this.router.navigate(['account', address]));
+    this.goToSmartAccount(address);
   }
 }

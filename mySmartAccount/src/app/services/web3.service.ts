@@ -85,6 +85,10 @@ export class Web3Service {
     return "0x5b7991cd";
   }
 
+  public getExtensionRolesData(): string {
+    return "0x71061398";
+  }
+
   public getExtensionByIndexData(index: number): string {
     return "0x98413ff1" + SolidityCoder.encodeParams(["uint256"], [index]);;
   }
@@ -93,7 +97,7 @@ export class Web3Service {
     return "0x54fd4d50";
   }
 
-  public getNetwork(): Observable<number> {
+  public getNetwork(): Observable<string> {
     let self = this;
     return new Observable(observer => {
       self.getWeb3().subscribe(web3 => {
@@ -202,7 +206,7 @@ export class Web3Service {
     });
   }
 
-  public transferToken(smartAccountAddress: string, loggedWallet: string, tokenAddress: string, to: string, amount: number, decimals: number, chainId: number): Observable<string> {
+  public transferToken(smartAccountAddress: string, loggedWallet: string, tokenAddress: string, to: string, amount: number, decimals: number, chainId: string): Observable<string> {
     let tokenData = this.getTransferTokenData(to, this.toWei(amount.toString(), decimals));
     let data = this.getExecuteCallData(tokenAddress, 0, 0, tokenData);
     let self = this;
@@ -213,7 +217,7 @@ export class Web3Service {
     });
   }
 
-  public sendEther(smartAccountAddress: string, loggedWallet: string, to: string, amount: number, chainId: number): Observable<string> {
+  public sendEther(smartAccountAddress: string, loggedWallet: string, to: string, amount: number, chainId: string): Observable<string> {
     let data = this.getExecuteCallData(to, this.toWei(amount.toString()), 0, "");
     let self = this;
     return new Observable(observer => {
@@ -268,7 +272,7 @@ export class Web3Service {
   }
 
   public sendTransaction(from: string, to: string, value: number, data: string, 
-    gasPrice: number, gasLimit: number, chainId: number): Observable<string> {
+    gasPrice: number, gasLimit: number, chainId: string): Observable<string> {
 
     let self = this;
     return new Observable(observer => {

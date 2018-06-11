@@ -1,0 +1,11 @@
+app-extension-list-item{
+    width: 100%;
+}
+
+.active {
+    color: green;
+}
+
+.inactive {
+    color: red;
+}

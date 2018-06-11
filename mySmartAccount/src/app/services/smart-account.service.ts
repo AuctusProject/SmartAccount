@@ -17,7 +17,7 @@ export class SmartAccountService {
 
   public hasWeb3: boolean;
   private account: string;
-  private network: number;
+  private network: string;
 
   constructor(private router: Router, 
     private eventsService: EventsService, 
@@ -37,10 +37,10 @@ export class SmartAccountService {
         if (!self.getNetwork()) {
           return;
         }
-        if (self.account && self.account != account) {
+        if (self.account != account) {
+          self.account = account;
           self.broadcastAccountChanged(account);
         }
-        self.account = account;
       });
     setTimeout(this.monitoreAccount, 5000);
   }
@@ -96,7 +96,7 @@ export class SmartAccountService {
     return this.account;
   }
 
-  public getNetwork(): number {
+  public getNetwork(): string {
     return this.network;
   }
 
@@ -203,6 +203,16 @@ export class SmartAccountService {
       let data = self.web3Service.getSmartAccountVersionData();
       self.web3Service.callConstMethodWithData(data, smartAccountAddress, ["string"]).subscribe(result => {
         observer.next(result);
+      });
+    });
+  }
+
+  public getRolesId(extensionAddress: string): Observable<string[]> {
+    let self = this;
+    return new Observable(observer => {
+      let data = self.web3Service.getExtensionRolesData();
+      self.web3Service.callConstMethodWithData(data, extensionAddress, ["bytes32[]"]).subscribe(result => {
+        observer.next(result[0]);
       });
     });
   }

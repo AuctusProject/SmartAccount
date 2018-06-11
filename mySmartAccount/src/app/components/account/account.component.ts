@@ -26,7 +26,7 @@ export class AccountComponent implements OnInit {
     this.route.params.subscribe(params => {
       self.smartAccount = self.localStorageService.getAccountData().getSmartAccount(params["address"]);
       if (!self.smartAccount) {
-        self.back();
+        this.zone.run(() => this.router.navigate(['home']));
       } else {
         self.load();
       }
@@ -57,7 +57,29 @@ export class AccountComponent implements OnInit {
     });
   }
 
-  back(){
-    this.zone.run(() => this.router.navigate(['home']));
+  getBackDestination(){
+    return ['home'];
+  }
+
+  getAddressLink() {
+    let chainId = this.smartAccountService.getNetwork();
+    let start;
+    switch (chainId) {
+      case "1":
+        start = "";
+        break;
+      case "2":
+        start = "ropsten.";
+        break;
+      case "3":
+        start = "kovan.";
+        break;
+      case "4":
+        start = "rinkeby.";
+        break;
+      default: 
+        return "#";
+    }
+    return "https://" + start + "etherscan.io/address/" + this.smartAccount.address;
   }
 }
