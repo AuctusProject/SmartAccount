@@ -24,7 +24,7 @@ import { TokenListComponent } from './components/account/token-list/token-list.c
 import { Web3Service } from './services/web3.service';
 import { SmartAccountService } from './services/smart-account.service';
 import { EventsServiceModule } from 'angular-event-service';
-import { ExtensionEditComponent } from './components/extension-edit/extension-edit.component';
+import { ExtensionSetComponent } from './components/extension-set/extension-set.component';
 import { HomeComponent } from './components/home/home.component';
 import { AccountComponent } from './components/account/account.component';
 import { RedirectProvider } from './provider/redirect.provider';
@@ -37,7 +37,7 @@ import { ExtensionService } from './services/extension.service';
     ExtensionListComponent,
     EthBalanceComponent,
     TokenListComponent,
-    ExtensionEditComponent,
+    ExtensionSetComponent,
     HomeComponent,
     AccountComponent,
     HeaderComponent

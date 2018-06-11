@@ -84,7 +84,8 @@ export class ExtensionService {
         });
       }
       observer.next(array);
-  }
+  });
+}
 /*
   public getExtensionList() : Extension[]{
     var extensionList = this.localStorageService.getLocalStorage("extension_list");

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { EventsService } from 'angular-event-service';
 import { Observable } from 'rxjs/Observable';
+import { Subscriber } from 'rxjs';
 import * as SolidityCoder from 'web3/lib/solidity/coder';
 import { environment } from '../../environments/environment';
 import * as utils from 'web3-utils';
@@ -225,6 +226,27 @@ export class Web3Service {
         observer.next(ret);
       });
     });
+  }
+
+  public isMined(txHash): Observable<boolean> {
+    let self = this;
+    return new Observable(observer => {
+      return self.isMinedTransaction(observer, txHash);
+    });
+  }
+
+  private isMinedTransaction(observer: Subscriber<boolean>, txHash: string) {
+    var self = this;
+    self.getTransactionReceipt(txHash).subscribe(
+      receipt => {
+        if (receipt) {
+          observer.next(true);
+        } else {
+          setTimeout(() => {
+            self.isMinedTransaction(observer, txHash);
+          }, 5000);
+        }
+      });
   }
 
   public getTransactionReceipt(hash): Observable<any> {

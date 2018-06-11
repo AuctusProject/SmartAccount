@@ -1,9 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, NgZone } from '@angular/core';
 import { LocalStorageService } from '../../../services/local-storage.service';
 import { environment } from '../../../../environments/environment';
 import { SmartAccountService } from '../../../services/smart-account.service';
 import { ExtensionStorage } from '../../../model/ExtensionStorage';
 import { Observable } from 'rxjs/Observable';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-extension-list',
@@ -20,7 +21,10 @@ export class ExtensionListComponent implements OnInit {
   selectedExtension: ExtensionStorage;
   selectedActive: boolean;
 
-  constructor(private localStorageService: LocalStorageService, private smartAccountService : SmartAccountService) { }
+  constructor(private localStorageService: LocalStorageService, 
+    private smartAccountService : SmartAccountService,
+    private router: Router,
+    private zone : NgZone) { }
 
   ngOnInit() {
     this.allExtensions = this.extensionList;
@@ -99,5 +103,6 @@ export class ExtensionListComponent implements OnInit {
   }
 
   onChangeActiveStatus(active: boolean) {
+    this.zone.run(() => this.router.navigate(['extension', this.smartAccountAddress, this.selectedExtension.address ]));
   }
 }
