@@ -4,7 +4,8 @@ import { Observable } from 'rxjs';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { environment } from '../../environments/environment';
 import { LocalStorageService } from './local-storage.service';
-import { ExtensionUI } from "../model/ExtensionUI"; 
+import { ExtensionUI } from "../model/ExtensionUI";
+import { ActionUI } from "../model/ActionUI";
 
 @Injectable()
 export class ExtensionService {
@@ -12,7 +13,6 @@ export class ExtensionService {
   contractInstance: any;
   extensionName: any;
   extensionDescription: any;
-  baseAbi: string = '[{"constant":true,"inputs":[{"name":"_reference","type":"address"}],"name":"getIdentifiersCount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"baseExtensionVersion","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getName","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"pure","type":"function"},{"constant":true,"inputs":[],"name":"getDescription","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"pure","type":"function"},{"constant":true,"inputs":[{"name":"index","type":"uint256"}],"name":"getSetupParametersByIndex","outputs":[{"name":"","type":"bool"},{"name":"","type":"string"},{"name":"","type":"uint256"},{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_reference","type":"address"},{"name":"_index","type":"uint256"}],"name":"getIdentifierByIndex","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_reference","type":"address"}],"name":"getIdentifiers","outputs":[{"name":"","type":"bytes32[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"actionIndex","type":"uint256"},{"name":"parameterIndex","type":"uint256"}],"name":"getActionParameterByIndexes","outputs":[{"name":"","type":"string"},{"name":"","type":"uint256"},{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"index","type":"uint256"}],"name":"getViewDataByIndex","outputs":[{"name":"","type":"bytes4"},{"name":"","type":"string"},{"name":"","type":"uint256"},{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"viewDatasCount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"actionsCount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getSetupFunction","outputs":[{"name":"","type":"bytes4"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"index","type":"uint256"}],"name":"getActionByIndex","outputs":[{"name":"","type":"bytes4"},{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"index","type":"uint256"}],"name":"actionParametersCountByIndex","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"setupParametersCount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"}]';
 
   constructor(private web3Service: Web3Service, private localStorageService : LocalStorageService) { }
 
@@ -21,11 +21,23 @@ export class ExtensionService {
 
     return new Observable(observer => {
       let extensionUi = new ExtensionUI();
-      combineLatest(this.web3Service.callConstMethodWithAbi(extensionAddress, this.baseAbi, "getName", ["string"]),
-      this.web3Service.callConstMethodWithAbi(extensionAddress, this.baseAbi, "getDescription", ["string"]))
+      combineLatest(self.callExtensionMethodWithSingleReturn(extensionAddress, "getName", "string"),
+      self.callExtensionMethodWithSingleReturn(extensionAddress, "getDescription", "string"),
+      self.callExtensionMethodWithSingleReturn(extensionAddress, "getActionsCount", "uint256"),
+      self.callExtensionMethodWithSingleReturn(extensionAddress, "getViewDatasCount", "uint256"),
+      self.callExtensionMethodWithSingleReturn(extensionAddress, "getSetupParametersCount", "uint256"))
       .subscribe(function handleValues(values) {
+        extensionUi.address = extensionAddress;
         extensionUi.name = values[0];
         extensionUi.description = values[1];
+        extensionUi.actionsCount = values[2];
+        extensionUi.viewDatasCount = values[3];
+        extensionUi.setupParametersCount = values[4];
+        combineLatest(self.getActions(extensionAddress, extensionUi.actionsCount),
+        self.getActions(extensionAddress, extensionUi.actionsCount)).subscribe(function handleValues(values) {
+          var test = values;
+        });
+
       });
       observer.next(extensionUi);
     });
@@ -50,6 +62,28 @@ export class ExtensionService {
             });
         });
     });*/
+  }
+
+  public callExtensionMethodWithSingleReturn(extensionAddress: string, methodName: string, returnType: string): Observable<any> {
+    let self = this;
+    return new Observable(observer => {
+      self.web3Service.callConstMethodWithAbi(extensionAddress, environment.extensionBaseAbi, methodName, [returnType]).subscribe(r => {
+        observer.next(r);
+      });
+    });
+  }
+
+  public getActions(extensionAddress: string, actionsCount: number): Observable<any[]> {
+    var self = this;
+    return new Observable(observer => {
+      var array = [];
+      for (var i = 0; i < actionsCount; ++i) {
+        self.web3Service.callConstMethodWithAbi(extensionAddress, environment.extensionBaseAbi, "getActionByIndex", ["bytes4", "string"], i + "").subscribe(r => {
+          let action = new ActionUI(r[0], r[1]);
+          array.push(action);
+        });
+      }
+      observer.next(array);
   }
 /*
   public getExtensionList() : Extension[]{
@@ -145,12 +179,12 @@ export class ExtensionService {
   public getActionParameters(index: number, action: ExtensionAction, extension: Extension): Observable<boolean> {
     var self = this;
     return new Observable(observer => {
-      this.web3Service.callConstMethodWithAbi(extension.address, this.baseAbi, "actionParametersCountByIndex", ["uint256"], index + "").subscribe(
+      this.web3Service.callConstMethodWithAbi(extension.address, environment.extensionBaseAbi, "actionParametersCountByIndex", ["uint256"], index + "").subscribe(
         result => {
           if (result[0] == 0) observer.next(true);
           var array = [];
           for (var i = 0; i < result[0]; ++i) {
-            array.push(this.web3Service.callConstMethodWithAbi(extension.address, this.baseAbi, "getActionParameterByIndexes", ["string", "uint256", "bool"], index + "", i + ""));
+            array.push(this.web3Service.callConstMethodWithAbi(extension.address, environment.extensionBaseAbi, "getActionParameterByIndexes", ["string", "uint256", "bool"], index + "", i + ""));
           }
 
           Observable.combineLatest(array)
