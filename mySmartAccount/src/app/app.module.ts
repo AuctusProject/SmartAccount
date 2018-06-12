@@ -25,6 +25,7 @@ import { Web3Service } from './services/web3.service';
 import { SmartAccountService } from './services/smart-account.service';
 import { EventsServiceModule } from 'angular-event-service';
 import { ExtensionSetComponent } from './components/extension-set/extension-set.component';
+import { ExtensionInstanceDetailsComponent } from './components/extension-instance-details/extension-instance-details.component';
 import { HomeComponent } from './components/home/home.component';
 import { AccountComponent } from './components/account/account.component';
 import { RedirectProvider } from './provider/redirect.provider';
