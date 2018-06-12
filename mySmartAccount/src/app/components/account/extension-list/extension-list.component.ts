@@ -27,36 +27,7 @@ export class ExtensionListComponent implements OnInit {
     private zone : NgZone) { }
 
   ngOnInit() {
-    this.allExtensions = this.extensionList;
-    let marketPlaceAddresses = this.localStorageService.getAccountData().getMarketplaceExtensionsAddresses(this.smartAccountService.getNetwork());
-    let notAdded = []
-    for(let i = 0; i < marketPlaceAddresses.length; ++i) {
-      let existing = false;
-      for(let j = 0; j < this.extensionList.length; ++j) { 
-        if (this.extensionList[j].address == marketPlaceAddresses[i]) {
-          existing = true;
-          break;
-        }
-      }
-      if (!existing) {
-        notAdded.push(marketPlaceAddresses[i]);
-      }
-    }
-    let array = [];
-    for (let i = 0; i < notAdded.length; ++i) {
-      array.push(this.smartAccountService.getRolesId(notAdded[i]));
-    }
-    let self = this;
-    Observable.combineLatest(array)
-      .subscribe(function handleValues(values) {
-        for (let i = 0; i < values.length; ++i) {
-          let ext = new ExtensionStorage(notAdded[i]);
-          for (var j = 0; j < values[i].length; ++j) {
-            ext.addRoleId(values[i][j]);
-          }
-          self.allExtensions.push(ext);
-        }
-      });
+    this.allExtensions = this.localStorageService.getAccountData().getSmartAccount(this.smartAccountAddress).getAllExtensionList(this.smartAccountService.getNetwork());
     this.back();
   }
 

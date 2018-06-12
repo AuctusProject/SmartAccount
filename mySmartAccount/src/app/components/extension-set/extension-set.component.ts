@@ -37,26 +37,18 @@ export class ExtensionSetComponent implements OnInit {
       if (!self.smartAccountAddress || !self.extensionAddress) {
         self.zone.run(() => self.router.navigate(['home']));
       } else {
-        let extensions = self.localStorageService.getAccountData().getSmartAccount(self.smartAccountAddress).extensions;
-        for (let i = 0; i < extensions.length; ++i) {
-          if (extensions[i].address == self.extensionAddress) {
-            self.roles = self.smartAccountService.getRolesNames(extensions[i].rolesIds);
-            self.active = true;
+        let allExtensions = self.localStorageService.getAccountData().getSmartAccount(self.smartAccountAddress).getAllExtensionList(self.smartAccountService.getNetwork());
+        for (let i = 0; i < allExtensions.length; ++i) {
+          if (allExtensions[i].address == self.extensionAddress) {
+            self.roles = self.smartAccountService.getRolesNames(allExtensions[i].rolesIds);
+            self.active = !!allExtensions[i].dateUnix;
             break;
           }
         }
-        let ui = self.localStorageService.getAccountData().extensionUIs;
-        for (let i = 0; i < ui.length; ++i) {
-          if (ui[i].address == self.extensionAddress) {
-            self.name = ui[i].name;
-            self.description = ui[i].description;
-            break;
-          }
-        }
-        if (!self.active) {
-          self.smartAccountService.getRolesId(self.extensionAddress).subscribe(ret => {
-            self.roles = self.smartAccountService.getRolesNames(ret);
-          });
+        let ui = self.localStorageService.getAccountData().getExtensionUI(self.extensionAddress);
+        if (ui) {
+          self.name = ui.name;
+          self.description = ui.description;
         }
         self.executing = false;
       }

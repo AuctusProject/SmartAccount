@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 import { LocalStorageService } from '../../../services/local-storage.service';
 import { SmartAccountService } from '../../../services/smart-account.service';
 import { TokenStorage } from '../../../model/TokenStorage';
@@ -26,7 +26,7 @@ export class TokenListComponent implements OnInit {
 
   constructor(
     private localStorageService: LocalStorageService,
-    private smartAccountService: SmartAccountService) { }
+    private smartAccountService: SmartAccountService, private ref: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.cancel();

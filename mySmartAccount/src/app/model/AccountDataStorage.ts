@@ -91,31 +91,6 @@ export class AccountDataStorage {
         return false;
     }
 
-    getMarketplaceExtensionsAddresses(chainId: string): string[] {
-        let result = [];
-        switch (chainId) {
-            case "1": 
-                result.push('');
-                result.push('');
-                break;
-            case "2":
-                result.push('');
-                result.push('');
-                break;
-            case "3":
-                result.push('');
-                result.push('');
-                break;
-            case "4":
-                result.push('0x018ad16649D90F4A3A8195b57677491C687b5309');
-                //result.push('');
-                break;
-            default: 
-                break;
-        }
-        return result;
-    }
-
     getExtensionUI(address: string): ExtensionUI {
         for(let i = 0; i < this.extensionUIs.length; ++i) {
             if (this.extensionUIs[i].address == address) {

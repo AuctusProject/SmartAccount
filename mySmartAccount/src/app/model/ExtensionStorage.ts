@@ -6,8 +6,10 @@ export class ExtensionStorage {
     rolesIds: string[] = new Array<string>();
     identifiers: ExtensionIdentifierStorage[] = new Array<ExtensionIdentifierStorage>();
 
-    constructor(address?: string, dateUnix?: number) {
+    constructor(address?: string, dateUnix?: number, rolesIds?: string[]) {
         this.address = address;
+        this.dateUnix = dateUnix;
+        this.rolesIds = rolesIds;
     }
 
     getIdentifiersList(): string[] {

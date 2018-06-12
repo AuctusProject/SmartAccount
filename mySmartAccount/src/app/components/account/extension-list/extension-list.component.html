@@ -3,7 +3,7 @@
         <mat-panel-title>Extensions</mat-panel-title>
     </mat-expansion-panel-header>
     <mat-list *ngIf="showList">
-        <mat-list-item *ngFor="let extension of extensionList" (click)="extensionDetails(extension.address)" >
+        <mat-list-item *ngFor="let extension of allExtensions" (click)="extensionDetails(extension.address)" >
             <span fxFlex="72">{{getName(extension.address)}}</span>
             <span fxFlex="25" class="bold active" *ngIf="isActive(extension.address)">ACTIVE</span>
             <span fxFlex="25" class="bold inactive" *ngIf="!isActive(extension.address)">INACTIVE</span>
