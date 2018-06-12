@@ -34,13 +34,19 @@ export class SmartAccountStorage {
         return false;
     }
 
-    addExtension(address: string): boolean {
+    addExtension(address: string, dateUnix?: number, rolesIds?: string[]): boolean {
         for(let i = 0; i < this.extensions.length; ++i) {
             if (this.extensions[i].address == address) {
+                if (dateUnix) {
+                    this.extensions[i].dateUnix = dateUnix;
+                }
+                if (rolesIds) {
+                    this.extensions[i].rolesIds = rolesIds;
+                }
                 return true;
             }
         }
-        this.extensions.push(new ExtensionStorage(address));
+        this.extensions.push(new ExtensionStorage(address, dateUnix, rolesIds));
         return true;
     }
 

@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, NgZone } from '@angular/core';
 import { SmartAccountService } from '../../services/smart-account.service';
 import { LocalStorageService } from '../../services/local-storage.service';
+import { ExtensionService } from '../../services/extension.service';
 import { SmartAccountStorage } from '../../model/SmartAccountStorage';
 import { TokenStorage } from '../../model/TokenStorage';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -17,6 +18,7 @@ export class AccountComponent implements OnInit {
 
   constructor(private smartAccountService: SmartAccountService, 
     private localStorageService: LocalStorageService,
+    private extensionService: ExtensionService,
     private router: Router, 
     private route: ActivatedRoute,
     private zone : NgZone) { }
@@ -26,7 +28,7 @@ export class AccountComponent implements OnInit {
     this.route.params.subscribe(params => {
       self.smartAccount = self.localStorageService.getAccountData().getSmartAccount(params["address"]);
       if (!self.smartAccount) {
-        this.zone.run(() => this.router.navigate(['home']));
+        self.zone.run(() => self.router.navigate(['home']));
       } else {
         self.load();
       }
@@ -58,14 +60,32 @@ export class AccountComponent implements OnInit {
       }
       if (extension) {
         for(let i = 0; i < extension.length; ++i) {
-          self.smartAccount.addExtension(extension[i].address);
+          self.smartAccount.addExtension(extension[i].address, extension[i].dateUnix, extension[i].rolesIds);
           self.smartAccount.setExtensionIdentifiers(extension[i].address, extension[i].getIdentifiersList());
         }
       }
       let account = self.localStorageService.getAccountData();
       account.updateSmartAccount(self.smartAccount);
       self.localStorageService.setAccountData(account);
+      self.setExtensionUIs();
     });
+  }
+
+  setExtensionUIs() {
+    let self = this;
+    let accountData = this.localStorageService.getAccountData();
+    let allExtensions = this.smartAccount.getAllExtensionList(this.smartAccountService.getNetwork());
+    for (let i = 0; i < allExtensions.length; ++i) {
+      let ui = accountData.getExtensionUI(allExtensions[i].address);
+      if (!ui) {
+        this.extensionService.getExtension(allExtensions[i].address).subscribe(ret => {
+          if (ret) {
+            accountData.setExtensionUI(ret);
+            self.localStorageService.setAccountData(accountData);
+          }
+        });
+      }
+    }
   }
 
   setTokenBalance(smartAddress: string, token: TokenStorage) {

@@ -1,5 +1,6 @@
 import { SmartAccountStorage } from "./SmartAccountStorage";
 import { ExtensionUI } from "./ExtensionUI";
+import { ExtensionStorage } from "./ExtensionStorage";
 
 export class AccountDataStorage {
     smartAccounts: SmartAccountStorage[] = new Array<SmartAccountStorage>();
@@ -53,7 +54,15 @@ export class AccountDataStorage {
     getSmartAccount(address: string): SmartAccountStorage {
         for(let i = 0; i < this.smartAccounts.length; ++i) {
             if (this.smartAccounts[i].address == address) {
-                return Object.assign(new SmartAccountStorage, this.smartAccounts[i]);
+                let sa = Object.assign(new SmartAccountStorage, this.smartAccounts[i]);
+                if (sa && sa.extensions) {
+                    let ext = new Array<ExtensionStorage>();
+                    sa.extensions.forEach(element => {
+                        ext.push(Object.assign(new ExtensionStorage, element));
+                    });
+                    sa.extensions = ext;
+                }
+                return sa;
             }
         }
         return null;
@@ -73,14 +82,6 @@ export class AccountDataStorage {
             return smartAccount.removeTokenData(tokenAddress);
         }
         return false;
-    }
-
-    addExtension(smartAccountAddress: string, extensionAddress: string): boolean {
-        let smartAccount = this.getSmartAccount(smartAccountAddress);
-        if (smartAccount) {
-            return smartAccount.addExtension(extensionAddress);
-        }
-        return true;
     }
 
     setExtensionIdentifiers(smartAccountAddress: string, extensionAddress: string, readIdentifiers: string[]): boolean {

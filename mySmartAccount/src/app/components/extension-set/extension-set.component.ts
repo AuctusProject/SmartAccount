@@ -45,6 +45,11 @@ export class ExtensionSetComponent implements OnInit {
             break;
           }
         }
+        if (!self.roles) {
+          self.smartAccountService.getRolesId(self.extensionAddress).subscribe(ret => {
+            self.roles = self.smartAccountService.getRolesNames(ret);
+          });
+        }
         let ui = self.localStorageService.getAccountData().getExtensionUI(self.extensionAddress);
         if (ui) {
           self.name = ui.name;

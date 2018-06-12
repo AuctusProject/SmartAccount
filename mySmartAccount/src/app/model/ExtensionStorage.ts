@@ -9,7 +9,7 @@ export class ExtensionStorage {
     constructor(address?: string, dateUnix?: number, rolesIds?: string[]) {
         this.address = address;
         this.dateUnix = dateUnix;
-        this.rolesIds = rolesIds;
+        this.rolesIds = rolesIds ? rolesIds : new Array<string>();
     }
 
     getIdentifiersList(): string[] {
