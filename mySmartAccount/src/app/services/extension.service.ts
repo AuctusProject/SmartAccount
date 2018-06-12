@@ -60,16 +60,44 @@ export class ExtensionService {
     var self = this;
     return new Observable(observer => {
       var array = [];
+      var paramCountArray = [];
       for (var i = 0; i < actionsCount; ++i) {
         array.push(self.web3Service.callConstMethodWithAbi(extensionAddress, environment.extensionBaseAbi, "getActionByIndex", ["bytes4", "string"], i + ""));
+        paramCountArray.push(self.web3Service.callConstMethodWithAbi(extensionAddress, environment.extensionBaseAbi, "getActionParametersCountByIndex", ["uint256"], i + ""));
       }
-      Observable.combineLatest(array).subscribe(function handleValues(values) {
-        var array2 = [];
-        values.forEach(param => {
+      Observable.combineLatest(array).subscribe(function handleValues(actions) {
+        var actionArray = [];
+        actions.forEach(param => {
           let action = new ActionUI(param[0], param[1]);
-          array2.push(action);
+          actionArray.push(action);
         });
-        observer.next(array2);
+        Observable.combineLatest(paramCountArray).subscribe(function handleValues(paramCounts) {
+          var parameterArray = [];
+          let actionCount = 0;
+          paramCounts.forEach(param => {
+            for (var i = 0; i < param; ++i) {
+              parameterArray.push(self.web3Service.callConstMethodWithAbi(extensionAddress, environment.extensionBaseAbi, "getActionParameterByIndexes", ["bool", "uint256", "uint256", "string"], actionCount + "", i + ""));
+            }
+            actionCount++;
+          });
+          Observable.combineLatest(parameterArray).subscribe(function handleValues(parameters) {
+            let actionCount = 0;
+            let actionParamCount = 1;
+            let globalCount = 0;
+
+            while (globalCount < parameters.length) {
+              if (actionParamCount <= paramCounts[actionCount]) {
+                actionArray[actionCount].args.push(new ParameterUI(parameters[globalCount][3], parameters[globalCount][1], parameters[globalCount][2], parameters[globalCount][0], true));
+                actionParamCount++;
+                globalCount++;
+              } else {
+                actionParamCount = 1;
+                actionCount++;
+              }
+            }
+            observer.next(actionArray);
+          });
+        });
       });
     });
   }
@@ -82,13 +110,13 @@ export class ExtensionService {
         array.push(self.web3Service.callConstMethodWithAbi(extensionAddress, environment.extensionBaseAbi, "getActionByIndex", ["bytes4", "bool", "uint256", "uint256", "string"], i + ""));
       }
       Observable.combineLatest(array).subscribe(function handleValues(values) {
-        var array2 = [];
+        var viewDataArray = [];
         values.forEach(param => {
           let output = new ParameterUI(param[4], param[2], param[3], param[1], false);
           let viewData = new ViewDataUI(param[0], output);
-          array2.push(viewData);
+          viewDataArray.push(viewData);
         });
-        observer.next(array2);
+        observer.next(viewDataArray);
       });
     });
   }
@@ -101,12 +129,12 @@ export class ExtensionService {
         array.push(self.web3Service.callConstMethodWithAbi(extensionAddress, environment.extensionBaseAbi, "getSetupParametersByIndex", ["bool", "bool", "uint256", "uint256", "string"], i + ""));
       }
       Observable.combineLatest(array).subscribe(function handleValues(values) {
-        var array2 = [];
+        var setupArray = [];
         values.forEach(param => {
           let setupParam = new ParameterUI(param[4], param[2], param[3], param[1], param[0]);
-          array2.push(setupParam);
+          setupArray.push(setupParam);
         });
-        observer.next(array2);
+        observer.next(setupArray);
       });
     });
   }
