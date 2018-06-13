@@ -30,6 +30,9 @@ import { HomeComponent } from './components/home/home.component';
 import { AccountComponent } from './components/account/account.component';
 import { RedirectProvider } from './provider/redirect.provider';
 import { ExtensionService } from './services/extension.service';
+import { ExtensionParameterComponent } from './components/extension-parameter/extension-parameter.component';
+import { ExtensionParameterElementComponent } from './components/extension-parameter/extension-parameter-element/extension-parameter-element.component';
+import { ExtensionSetupComponent } from './components/extension-setup/extension-setup.component';
 
 
 @NgModule({
@@ -41,7 +44,14 @@ import { ExtensionService } from './services/extension.service';
     ExtensionSetComponent,
     HomeComponent,
     AccountComponent,
-    HeaderComponent
+    ExtensionInstanceDetailsComponent,
+    HeaderComponent,
+    ExtensionParameterComponent,
+    ExtensionParameterElementComponent,
+    ExtensionSetupComponent
+  ],
+  entryComponents: [
+    ExtensionParameterElementComponent
   ],
   imports: [
     BrowserModule,

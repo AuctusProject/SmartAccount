@@ -1,0 +1,13 @@
+<div fxLayout="column" #parameterDiv>
+    <span fxFlex="100" class="pull-right" *ngIf="isArray() && parameter.isEditable">
+        <mat-icon (click)="addNewElement()">add_circle_outline</mat-icon>
+    </span>
+    <mat-label *ngIf="isArray()">{{getDescription()}}</mat-label>
+    <app-extension-parameter-element 
+        fxFlex="100"
+        [index]="index" 
+        [parameter]="parameter" 
+        [smartAccountAddress]="smartAccountAddress"
+        (parameterSet)="getElementSet($event)">
+    </app-extension-parameter-element>
+</div>

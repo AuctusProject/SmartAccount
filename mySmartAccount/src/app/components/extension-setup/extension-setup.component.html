@@ -1,0 +1,15 @@
+<mat-expansion-panel [disabled]="disabled" [hideToggle]="disabled" [expanded]="expanded">
+    <mat-expansion-panel-header>
+        <mat-panel-title>CONFIGURATION</mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-list>
+        <mat-list-item *ngFor="let parameter of parameters; index as i" [attr.data-index]="i">
+            <app-extension-parameter 
+                [smartAccountAddress]="smartAccountAddress" 
+                [index]="index"
+                [parameter]="parameter"
+                [setValue]="values[index]">
+            </app-extension-parameter>
+        </mat-list-item>
+    </mat-list>
+</mat-expansion-panel>
