@@ -91,9 +91,17 @@ export class ExtensionParameterComponent implements OnInit {
     }
 
     getFormattedValue(value: any) {
-        if (value && (this.parameter.type == 3 || this.parameter.type == 7 || this.parameter.type == 8)) {
-            let valueLower = (value.toString()).toLowerCase();
+        if (!value && value != 0) {
+            return "";
+        } else if (this.parameter.type == 3 || this.parameter.type == 7 || this.parameter.type == 8) {
+            let valueLower = value.toLowerCase();
             return valueLower.startsWith("0x") ? valueLower : "0x" + valueLower;
+        } else if (this.parameter.type == 5) {
+            return value.getTime() / 1000;
+        } else if (this.parameter.type == 4) {
+            return value ? 1 : 0;
+        } else if (this.parameter.type == 1 || this.parameter.type == 2) {
+            return value * (this.parameter.decimals > 1 ? this.parameter.decimals : 1);
         } else {
             return value;
         }

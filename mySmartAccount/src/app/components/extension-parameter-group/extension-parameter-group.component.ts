@@ -4,6 +4,7 @@ import { SmartAccountService } from '../../services/smart-account.service';
 import { ParameterUI } from '../../model/ParameterUI';
 import { Web3Service } from '../../services/web3.service';
 import * as SolidityCoder from 'web3/lib/solidity/coder';
+import { ParameterUtil } from '../../util/parameterUtil';
 
 
 @Component({
@@ -45,7 +46,7 @@ export class ExtensionParameterGroupComponent implements OnInit {
             let types = [];
             let values = [];
             for (let i = 0; i < this.values.length; ++ i) {
-                types.push(this.parameters[i].getWeb3Type());
+                types.push(ParameterUtil.getWeb3Type(this.parameters[i]));
                 values.push(this.values[i].value)
             }
             let data = this.functionSignature + SolidityCoder.encodeParams(types, values);

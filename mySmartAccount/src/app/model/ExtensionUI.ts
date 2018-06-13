@@ -1,6 +1,7 @@
 import { ViewDataUI } from "./ViewDataUI";
 import { ParameterUI } from "./ParameterUI";
 import { ActionUI } from "./ActionUI";
+import { ParameterUtil } from "../util/parameterUtil";
 
 export class ExtensionUI {
     address: string;
@@ -33,7 +34,7 @@ export class ExtensionUI {
     getSetupWeb3Types(): string[] {
         var ret = [];
         this.setupParameters.forEach(element => {
-            ret.push(element.getWeb3Type());
+            ret.push(ParameterUtil.getWeb3Type(element));
         });
         return ret;
     }
