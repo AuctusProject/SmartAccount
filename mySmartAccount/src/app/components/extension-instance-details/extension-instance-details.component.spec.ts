@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+
 import { ExtensionInstanceDetailsComponent } from './extension-instance-details.component';
 
 describe('ExtensionInstanceDetailsComponent', () => {

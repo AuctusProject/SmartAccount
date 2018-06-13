@@ -27,7 +27,9 @@ export class ExtensionService {
       self.callExtensionMethodWithSingleReturn(extensionAddress, "getDescription", "string"),
       self.callExtensionMethodWithSingleReturn(extensionAddress, "getActionsCount", "uint256"),
       self.callExtensionMethodWithSingleReturn(extensionAddress, "getViewDatasCount", "uint256"),
-      self.callExtensionMethodWithSingleReturn(extensionAddress, "getSetupParametersCount", "uint256"))
+      self.callExtensionMethodWithSingleReturn(extensionAddress, "getSetupParametersCount", "uint256"),
+      self.callExtensionMethodWithSingleReturn(extensionAddress, "getSetupFunction", "bytes4"),
+      self.callExtensionMethodWithSingleReturn(extensionAddress, "getRoles", "bytes32[]"))
       .subscribe(function handleValues(values) {
         extensionUi.address = extensionAddress;
         extensionUi.name = values[0];
@@ -35,6 +37,8 @@ export class ExtensionService {
         extensionUi.actionsCount = values[2];
         extensionUi.viewDatasCount = values[3];
         extensionUi.setupParametersCount = values[4];
+        extensionUi.setupFunctionSignature = values[5];
+        extensionUi.rolesIds = values[6];
         combineLatest(self.getActions(extensionAddress, extensionUi.actionsCount),
         self.getViewDataParams(extensionAddress, extensionUi.viewDatasCount),
         self.getSetupParameters(extensionAddress, extensionUi.setupParametersCount)).subscribe(function handleValues(values) {
