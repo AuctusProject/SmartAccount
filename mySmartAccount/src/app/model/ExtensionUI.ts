@@ -9,9 +9,11 @@ export class ExtensionUI {
     actionsCount: number;
     viewDatasCount: number;
     setupParametersCount: number;
+    setupFunctionSignature: string;
     setupParameters: ParameterUI[] = new Array<ParameterUI>();
     viewDataParameters: ViewDataUI[] = new Array<ViewDataUI>();
     actions: ActionUI[] = new Array<ActionUI>();
+    rolesIds: string[] = new Array<string>();
 
     constructor() {
     }

@@ -10,8 +10,10 @@ import { MatInputModule } from "@angular/material/input";
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from "@angular/material/list";
 import { MatIconModule } from '@angular/material/icon';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Angular2PromiseButtonModule } from 'angular2-promise-buttons/dist';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { UiSwitchModule } from 'angular2-ui-switch'
@@ -33,6 +35,7 @@ import { ExtensionService } from './services/extension.service';
 import { ExtensionParameterComponent } from './components/extension-parameter/extension-parameter.component';
 import { ExtensionParameterElementComponent } from './components/extension-parameter/extension-parameter-element/extension-parameter-element.component';
 import { ExtensionParameterGroupComponent } from './components/extension-parameter-group/extension-parameter-group.component';
+import { ExtensionSetupComponent } from './components/extension-setup/extension-setup.component';
 
 
 @NgModule({
@@ -48,7 +51,8 @@ import { ExtensionParameterGroupComponent } from './components/extension-paramet
     HeaderComponent,
     ExtensionParameterComponent,
     ExtensionParameterElementComponent,
-    ExtensionParameterGroupComponent
+    ExtensionParameterGroupComponent,
+    ExtensionSetupComponent
   ],
   entryComponents: [
     ExtensionParameterElementComponent
@@ -61,11 +65,14 @@ import { ExtensionParameterGroupComponent } from './components/extension-paramet
     MatExpansionModule,
     MatCardModule,
     MatFormFieldModule,
+    ReactiveFormsModule,
     MatButtonModule,
     MatInputModule,
     MatProgressSpinnerModule,
     MatDividerModule,
     MatListModule,
+    MatCheckboxModule,
+    MatDatepickerModule,
     MatIconModule,
     UiSwitchModule,
     FlexLayoutModule,

@@ -1,6 +1,6 @@
 import { Component, OnInit, NgZone, Input, Output, EventEmitter } from '@angular/core';
 import { ParameterUI } from '../../../model/ParameterUI';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators, FormGroup } from '@angular/forms';
 
 @Component({
     selector: 'app-extension-parameter-element',

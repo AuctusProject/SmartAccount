@@ -1,0 +1,18 @@
+<app-header [backDestination]="getBackDestination()"></app-header>
+<div fxLayout="column">
+  <h2 fxFlex="100">Set new instance</h2>
+  <div fxLayout="column">
+        <mat-form-field class="full-width" fxFlex="100">
+            <input matInput placeholder="Name" [(ngModel)]="name" />
+        </mat-form-field>
+        <app-extension-parameter-group
+            [title]="CONFIGURATION"
+            [actionButtonName]="SAVE"
+            [functionSignature]="getFunctionSignature()"
+            [disabled]="true"
+            [expanded]="true"
+            [parameters]="getParameters()"
+            [values]="getValues()">
+        </app-extension-parameter-group>
+  </div>
+</div>
