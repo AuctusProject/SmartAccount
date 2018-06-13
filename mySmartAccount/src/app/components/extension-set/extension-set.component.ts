@@ -78,7 +78,7 @@ export class ExtensionSetComponent implements OnInit {
     if (!this.active) {
       this.smartAccountService.addExtension(this.smartAccountAddress, this.extensionAddress).subscribe(txHash => {
         self.web3Service.isMined(txHash).subscribe(ret => {
-          self.back();
+          self.zone.run(() => self.router.navigate(['extension-setup', self.smartAccountAddress, self.extensionAddress]));
         });
       });
     } else {

@@ -73,6 +73,7 @@ export class ExtensionListComponent implements OnInit {
   }
 
   setNewConfiguration() {
+    this.zone.run(() => this.router.navigate(['extension-setup', this.smartAccountAddress, this.selectedExtension.address]));
   }
 
   loadCustomExtension() {
