@@ -1,6 +1,6 @@
 <mat-expansion-panel [disabled]="disabled" [hideToggle]="disabled" [expanded]="expanded">
     <mat-expansion-panel-header>
-        <mat-panel-title>CONFIGURATION</mat-panel-title>
+        <mat-panel-title>{{title}}</mat-panel-title>
     </mat-expansion-panel-header>
     <mat-list>
         <mat-list-item *ngFor="let parameter of parameters; index as i" [attr.data-index]="i">
@@ -11,5 +11,8 @@
                 [setValue]="values[index]">
             </app-extension-parameter>
         </mat-list-item>
+        <div fxLayout="row" *ngIf="functionSignature">
+            <button fxFlex="100" color="primary" class="mat-raised-button mat-primary" (click)="execute()">{{actionButtonName}}</button>
+        </div>
     </mat-list>
 </mat-expansion-panel>

@@ -32,7 +32,7 @@ import { RedirectProvider } from './provider/redirect.provider';
 import { ExtensionService } from './services/extension.service';
 import { ExtensionParameterComponent } from './components/extension-parameter/extension-parameter.component';
 import { ExtensionParameterElementComponent } from './components/extension-parameter/extension-parameter-element/extension-parameter-element.component';
-import { ExtensionSetupComponent } from './components/extension-setup/extension-setup.component';
+import { ExtensionParameterGroupComponent } from './components/extension-parameter-group/extension-parameter-group.component';
 
 
 @NgModule({
@@ -48,7 +48,7 @@ import { ExtensionSetupComponent } from './components/extension-setup/extension-
     HeaderComponent,
     ExtensionParameterComponent,
     ExtensionParameterElementComponent,
-    ExtensionSetupComponent
+    ExtensionParameterGroupComponent
   ],
   entryComponents: [
     ExtensionParameterElementComponent

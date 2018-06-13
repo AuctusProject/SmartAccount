@@ -4,13 +4,17 @@ import { LocalStorageService } from '../../services/local-storage.service';
 import { SmartAccountService } from '../../services/smart-account.service';
 import { ParameterUI } from '../../model/ParameterUI';
 
-@Component({
-  selector: 'app-extension-setup',
-  templateUrl: './extension-setup.component.html',
-  styleUrls: ['./extension-setup.component.css']
-})
-export class ExtensionSetupComponent implements OnInit {
 
+@Component({
+  selector: 'app-extension-parameter-group',
+  templateUrl: './extension-parameter-group.component.html',
+  styleUrls: ['./extension-parameter-group.component.css']
+})
+export class ExtensionParameterGroupComponent implements OnInit {
+
+    @Input() title: string;
+    @Input() actionButtonName: string;
+    @Input() functionSignature: string;
     @Input() smartAccountAddress: string;
     @Input() disabled: boolean;
     @Input() expanded: boolean;
@@ -24,5 +28,9 @@ export class ExtensionSetupComponent implements OnInit {
         private smartAccountService: SmartAccountService) { }
     
     ngOnInit() {
+    }
+
+    execute() {
+        
     }
 }
