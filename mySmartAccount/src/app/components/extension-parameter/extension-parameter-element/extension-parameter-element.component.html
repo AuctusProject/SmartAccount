@@ -1,10 +1,10 @@
-<mat-form-field class="full-width" *ngIf="parameter.type == 4">
-    <mat-checkbox [(ngModel)]="value" (change)="onCheck()" [disabled]="!parameter.isEditable">{{description}}</mat-checkbox>
-    <mat-icon matSuffix *ngIf="parameter.isArray && parameter.isEditable" (click)="removeElement()">clear</mat-icon>
+<mat-form-field class="full-width" *ngIf="showCheckbox()">
+    <mat-checkbox [(ngModel)]="value" (change)="onCheck()" [disabled]="isDisabled()">{{description}}</mat-checkbox>
+    <mat-icon matSuffix *ngIf="canRemoveArray()" (click)="removeElement()">clear</mat-icon>
 </mat-form-field>
-<mat-form-field class="full-width" *ngIf="parameter.type == 5">
+<mat-form-field class="full-width" *ngIf="showDatepicker()">
     <input matInput [matDatepicker]="picker" 
-        [disabled]="!parameter.isEditable" 
+        [disabled]="isDisabled()" 
         [placeholder]="description"
         [pattern]="getPattern()"
         [formControl]="getFormCtrl()"
@@ -12,15 +12,27 @@
         [(ngModel)]="value">
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
-    <mat-icon matSuffix *ngIf="parameter.isArray && parameter.isEditable" (click)="removeElement()">clear</mat-icon>
+    <mat-icon matSuffix *ngIf="canRemoveArray()" (click)="removeElement()">clear</mat-icon>
 </mat-form-field>
-<mat-form-field class="full-width" *ngIf="parameter.type != 4 && parameter.type != 5">
-    <input matInput [disabled]="!parameter.isEditable" 
+<mat-form-field class="full-width" *ngIf="showNumber()">
+    <input matInput [disabled]="isDisabled()" 
         [placeholder]="description" 
         [(ngModel)]="value"
         [pattern]="getPattern()"
         [formControl]="getFormCtrl()"
         (blur)="onBlur()"
-        type="getType()" />
-    <mat-icon matSuffix *ngIf="parameter.isArray && parameter.isEditable" (click)="removeElement()">clear</mat-icon>
+        type="number"
+        step="1"
+        min="0" />
+    <mat-icon matSuffix *ngIf="canRemoveArray()" (click)="removeElement()">clear</mat-icon>
+</mat-form-field>
+<mat-form-field class="full-width" *ngIf="!showDatepicker() && !showCheckbox() && !showNumber()">
+    <input matInput [disabled]="isDisabled()" 
+        [placeholder]="description" 
+        [(ngModel)]="value"
+        [pattern]="getPattern()"
+        [formControl]="getFormCtrl()"
+        (blur)="onBlur()"
+        type="text" />
+    <mat-icon matSuffix *ngIf="canRemoveArray()" (click)="removeElement()">clear</mat-icon>
 </mat-form-field>

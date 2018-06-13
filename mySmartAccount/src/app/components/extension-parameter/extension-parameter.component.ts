@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, ViewContainerRef, ComponentFactoryResolver, ComponentRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { ParameterUI } from '../../model/ParameterUI';
 import { FormControl, Validators } from '@angular/forms';
 import { ExtensionParameterElementComponent } from './extension-parameter-element/extension-parameter-element.component';
@@ -8,18 +8,16 @@ import { ExtensionParameterElementComponent } from './extension-parameter-elemen
     templateUrl: './extension-parameter.component.html',
     styleUrls: ['./extension-parameter.component.css']
 })
-export class ExtensionParameterComponent implements OnInit, OnDestroy {
+export class ExtensionParameterComponent implements OnInit {
   
     @Input() smartAccountAddress: string;
     @Input() index: number;
     @Input() parameter: ParameterUI;
     @Input() setValue: any;
     @Output() parameterSet = new EventEmitter<any>();
-    elements: ComponentRef<ExtensionParameterElementComponent>[];
-    arrayValues = new Array<any>();
+    elements = new Array<any>();
 
-    constructor(private viewContainerRef: ViewContainerRef,
-        private componentFactoryResolver: ComponentFactoryResolver) {}
+    constructor() {}
 
     ngOnInit() {
         if (this.isArray()) {
@@ -35,16 +33,6 @@ export class ExtensionParameterComponent implements OnInit, OnDestroy {
         }
     }
 
-    ngOnDestroy() {
-        if (this.elements) {
-            for(let i = 0; i < this.elements.length; ++i) {
-                if (this.elements[i]) {
-                    this.elements[i].destroy();
-                }
-            }
-        }
-    }
-
     isArray(): boolean {
         return this.parameter.isArray && this.parameter.type != 6 && this.parameter.type != 7 && this.parameter.type != 8;
     }
@@ -54,22 +42,29 @@ export class ExtensionParameterComponent implements OnInit, OnDestroy {
     }
 
     addNewElement(value?: any) {
-        let componentFactory = this.componentFactoryResolver.resolveComponentFactory(ExtensionParameterElementComponent);
-        let component = this.viewContainerRef.createComponent(componentFactory);
-        component.instance.parameter = this.parameter;
-        component.instance.index = this.isArray() ? this.arrayValues.length : 0;
-        component.instance.description = this.isArray() ? "" : this.getDescription();
-        component.instance.smartAccountAddress = this.smartAccountAddress;
-        component.instance.setValue = value;
-        this.elements.push(component);
-
-        let element = component.location.nativeElement;
-        let sibling: HTMLElement = element.previousSibling;
-        sibling.insertBefore(element, sibling.firstChild);
+        this.elements.push({ 
+            parameter: this.parameter,
+            id: this.getNextId(),
+            description: this.isArray() ? "" : this.getDescription(),
+            smartAccountAddress: this.smartAccountAddress,
+            setValue: value
+        });
     }
 
-    getRemoved(removedIndex: number) {
-        this.arrayValues.splice(removedIndex, 1);
+    getNextId(): string {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+          });
+    }
+
+    getRemoved(removedId: string) {
+        for (let i = 0; i < this.elements.length; ++i) {
+            if (this.elements[i].id == removedId) {
+                this.elements.splice(i, 1);
+                break;
+            }
+        }
         this.emitArraySet(null);
     }
 
@@ -77,24 +72,30 @@ export class ExtensionParameterComponent implements OnInit, OnDestroy {
         if (this.isArray()) {
             this.emitArraySet(element);
         } else {
-            this.parameterSet.emit({ index: this.index, status: element.status, value: element.value });
+            this.parameterSet.emit({ index: this.index, status: element.status, value: this.getFormattedValue(element.value) });
         }
     }
 
     emitArraySet(element?: any) {
-        let status = element ? element.status : true;
+        let status = true;
         let values = [];
-        for (let i = 0; i < this.arrayValues.length; ++i) {
-            if (element && element.index == i) {
-                this.arrayValues[i] = element.value;
+        for (let i = 0; i < this.elements.length; ++i) {
+            if (element && element.id == this.elements[i].id) {
+                this.elements[i]["value"] = this.getFormattedValue(element.value);
+                this.elements[i]["status"] = element.status;
             }
-            status = status && this.arrayValues[i].status;
-            values.push(this.arrayValues[i].value);
-        }
-        if (element && element.index == this.arrayValues.length) {
-            this.arrayValues.push({ status: element.status, value: element.value });
-            values.push(element.value);
+            status = status && this.elements[i]["status"];
+            values.push(this.elements[i]["value"]);
         }
         this.parameterSet.emit({ index: this.index, status: status, value: values });
+    }
+
+    getFormattedValue(value: any) {
+        if (value && (this.parameter.type == 3 || this.parameter.type == 7 || this.parameter.type == 8)) {
+            let valueLower = (value.toString()).toLowerCase();
+            return valueLower.startsWith("0x") ? valueLower : "0x" + valueLower;
+        } else {
+            return value;
+        }
     }
 }

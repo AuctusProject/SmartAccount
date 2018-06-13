@@ -3,16 +3,18 @@
         <mat-panel-title>{{title}}</mat-panel-title>
     </mat-expansion-panel-header>
     <mat-list>
-        <mat-list-item *ngFor="let parameter of parameters; index as i" [attr.data-index]="i">
+        <div *ngFor="let param of parameters; let i = index" [attr.data-index]="i">
             <app-extension-parameter 
                 [smartAccountAddress]="smartAccountAddress" 
-                [index]="index"
-                [parameter]="parameter"
-                [setValue]="values[index]">
+                [index]="i"
+                [parameter]="param"
+                [setValue]="values[i]"
+                (parameterSet)="parameterSet($event)">
             </app-extension-parameter>
-        </mat-list-item>
-        <div fxLayout="row" *ngIf="functionSignature">
-            <button fxFlex="100" color="primary" class="mat-raised-button mat-primary" (click)="execute()">{{actionButtonName}}</button>
+        </div>
+        <div fxLayout="row" *ngIf="!!functionSignature">
+            <button class="mat-raised-button" fxFlex="50" *ngIf="!!backButtonName" mat-button (click)="back()" [disabled]="executing">{{backButtonName}}</button>
+            <button color="primary" fxFlex="!!backButtonName ? 50 : 100" class="mat-raised-button mat-primary" mat-button (click)="execute()" [disabled]="executing">{{actionButtonName}}</button>
         </div>
     </mat-list>
 </mat-expansion-panel>

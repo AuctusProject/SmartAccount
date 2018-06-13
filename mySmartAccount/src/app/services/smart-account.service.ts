@@ -45,6 +45,10 @@ export class SmartAccountService {
     setTimeout(this.monitoreAccount, 5000);
   }
 
+  startWeb3() {
+    return this.web3Service.hasWeb3();
+  }
+
   private runChecks() {
     let self = this;
     self.web3Service.hasWeb3().subscribe(web3 => {
@@ -211,6 +215,16 @@ export class SmartAccountService {
       self.web3Service.callConstMethodWithData(data, extensionAddress, ["bytes32[]"]).subscribe(result => {
         observer.next(result[0]);
       });
+    });
+  }
+
+  public sendGenericTransaction(to: string, value: number, gasLimit: number, data: string): Observable<string> {
+    let self = this;
+    return new Observable(observer => {
+      self.web3Service.sendTransaction(self.getAccount(), to, value, data, environment.defaultGasPrice, gasLimit, self.getNetwork())
+        .subscribe(txHash => {
+            observer.next(txHash);
+        });
     });
   }
 

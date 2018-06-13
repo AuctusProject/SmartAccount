@@ -1,13 +1,18 @@
-<div fxLayout="column" #parameterDiv>
-    <span fxFlex="100" class="pull-right" *ngIf="isArray() && parameter.isEditable">
-        <mat-icon (click)="addNewElement()">add_circle_outline</mat-icon>
-    </span>
-    <mat-label *ngIf="isArray()">{{getDescription()}}</mat-label>
-    <app-extension-parameter-element 
-        fxFlex="100"
-        [index]="index" 
-        [parameter]="parameter" 
-        [smartAccountAddress]="smartAccountAddress"
-        (parameterSet)="getElementSet($event)">
-    </app-extension-parameter-element>
+<div fxLayout="column">
+    <div fxFlex="100" fxLayout="row" class="array" *ngIf="isArray()">
+        <mat-label fxFlex="95" *ngIf="isArray()">{{getDescription()}}</mat-label>
+        <mat-icon fxFlex="5" class="pull-right"  *ngIf="parameter.isEditable" (click)="addNewElement()">add_circle_outline</mat-icon>
+    </div>
+    <mat-list-item *ngFor="let element of elements" >
+        <app-extension-parameter-element
+            fxFlex="100"
+            [smartAccountAddress]="element.smartAccountAddress"
+            [id]="element.id"
+            [parameter]="element.parameter"
+            [setValue]="element.setValue"
+            [description]="element.description"
+            (parameterSet)="getElementSet($event)"
+            (removed)="getRemoved($event)">
+        </app-extension-parameter-element>
+    </mat-list-item>
 </div>

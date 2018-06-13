@@ -5,14 +5,18 @@
         <mat-form-field class="full-width" fxFlex="100">
             <input matInput placeholder="Name" [(ngModel)]="name" />
         </mat-form-field>
+
         <app-extension-parameter-group
-            [title]="CONFIGURATION"
-            [actionButtonName]="SAVE"
+            [title]="getTitle()"
+            [actionButtonName]="getActionButtonName()"
             [functionSignature]="getFunctionSignature()"
+            [smartAccountAddress]="smartAccountAddress"
+            [extensionAddress]="extensionAddress"
             [disabled]="true"
             [expanded]="true"
             [parameters]="getParameters()"
-            [values]="getValues()">
+            [initialValues]="getValues()"
+            (executed)="executed()">
         </app-extension-parameter-group>
   </div>
 </div>

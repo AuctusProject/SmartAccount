@@ -24,6 +24,7 @@ export class HeaderComponent implements OnInit {
     this.eventsService.on("accountChanged", this.onAccountChanged);
     this.eventsService.on("loginConditionsFail", this.onLoginConditionsFail);
     this.eventsService.on("loginConditionsSuccess", this.onLoginConditionsSuccess);
+    this.smartAccountService.startWeb3();
     this.setData();
   }
 
