@@ -49,7 +49,8 @@ export class ExtensionParameterGroupComponent implements OnInit {
                 types.push(GeneralUtil.getWeb3Type(this.parameters[i]));
                 values.push(this.values[i].value)
             }
-            let data = this.functionSignature + SolidityCoder.encodeParams(types, values);
+            let data = this.web3Service.getExecuteCallData(this.extensionAddress, 0, 0, 
+                this.functionSignature + SolidityCoder.encodeParams(types, values));
             let self = this;
             this.smartAccountService.sendGenericTransaction(this.smartAccountAddress, 0, 0, data).subscribe(txHash => {
                 self.web3Service.isMined(txHash).subscribe(ret => {
