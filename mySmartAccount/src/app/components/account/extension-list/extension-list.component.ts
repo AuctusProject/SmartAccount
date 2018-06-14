@@ -107,7 +107,8 @@ export class ExtensionListComponent implements OnInit {
     this.executing = false;
   }
 
-  goToIdentifier() {
+  goToIdentifier(identifier: string) {
+    this.zone.run(() => this.router.navigate([ 'extension-instance', this.smartAccountAddress, this.selectedExtension.address, identifier ]));
   }
 
   onChangeActiveStatus(active: boolean) {

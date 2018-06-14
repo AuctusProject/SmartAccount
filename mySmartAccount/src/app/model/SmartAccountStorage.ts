@@ -34,19 +34,16 @@ export class SmartAccountStorage {
         return false;
     }
 
-    addExtension(address: string, dateUnix?: number, rolesIds?: string[]): boolean {
+    addExtension(address: string, dateUnix?: number): boolean {
         for(let i = 0; i < this.extensions.length; ++i) {
             if (this.extensions[i].address == address) {
                 if (dateUnix) {
                     this.extensions[i].dateUnix = dateUnix;
                 }
-                if (rolesIds) {
-                    this.extensions[i].rolesIds = rolesIds;
-                }
                 return true;
             }
         }
-        this.extensions.push(new ExtensionStorage(address, dateUnix, rolesIds));
+        this.extensions.push(new ExtensionStorage(address, dateUnix));
         return true;
     }
 
@@ -95,20 +92,20 @@ export class SmartAccountStorage {
         let result = [];
         switch (chainId) {
             case "1": 
-                //result.push(new ExtensionStorage('0x018ad16649D90F4A3A8195b57677491C687b5309', null, ['0x4ea3bb1eaa05b77c4b0eeee0116a3177c6d62319dd7149ae148185d9e09de74a']));
-                //result.push(new ExtensionStorage('0x018ad16649D90F4A3A8195b57677491C687b5309', null, ['0x8f18f658d37b632619e90699ac1fae34e82c1a03435ac5dc930259af8e29e56c','0xd5342cfae8cfcd762ee9ec644e43767d823c2d2f1ea741cbb93224eaa6b8449e']));
+                //result.push(new ExtensionStorage('0x018ad16649D90F4A3A8195b57677491C687b5309', null));
+                //result.push(new ExtensionStorage('0x018ad16649D90F4A3A8195b57677491C687b5309', null));
                 break;
             case "2":
-                //result.push(new ExtensionStorage('0x018ad16649D90F4A3A8195b57677491C687b5309', null, ['0x4ea3bb1eaa05b77c4b0eeee0116a3177c6d62319dd7149ae148185d9e09de74a']));
-                //result.push(new ExtensionStorage('0x018ad16649D90F4A3A8195b57677491C687b5309', null, ['0x8f18f658d37b632619e90699ac1fae34e82c1a03435ac5dc930259af8e29e56c','0xd5342cfae8cfcd762ee9ec644e43767d823c2d2f1ea741cbb93224eaa6b8449e']));
+                //result.push(new ExtensionStorage('0x018ad16649D90F4A3A8195b57677491C687b5309', null));
+                //result.push(new ExtensionStorage('0x018ad16649D90F4A3A8195b57677491C687b5309', null));
                 break;
             case "3":
-                //result.push(new ExtensionStorage('0x018ad16649D90F4A3A8195b57677491C687b5309', null, ['0x4ea3bb1eaa05b77c4b0eeee0116a3177c6d62319dd7149ae148185d9e09de74a']));
-                //result.push(new ExtensionStorage('0x018ad16649D90F4A3A8195b57677491C687b5309', null, ['0x8f18f658d37b632619e90699ac1fae34e82c1a03435ac5dc930259af8e29e56c','0xd5342cfae8cfcd762ee9ec644e43767d823c2d2f1ea741cbb93224eaa6b8449e']));
+                //result.push(new ExtensionStorage('0x018ad16649D90F4A3A8195b57677491C687b5309', null));
+                //result.push(new ExtensionStorage('0x018ad16649D90F4A3A8195b57677491C687b5309', null));
                 break;
             case "4":
-                result.push(new ExtensionStorage('0x018ad16649D90F4A3A8195b57677491C687b5309', null, ['0x4ea3bb1eaa05b77c4b0eeee0116a3177c6d62319dd7149ae148185d9e09de74a']));
-                //result.push(new ExtensionStorage('0x018ad16649D90F4A3A8195b57677491C687b5309', null, ['0x8f18f658d37b632619e90699ac1fae34e82c1a03435ac5dc930259af8e29e56c','0xd5342cfae8cfcd762ee9ec644e43767d823c2d2f1ea741cbb93224eaa6b8449e']));
+                result.push(new ExtensionStorage('0x018ad16649d90f4a3a8195b57677491c687b5309', null));
+                //result.push(new ExtensionStorage('0x018ad16649D90F4A3A8195b57677491C687b5309', null));
                 break;
             default: 
                 break;

@@ -1,6 +1,6 @@
 <app-header></app-header>
 <div fxLayout="column" fxLayoutGap="20px">
-  <mat-expansion-panel [disabled]="true" [hideToggle]="true" [expanded]="true">
+  <mat-expansion-panel [disabled]="true" [hideToggle]="true" [expanded]="true" *ngIf="accountData.smartAccounts.length > 0">
     <mat-list>
       <mat-list-item *ngFor="let smartAccount of accountData.smartAccounts" (click)="goToSmartAccount(smartAccount.address)" >
         <span fxFlex="70">{{smartAccount.name}}</span>

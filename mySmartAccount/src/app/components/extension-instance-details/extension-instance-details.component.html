@@ -1,26 +1,72 @@
 <app-header [backDestination]="getBackDestination()"></app-header>
 <div fxLayout="column">
   <h2 fxFlex="100">{{name}}</h2>
-  <h6 fxFlex="100">{{description}}</h6>
-  <div fxLayout="column" *ngIf="!active">
-    <mat-expansion-panel [disabled]="true" [hideToggle]="true" [expanded]="true">
-      <mat-expansion-panel-header>
-          <mat-panel-title>Required Permissions</mat-panel-title>
-      </mat-expansion-panel-header>
-      <mat-list>
-        <mat-list-item *ngFor="let role of roles">
-          <span class="pull-left"><mat-icon>chevron_right</mat-icon></span>
-          <span fxFlex="95">{{role}}</span>
-        </mat-list-item>
-      </mat-list>
-    </mat-expansion-panel>
-    <h5 fxFlex="100">After activating you need set the extension's configuration.</h5>
-  </div>
-  <div *ngIf="active">
-    <h5 fxFlex="100">After inactivating all extension's configuration will be disabled.</h5>
-  </div>
-  <div fxLayout="row" fxLayoutGap="10px">
-      <button class="mat-raised-button" fxFlex="50" mat-button (click)="back()" [disabled]="executing">CANCEL</button>
-      <button color="primary" fxFlex="50" class="mat-raised-button mat-primary" mat-button [disabled]="executing" (click)="setAction()">{{getActionName()}}</button>
-  </div>
+  <h3 fxFlex="100">{{ui.name}}</h3>
+  <mat-expansion-panel fxFlex="100">
+    <mat-expansion-panel-header>
+        <mat-panel-title>DESCRIPTION</mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-list>
+      <mat-list-item>
+        <mat-label fxFlex="100">{{ui.description}}</mat-label>
+      </mat-list-item>
+    </mat-list>
+  </mat-expansion-panel>
+  <mat-expansion-panel fxFlex="100">
+    <mat-expansion-panel-header>
+        <mat-panel-title>Permissions</mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-list>
+      <mat-list-item *ngFor="let role of roles">
+        <span class="pull-left"><mat-icon>chevron_right</mat-icon></span>
+        <mat-label fxFlex="95">{{role}}</mat-label>
+      </mat-list-item>
+    </mat-list>
+  </mat-expansion-panel> 
+  <app-extension-parameter-group fxFlex="100"
+      [title]="getDataTitle()"
+      [smartAccountAddress]="smartAccountAddress"
+      [extensionAddress]="extensionAddress"
+      [disabled]="false"
+      [expanded]="true"
+      [parameters]="getDataParameters()"
+      [initialValues]="dataValues">
+  </app-extension-parameter-group>
+  <app-extension-parameter-group
+      [title]="getSetupTitle()"
+      [actionButtonName]="getSetupActionName()"
+      [functionSignature]="ui.setupFunctionSignature"
+      [smartAccountAddress]="smartAccountAddress"
+      [extensionAddress]="extensionAddress"
+      [disabled]="false"
+      [expanded]="false"
+      [parameters]="ui.setupParameters"
+      [initialValues]="setupValues"
+      (executed)="setupExecuted()">
+  </app-extension-parameter-group>
+  <mat-expansion-panel *ngIf="!showActionDetails">
+    <mat-expansion-panel-header>
+        <mat-panel-title>{{getActionTitle()}}</mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-list>
+      <mat-list-item *ngFor="let action of ui.actions" >
+        <button class="mat-button mat-primary primary" (click)="clickAction(action.funcSignature)">{{action.description}}</button>
+      </mat-list-item>
+    </mat-list>
+  </mat-expansion-panel>
+  <app-extension-parameter-group *ngIf="showActionDetails"
+      [title]="getActionTitle()"
+      [actionButtonName]="getButtonActionName()"
+      [backButtonName]="getBackActionName()"
+      [functionSignature]="getActionSignature()"
+      [smartAccountAddress]="smartAccountAddress"
+      [extensionAddress]="extensionAddress"
+      [identifier]="extensionInstanceIdentifier"
+      [disabled]="false"
+      [expanded]="false"
+      [parameters]="getActionParameters()"
+      [initialValues]="getActionValues()"
+      (backClick)="actionBack()"
+      (executed)="actionExecuted()">
+  </app-extension-parameter-group>
 </div>
