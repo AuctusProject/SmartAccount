@@ -21,7 +21,7 @@
                 <ui-switch fxFlex="25" [(ngModel)]="selectedActive" (change)="onChangeActiveStatus($event)"></ui-switch>
             </div>
             <mat-list fxFlex="100">
-                <mat-list-item *ngFor="let identifier of selectedExtension.identifiers" (click)="goToIdentifier()" >
+                <mat-list-item *ngFor="let identifier of selectedExtension.identifiers" (click)="goToIdentifier(identifier.identifier)" >
                     <span fxFlex="90">{{identifier.name}}</span>
                     <span class="pull-right"><mat-icon>chevron_right</mat-icon></span>
                 </mat-list-item>

@@ -7,5 +7,5 @@ export class ViewDataUI {
     constructor(funcSignature?: string, output?: ParameterUI) {
         this.funcSignature = funcSignature;
         this.output = output;
-      }
+    }
 }

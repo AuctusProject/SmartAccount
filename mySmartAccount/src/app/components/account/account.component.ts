@@ -60,7 +60,7 @@ export class AccountComponent implements OnInit {
       }
       if (extension) {
         for(let i = 0; i < extension.length; ++i) {
-          self.smartAccount.addExtension(extension[i].address, extension[i].dateUnix, extension[i].rolesIds);
+          self.smartAccount.addExtension(extension[i].address, extension[i].dateUnix);
           self.smartAccount.setExtensionIdentifiers(extension[i].address, extension[i].getIdentifiersList());
         }
       }

@@ -6,6 +6,7 @@ import { SmartAccountService } from '../../services/smart-account.service';
 import { ExtensionData } from '../../model/ExtensionData';
 import { Router } from '@angular/router';
 import { ExtensionStorage } from '../../model/ExtensionStorage';
+import { GeneralUtil } from '../../util/generalUtil';
 
 @Component({
   selector: 'app-extension-set',
@@ -37,25 +38,23 @@ export class ExtensionSetComponent implements OnInit {
       if (!self.smartAccountAddress || !self.extensionAddress) {
         self.zone.run(() => self.router.navigate(['home']));
       } else {
-        let allExtensions = self.localStorageService.getAccountData().getSmartAccount(self.smartAccountAddress).getAllExtensionList(self.smartAccountService.getNetwork());
-        for (let i = 0; i < allExtensions.length; ++i) {
-          if (allExtensions[i].address == self.extensionAddress) {
-            self.roles = self.smartAccountService.getRolesNames(allExtensions[i].rolesIds);
-            self.active = !!allExtensions[i].dateUnix;
-            break;
-          }
-        }
-        if (!self.roles) {
-          self.smartAccountService.getRolesId(self.extensionAddress).subscribe(ret => {
-            self.roles = self.smartAccountService.getRolesNames(ret);
-          });
-        }
         let ui = self.localStorageService.getAccountData().getExtensionUI(self.extensionAddress);
-        if (ui) {
+        if (!ui) {
+          self.zone.run(() => self.router.navigate(['home']));
+        } else {
           self.name = ui.name;
           self.description = ui.description;
+          self.roles = ui.rolesIds;
+          let allExtensions = self.localStorageService.getAccountData().getSmartAccount(self.smartAccountAddress).getAllExtensionList(self.smartAccountService.getNetwork());
+          for (let i = 0; i < allExtensions.length; ++i) {
+            if (allExtensions[i].address == self.extensionAddress) {
+              self.roles = GeneralUtil.getRolesNames(ui.rolesIds);
+              self.active = !!allExtensions[i].dateUnix;
+              break;
+            }
+          }
+          self.executing = false;
         }
-        self.executing = false;
       }
     });
   }

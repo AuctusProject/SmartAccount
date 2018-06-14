@@ -86,10 +86,6 @@ export class Web3Service {
     return "0x5b7991cd";
   }
 
-  public getExtensionRolesData(): string {
-    return "0x71061398";
-  }
-
   public getExtensionByIndexData(index: number): string {
     return "0x98413ff1" + SolidityCoder.encodeParams(["uint256"], [index]);;
   }
