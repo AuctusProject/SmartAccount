@@ -4,7 +4,8 @@ pragma solidity 0.4.24;
 import "./IExtension.sol";
 import "./SafeMath.sol";
 
-
+//Example 1
+//TODO: add comments and events
 contract RecoveryFunds is IExtension {
     using SafeMath for uint256;
     
@@ -45,18 +46,19 @@ contract RecoveryFunds is IExtension {
     
     function getSetupParameters() pure internal returns(Setup) {
         ConfigParameter[] memory parameters = new ConfigParameter[](3);
-        parameters[0] = ConfigParameter(true, Parameter(false, INTEGER, 86400, "Time to disprove in days"));
-        parameters[1] = ConfigParameter(true, Parameter(false, INTEGER, 1, "Number of confirmations"));
-        parameters[2] = ConfigParameter(true, Parameter(true, ADDRESS, 0, "Providers addresses"));
-        return Setup(bytes4(keccak256("setup(uint256,uint256,address[])")), parameters);
+        parameters[0] = ConfigParameter(true, Parameter(false, false, INTEGER, 86400, "Time to disprove in days"));
+        parameters[1] = ConfigParameter(true, Parameter(false, false, INTEGER, 1, "Number of confirmations"));
+        parameters[2] = ConfigParameter(true, Parameter(true, false, ADDRESS, 0, "Providers addresses"));
+        return Setup(bytes4(keccak256("createSetup(uint256,uint256,address[])")),
+            bytes4(keccak256("updateSetup(bytes32,uint256,uint256,address[])")), parameters);
     }
     
     function getActions() pure internal returns(Action[]) {
         Parameter[] memory parameters1 = new Parameter[](2);
-        parameters1[0] = Parameter(false, SMARTACCOUNTADDRESS, 0, "Smart account");
-        parameters1[1] = Parameter(false, ADDRESS, 0, "Destination");
+        parameters1[0] = Parameter(false, false, SMARTACCOUNTADDRESS, 0, "Smart account");
+        parameters1[1] = Parameter(false, false, ADDRESS, 0, "Destination");
         Parameter[] memory parameters2 = new Parameter[](1);
-        parameters2[0] = Parameter(false, SMARTACCOUNTADDRESS, 0, "Smart account");
+        parameters2[0] = Parameter(false, false, SMARTACCOUNTADDRESS, 0, "Smart account");
         Action[] memory action = new Action[](5);
         action[0].description = "Start recovery process";
         action[0].parameters = parameters1;
@@ -78,13 +80,13 @@ contract RecoveryFunds is IExtension {
     function getViewDatas() pure internal returns(ViewData[]) {
         ViewData[] memory viewData = new ViewData[](4);
         viewData[0].functionSignature = bytes4(keccak256("isStarted(address,bytes32)"));
-        viewData[0].output = Parameter(false, BOOL, 0, "Recovery process is started");
+        viewData[0].output = Parameter(false, false, BOOL, 0, "Recovery process is started");
         viewData[1].functionSignature = bytes4(keccak256("destinationAddress(address,bytes32)"));
-        viewData[1].output = Parameter(false, ADDRESS, 0, "Destination address");
+        viewData[1].output = Parameter(false, true, ADDRESS, 0, "Destination address");
         viewData[2].functionSignature = bytes4(keccak256("getConfirmations(address,bytes32)"));
-        viewData[2].output = Parameter(true, ADDRESS, 0, "Confirmations");
+        viewData[2].output = Parameter(true, true, ADDRESS, 0, "Confirmations");
         viewData[3].functionSignature = bytes4(keccak256("timeToDisprove(address,bytes32)"));
-        viewData[3].output = Parameter(false, INTEGER, 86400, "Time in seconds to disprove");
+        viewData[3].output = Parameter(false, true, INTEGER, 86400, "Time in seconds to disprove");
         return viewData;
     }
     
@@ -94,7 +96,7 @@ contract RecoveryFunds is IExtension {
         return roles;
     }
     
-    function setup(uint256 _delay,  uint256 _confirmations, address[] _providers) external {
+    function createSetup(uint256 _delay,  uint256 _confirmations, address[] _providers) public {
         require(configuration[msg.sender].numberOfConfirmations == 0 || recoveryProcess[msg.sender].start == 0);
         require(_providers.length > 0);
         require(_confirmations > 0);
@@ -107,6 +109,10 @@ contract RecoveryFunds is IExtension {
         }
         configuration[msg.sender] = Configuration(_delay, _confirmations, _providers);
         setIdentifier(msg.sender, bytes32(0));
+    }
+    
+    function updateSetup(bytes32, uint256 _delay,  uint256 _confirmations, address[] _providers) external {
+        createSetup(_delay, _confirmations, _providers);
     }
         
     function getSetup(address _reference, bytes32) 
