@@ -28,7 +28,6 @@ export class ExtensionService {
       self.callExtensionMethodWithSingleReturn(extensionAddress, "getActionsCount", "uint256"),
       self.callExtensionMethodWithSingleReturn(extensionAddress, "getViewDatasCount", "uint256"),
       self.callExtensionMethodWithSingleReturn(extensionAddress, "getSetupParametersCount", "uint256"),
-      self.callExtensionMethodWithSingleReturn(extensionAddress, "getSetupFunction", "bytes4"),
       self.callExtensionMethodWithSingleReturn(extensionAddress, "getRoles", "bytes32[]"))
       .subscribe(function handleValues(values) {
         extensionUi.address = extensionAddress;
@@ -37,15 +36,17 @@ export class ExtensionService {
         extensionUi.actionsCount = values[2][0];
         extensionUi.viewDatasCount = values[3][0];
         extensionUi.setupParametersCount = values[4][0];
-        extensionUi.setupFunctionSignature = values[5][0];
-        extensionUi.rolesIds = values[6][0];
-        combineLatest(self.getActions(extensionAddress, extensionUi.actionsCount),
-        self.getViewDataParams(extensionAddress, extensionUi.viewDatasCount),
-        self.getSetupParameters(extensionAddress, extensionUi.setupParametersCount)).subscribe(function handleValues(values) {
-          extensionUi.actions = values[0];
-          extensionUi.viewDataParameters = values[1];
-          extensionUi.setupParameters = values[2];
-          observer.next(extensionUi);
+        extensionUi.rolesIds = values[5][0];
+        combineLatest(self.getSetupFunctions(extensionAddress),
+          self.getActions(extensionAddress, extensionUi.actionsCount),
+          self.getViewDataParams(extensionAddress, extensionUi.viewDatasCount),
+          self.getSetupParameters(extensionAddress, extensionUi.setupParametersCount)).subscribe(function handleValues(values) {
+            extensionUi.createSetupFunctionSignature = values[0][0];
+            extensionUi.updateSetupFunctionSignature = values[0][1];
+            extensionUi.actions = values[1];
+            extensionUi.viewDataParameters = values[2];
+            extensionUi.setupParameters = values[3];
+            observer.next(extensionUi);
         });
       });
     });
@@ -60,13 +61,22 @@ export class ExtensionService {
     });
   }
 
+  public getSetupFunctions(extensionAddress: string): Observable<any> {
+    let self = this;
+    return new Observable(observer => {
+      self.web3Service.callConstMethodWithAbi(extensionAddress, environment.extensionBaseAbi, "getSetupFunctions", ["bytes4", "bytes4"]).subscribe(r => {
+        observer.next(r);
+      });
+    });
+  }
+
   public getActions(extensionAddress: string, actionsCount: number): Observable<any[]> {
     var self = this;
     return new Observable(observer => {
       var array = [];
       var paramCountArray = [];
       for (var i = 0; i < actionsCount; ++i) {
-        array.push(self.web3Service.callConstMethodWithAbi(extensionAddress, environment.extensionBaseAbi, "getActionByIndex", ["bytes4", "string"], i + ""));
+        array.push(self.web3Service.callConstMethodWithAbi(extensionAddress, environment.extensionBaseAbi, "getActionByIndex", ["bytes4", "string", "uint256"], i + ""));
         paramCountArray.push(self.web3Service.callConstMethodWithAbi(extensionAddress, environment.extensionBaseAbi, "getActionParametersCountByIndex", ["uint256"], i + ""));
       }
       Observable.combineLatest(array).subscribe(function handleValues(actions) {

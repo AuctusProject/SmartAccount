@@ -10,7 +10,8 @@ export class ExtensionUI {
     actionsCount: number;
     viewDatasCount: number;
     setupParametersCount: number;
-    setupFunctionSignature: string;
+    createSetupFunctionSignature: string;
+    updateSetupFunctionSignature: string;
     setupParameters: ParameterUI[] = new Array<ParameterUI>();
     viewDataParameters: ViewDataUI[] = new Array<ViewDataUI>();
     actions: ActionUI[] = new Array<ActionUI>();
