@@ -57,10 +57,10 @@ export class HeaderComponent implements OnInit {
         case "1":
             this.chain = 'Mainnet';
             break;
-        case "2":
+        case "3":
             this.chain = 'Ropsten';
             break;
-        case "3":
+        case "42":
             this.chain = 'Kovan';
             break;
         case "4":

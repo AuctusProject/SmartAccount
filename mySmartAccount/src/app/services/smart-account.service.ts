@@ -42,7 +42,7 @@ export class SmartAccountService {
           self.broadcastAccountChanged(account);
         }
       });
-    setTimeout(this.monitoreAccount, 5000);
+    setTimeout(() => this.monitoreAccount(), 2000);
   }
 
   startWeb3() {
