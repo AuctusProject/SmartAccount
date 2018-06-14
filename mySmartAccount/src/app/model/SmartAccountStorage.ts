@@ -104,7 +104,7 @@ export class SmartAccountStorage {
                 //result.push(new ExtensionStorage('0x018ad16649D90F4A3A8195b57677491C687b5309', null));
                 break;
             case "4":
-                result.push(new ExtensionStorage('0x018ad16649D90F4A3A8195b57677491C687b5309', null));
+                result.push(new ExtensionStorage('0x018ad16649d90f4a3a8195b57677491c687b5309', null));
                 //result.push(new ExtensionStorage('0x018ad16649D90F4A3A8195b57677491C687b5309', null));
                 break;
             default: 
