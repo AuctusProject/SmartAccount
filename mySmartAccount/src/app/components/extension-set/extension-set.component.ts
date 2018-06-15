@@ -44,11 +44,10 @@ export class ExtensionSetComponent implements OnInit {
         } else {
           self.name = ui.name;
           self.description = ui.description;
-          self.roles = ui.rolesIds;
+          self.roles = GeneralUtil.getRolesNames(ui.rolesIds);
           let allExtensions = self.localStorageService.getAccountData().getSmartAccount(self.smartAccountAddress).getAllExtensionList(self.smartAccountService.getNetwork());
           for (let i = 0; i < allExtensions.length; ++i) {
             if (allExtensions[i].address == self.extensionAddress) {
-              self.roles = GeneralUtil.getRolesNames(ui.rolesIds);
               self.active = !!allExtensions[i].dateUnix;
               break;
             }

@@ -43,7 +43,7 @@ export class ExtensionSetupComponent implements OnInit {
     }
 
     getFunctionSignature() {
-        return this.ui.setupFunctionSignature;
+        return this.ui.createSetupFunctionSignature;
     }
 
     getParameters() {

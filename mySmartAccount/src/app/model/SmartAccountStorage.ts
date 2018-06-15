@@ -92,20 +92,20 @@ export class SmartAccountStorage {
         let result = [];
         switch (chainId) {
             case "1": 
-                //result.push(new ExtensionStorage('0x018ad16649D90F4A3A8195b57677491C687b5309', null));
-                //result.push(new ExtensionStorage('0x018ad16649D90F4A3A8195b57677491C687b5309', null));
+                //result.push(new ExtensionStorage('', null));
+                //result.push(new ExtensionStorage('', null));
                 break;
-            case "2":
-                //result.push(new ExtensionStorage('0x018ad16649D90F4A3A8195b57677491C687b5309', null));
-                //result.push(new ExtensionStorage('0x018ad16649D90F4A3A8195b57677491C687b5309', null));
+            case "42":
+                result.push(new ExtensionStorage('0x94f1de751407dd25a7b865fa4d64a4b69080d5ed', null));
+                result.push(new ExtensionStorage('0x6100f93f5c0b3b2a49af866a49ce5d4357f4934b', null));
                 break;
             case "3":
-                //result.push(new ExtensionStorage('0x018ad16649D90F4A3A8195b57677491C687b5309', null));
-                //result.push(new ExtensionStorage('0x018ad16649D90F4A3A8195b57677491C687b5309', null));
+                result.push(new ExtensionStorage('0x138eb47c578bf7f687fb9c1be43ba224f02dda10', null));
+                result.push(new ExtensionStorage('0x21fcface25d5876a50cb61d2f939b8b8d5de9efb', null));
                 break;
             case "4":
-                result.push(new ExtensionStorage('0x018ad16649d90f4a3a8195b57677491c687b5309', null));
-                //result.push(new ExtensionStorage('0x018ad16649D90F4A3A8195b57677491C687b5309', null));
+                result.push(new ExtensionStorage('0x63101c3fd1d6a7a5e0b04fbd79c326caa759b04c', null));
+                result.push(new ExtensionStorage('0xe3cb8100e5f9fa616c386ddb158b73b9395c7ca4', null));
                 break;
             default: 
                 break;

@@ -292,24 +292,24 @@ contract SignatureBouncer is Ownable, RBAC {
   }
 
   /**
-  * @dev allows the owner to add additional bouncer addresses
+  * @dev Modified from original to allows any bouncer to add additional bouncer addresses
   */
   function addBouncer(address _bouncer)
-    onlyOwner
     validAddress(_bouncer)
     public
   {
+    require(msg.sender == owner || hasRole(msg.sender, ROLE_BOUNCER));
     addRole(_bouncer, ROLE_BOUNCER);
   }
 
   /**
-  * @dev allows the owner to remove bouncer addresses
+  * @dev Modified from original to allows any bouncer to remove bouncer addresses
   */
   function removeBouncer(address _bouncer)
-    onlyOwner
     validAddress(_bouncer)
     public
   {
+    require(msg.sender == owner || hasRole(msg.sender, ROLE_BOUNCER));
     removeRole(_bouncer, ROLE_BOUNCER);
   }
 
@@ -395,7 +395,6 @@ contract SmartAccount is SignatureAccount {
   struct Extension {
     address extension;
     uint256 addedDate;
-    bytes32[] roles;
   }
   
   Extension[] public extensions;
@@ -419,6 +418,7 @@ contract SmartAccount is SignatureAccount {
     payable 
     external 
   {
+    require(msg.value > 0);  
   }
 
   function extensionsCount() 
@@ -432,9 +432,9 @@ contract SmartAccount is SignatureAccount {
   function extensionByIndex(uint256 _index) 
     view 
     external 
-    returns(address extension, uint256 addedDate, bytes32[] roles) 
+    returns(address extension, uint256 addedDate) 
   {
-    return (extensions[_index].extension, extensions[_index].addedDate, extensions[_index].roles);
+    return (extensions[_index].extension, extensions[_index].addedDate);
   }
   
   function onlyBouncerSetGasRefund(bool _refundGas) 
@@ -543,7 +543,6 @@ contract SmartAccount is SignatureAccount {
   
   function createContract(bytes _data) 
     public 
-    returns(address)
   {
     require(validCall(0, _data));
     address newContract;
@@ -552,7 +551,6 @@ contract SmartAccount is SignatureAccount {
     }
     require(newContract != address(0));
     emit ExecuteCreate(msg.sender, newContract); 
-    return newContract;
   }
 
   function executeCall(address _destination, uint256 _value, uint256 _gasLimit, bytes _data) 
@@ -571,7 +569,7 @@ contract SmartAccount is SignatureAccount {
     }
     bytes32[] memory roles = IExtension(_extension).getRoles();
     addRoles(roles, _extension);
-    extensions.push(Extension(_extension, now, roles));
+    extensions.push(Extension(_extension, now));
     emit AddExtension(msg.sender, _extension, roles);
   }
   
@@ -593,7 +591,7 @@ contract SmartAccount is SignatureAccount {
       toBeRemoved = last;
     }
     extensions.length--;
-    removeRoles(toBeRemoved.roles, _extension);
+    removeRoles(IExtension(_extension).getRoles(), _extension);
     emit RemoveExtension(msg.sender, _extension);
   }
   
@@ -627,7 +625,7 @@ contract SmartAccount is SignatureAccount {
       return hasRole(msg.sender, ROLE_TRANSFER_ETHER);
     }
     if (_data.length == 0) {
-      return true;
+      return false;
     }
     bytes4 functionSignature;
     assembly {

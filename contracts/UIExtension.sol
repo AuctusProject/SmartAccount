@@ -15,8 +15,9 @@ contract UIExtension {
 	
     struct Parameter {
 		bool isArray;
+		bool isOptional;
 		uint256 typeReference;
-		uint256 decimals; //only for INTEGER and FLOAT types (the value that will be multiplied, default 1, not defined 0 is equal 1 too)
+		uint256 decimals; //only for INTEGER and FLOAT types (the value that will be multiplied, default 1, not defined or zero is equal 1 too)
 		string description;
 	}
 
@@ -26,8 +27,9 @@ contract UIExtension {
 	}
 	
 	struct Setup {
-	    bytes4 functionSignature; //function signature to set configurable parameters
-		ConfigParameter[] parameters;
+	    bytes4 createFunctionSignature; //function signature to create new configurable instance (view notes below)
+	    bytes4 updateFunctionSignature; //function signature to update existing configurable instance (view notes below)
+	    ConfigParameter[] parameters;
 	}
 	
 	struct Action {
@@ -53,7 +55,9 @@ contract UIExtension {
 	}
 	
 	struct ConfigStorage {
-		BaseStorage baseData;
+		bytes4 createFunctionSignature;
+		bytes4 updateFunctionSignature;
+		uint256 parametersCount;
 		mapping(uint256 => ConfigParameter) parameters;
 	}
 	
@@ -75,13 +79,22 @@ contract UIExtension {
     
     // IMPORTANT NOTES
     
-    /* All view data functions must receive as arguments address and bytes32 (address,bytes32)
-     * the arguments are smart account address and respective identifier
+    /* All view data functions must receive as arguments an address and a bytes32 (address,bytes32)
+     * the arguments are smart account address and the respective identifier
+     */
+    
+    /* Function to create new configurable instance must receive all setup parameters
+     * using the same order defined in getSetupParameters() function 
+     */
+     
+    /* Function to update existing configurable instance must receive 
+     * respective identifier + all setup parameters (bytes32, [setup parameters])
+     * setup parameters must use the same order defined in getSetupParameters() function 
      */
     
     /* Extension must always implement a function with the signature getSetup(address,bytes32)
      * the arguments are smart account address and respective identifier
-     * the return must be the value for all setup parameters 
+     * the returns must be the value for all setup parameters 
      * using the same order defined in getSetupParameters() function 
      */ 
     
@@ -90,7 +103,7 @@ contract UIExtension {
         public 
         returns(uint256) 
     {
-        return setupParameters.baseData.parametersCount;
+        return setupParameters.parametersCount;
     }
     
     function getViewDatasCount() 
@@ -109,46 +122,48 @@ contract UIExtension {
         return actions.length;
     }
     
-    function getSetupFunction() 
+    function getSetupFunctions() 
         view 
         public 
-        returns(bytes4) 
+        returns(bytes4, bytes4) 
     {
-        return setupParameters.baseData.functionSignature;
+        return (setupParameters.createFunctionSignature, setupParameters.updateFunctionSignature);
     }
     
     function getSetupParametersByIndex(uint256 _index) 
         view 
         public 
-        returns(bool, bool, uint256, uint256, string) 
+        returns(bool, bool, bool, uint256, uint256, string) 
     {
         bool isArray;
+        bool isOptional;
         uint256 typeReference; 
         uint256 decimals;
         string memory description;
-        (isArray, typeReference, decimals, description) = getParameter(setupParameters.parameters[_index].parameter);
-        return (setupParameters.parameters[_index].isEditable, isArray, typeReference, decimals, description);
+        (isArray, isOptional, typeReference, decimals, description) = getParameter(setupParameters.parameters[_index].parameter);
+        return (setupParameters.parameters[_index].isEditable, isArray, isOptional, typeReference, decimals, description);
     }
     
     function getViewDataByIndex(uint256 _index) 
         view 
         public 
-        returns(bytes4, bool, uint256, uint256, string) 
+        returns(bytes4, bool, bool, uint256, uint256, string) 
     {
         bool isArray;
+        bool isOptional;
         uint256 typeReference;
         uint256 decimals;
         string memory description;
-        (isArray, typeReference, decimals, description) = getParameter(viewDatas[_index].parameters[0]);
-        return (viewDatas[_index].baseData.functionSignature, isArray, typeReference, decimals, description);
+        (isArray, isOptional, typeReference, decimals, description) = getParameter(viewDatas[_index].parameters[0]);
+        return (viewDatas[_index].baseData.functionSignature, isArray, isOptional, typeReference, decimals, description);
     }
     
     function getActionByIndex(uint256 _index) 
         view 
         public 
-        returns(bytes4, string) 
+        returns(bytes4, string, uint256) 
     {
-        return (actions[_index].baseData.functionSignature, actions[_index].baseData.description);
+        return (actions[_index].baseData.functionSignature, actions[_index].baseData.description, actions[_index].baseData.parametersCount);
     }
     
     function getActionParametersCountByIndex(uint256 _index) 
@@ -162,17 +177,17 @@ contract UIExtension {
     function getActionParameterByIndexes(uint256 _actionIndex, uint256 _parameterIndex) 
         view 
         public 
-        returns(bool, uint256, uint256, string) 
+        returns(bool, bool, uint256, uint256, string) 
     {
         return getParameter(actions[_actionIndex].parameters[_parameterIndex]);
     }
 
     function getParameter(Parameter _parameter)
-        private
         pure
-        returns(bool, uint256, uint256, string)
+        private
+        returns(bool, bool, uint256, uint256, string)
     {
-        return (_parameter.isArray, _parameter.typeReference, _parameter.decimals, _parameter.description);
+        return (_parameter.isArray, _parameter.isOptional, _parameter.typeReference, _parameter.decimals, _parameter.description);
     }
     
     function validateTypeReference(uint256 _typeReference, bool _isArray) 
@@ -198,7 +213,12 @@ contract UIExtension {
     }
     
     function addConfigurableParameters(Setup _setup) private {
-        setupParameters.baseData = setBaseStorage(_setup.functionSignature, _setup.parameters.length, "");
+        require(_setup.createFunctionSignature != _setup.updateFunctionSignature);
+        require(_setup.createFunctionSignature != "" && _setup.updateFunctionSignature != "");
+            
+        setupParameters.createFunctionSignature = _setup.createFunctionSignature;
+        setupParameters.updateFunctionSignature = _setup.updateFunctionSignature;
+        setupParameters.parametersCount = _setup.parameters.length;
         for(uint256 i = 0; i < _setup.parameters.length; i++) {
             validateTypeReference(_setup.parameters[i].parameter.typeReference, _setup.parameters[i].parameter.isArray);
             setupParameters.parameters[i] = _setup.parameters[i];

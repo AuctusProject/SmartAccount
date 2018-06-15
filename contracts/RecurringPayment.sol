@@ -4,7 +4,8 @@ pragma solidity 0.4.24;
 import "./IExtension.sol";
 import "./SafeMath.sol";
 
-
+// Example 2
+//TODO: add comments and events
 contract RecurringPayment is IExtension {
     using SafeMath for uint256;
     
@@ -36,21 +37,23 @@ contract RecurringPayment is IExtension {
     
     function getSetupParameters() pure internal returns(Setup) {
         ConfigParameter[] memory parameters = new ConfigParameter[](6);
-        parameters[0] = ConfigParameter(false, Parameter(false, ADDRESS, 0, "Beneficiary address"));
-        parameters[1] = ConfigParameter(false, Parameter(false, INTEGER, 86400, "Recurrence time in days"));
-        parameters[2] = ConfigParameter(true, Parameter(false, INTEGER, 0, "Number of periods"));
-        parameters[3] = ConfigParameter(false, Parameter(false, BOOL, 0, "Payment in Ether"));
-        parameters[4] = ConfigParameter(false, Parameter(false, ADDRESS, 0, "Token address if payment not in Ether"));
-        parameters[5] = ConfigParameter(true, Parameter(false, FLOAT, 1000000000000000000, "Maximum amount per period"));
-        return Setup(bytes4(keccak256("setup(address,uint256,uint256,bool,address,uint256)")), parameters);
+        parameters[0] = ConfigParameter(false, Parameter(false, false, ADDRESS, 0, "Beneficiary address"));
+        parameters[1] = ConfigParameter(false, Parameter(false, false, INTEGER, 86400, "Recurrence time in days"));
+        parameters[2] = ConfigParameter(true, Parameter(false, false, INTEGER, 0, "Number of periods"));
+        parameters[3] = ConfigParameter(false, Parameter(false, false, BOOL, 0, "Payment in Ether"));
+        parameters[4] = ConfigParameter(false, Parameter(false, true, ADDRESS, 0, "Token address if payment not in Ether"));
+        parameters[5] = ConfigParameter(true, Parameter(false, false, FLOAT, 1000000000000000000, "Maximum amount per period"));
+        return Setup(bytes4(keccak256("createSetup(address,uint256,uint256,bool,address,uint256)")), 
+            bytes4(keccak256("updateSetup(bytes32,address,uint256,uint256,bool,address,uint256)")),
+            parameters);
     }
     
     function getActions() pure internal returns(Action[]) {
         Parameter[] memory parameters1 = new Parameter[](2);
-        parameters1[0] = Parameter(false, SMARTACCOUNTADDRESS, 0, "Smart account");
-        parameters1[1] = Parameter(false, FLOAT, 1000000000000000000, "Amount");
+        parameters1[0] = Parameter(false, false, SMARTACCOUNTADDRESS, 0, "Smart account");
+        parameters1[1] = Parameter(false, false, FLOAT, 1000000000000000000, "Amount");
         Parameter[] memory parameters2 = new Parameter[](1);
-        parameters2[0] = Parameter(false, ADDRESS, 0, "Beneficiary");
+        parameters2[0] = Parameter(false, false, ADDRESS, 0, "Beneficiary");
         Action[] memory action = new Action[](2);
         action[0].description = "Make a withdraw";
         action[0].parameters = parameters1;
@@ -64,11 +67,11 @@ contract RecurringPayment is IExtension {
     function getViewDatas() pure internal returns(ViewData[]) {
         ViewData[] memory viewData = new ViewData[](3);
         viewData[0].functionSignature = bytes4(keccak256("getAvailableAmountWithdrawal(address,bytes32)"));
-        viewData[0].output = Parameter(false, FLOAT, 1000000000000000000, "Available amount to withdrawal");
+        viewData[0].output = Parameter(false, false, FLOAT, 1000000000000000000, "Available amount to withdrawal");
         viewData[1].functionSignature = bytes4(keccak256("getAmountWithdrawal(address,bytes32)"));
-        viewData[1].output = Parameter(false, FLOAT, 1000000000000000000, "Amount released");
+        viewData[1].output = Parameter(false, false, FLOAT, 1000000000000000000, "Amount released");
         viewData[2].functionSignature = bytes4(keccak256("getPeriodsWithdrawal(address,bytes32)"));
-        viewData[2].output = Parameter(false, INTEGER, 0, "Amount of periods released");
+        viewData[2].output = Parameter(false, false, INTEGER, 0, "Amount of periods released");
         return viewData;
     }
     
@@ -79,7 +82,7 @@ contract RecurringPayment is IExtension {
         return roles;
     }
     
-    function setup(
+    function createSetup(
         address _beneficiary, 
         uint256 _recurrenceTime, 
         uint256 _periods, 
@@ -87,7 +90,7 @@ contract RecurringPayment is IExtension {
         address _tokenAddress, 
         uint256 _maximumAmountPerPeriod
     )
-        external
+        public
     {
         require(_beneficiary != address(0) && msg.sender != _beneficiary);
         require(_recurrenceTime > 0);
@@ -106,6 +109,20 @@ contract RecurringPayment is IExtension {
         }
         configuration[msg.sender][_beneficiary].periods = _periods;
         configuration[msg.sender][_beneficiary].maximumAmountPerPeriod = _maximumAmountPerPeriod;
+    }
+    
+    function updateSetup(
+        bytes32,
+        address _beneficiary, 
+        uint256 _recurrenceTime, 
+        uint256 _periods, 
+        bool _paymentInEther, 
+        address _tokenAddress, 
+        uint256 _maximumAmountPerPeriod
+    )
+        external
+    {
+        createSetup(_beneficiary, _recurrenceTime, _periods, _paymentInEther, _tokenAddress, _maximumAmountPerPeriod);
     }
         
     function getSetup(address _reference, bytes32 _identifier) 
