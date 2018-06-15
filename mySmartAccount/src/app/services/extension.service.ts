@@ -90,7 +90,7 @@ export class ExtensionService {
           let actionCount = 0;
           paramCounts.forEach(param => {
             for (var i = 0; i < param; ++i) {
-              parameterArray.push(self.web3Service.callConstMethodWithAbi(extensionAddress, environment.extensionBaseAbi, "getActionParameterByIndexes", ["bool", "uint256", "uint256", "string"], actionCount + "", i + ""));
+              parameterArray.push(self.web3Service.callConstMethodWithAbi(extensionAddress, environment.extensionBaseAbi, "getActionParameterByIndexes", ["bool", "bool", "uint256", "uint256", "string"], actionCount + "", i + ""));
             }
             actionCount++;
           });
@@ -101,7 +101,7 @@ export class ExtensionService {
 
             while (globalCount < parameters.length) {
               if (actionParamCount <= paramCounts[actionCount]) {
-                actionArray[actionCount].args.push(new ParameterUI(parameters[globalCount][3], parameters[globalCount][1], parameters[globalCount][2], parameters[globalCount][0], true));
+                actionArray[actionCount].args.push(new ParameterUI(parameters[globalCount][4], parameters[globalCount][2], parameters[globalCount][3], parameters[globalCount][0], true, parameters[globalCount][1]));
                 actionParamCount++;
                 globalCount++;
               } else {
@@ -121,12 +121,12 @@ export class ExtensionService {
     return new Observable(observer => {
       var array = [];
       for (var i = 0; i < viewDataCount; ++i) {
-        array.push(self.web3Service.callConstMethodWithAbi(extensionAddress, environment.extensionBaseAbi, "getActionByIndex", ["bytes4", "bool", "uint256", "uint256", "string"], i + ""));
+        array.push(self.web3Service.callConstMethodWithAbi(extensionAddress, environment.extensionBaseAbi, "getViewDataByIndex", ["bytes4", "bool", "bool", "uint256", "uint256", "string"], i + ""));
       }
       Observable.combineLatest(array).subscribe(function handleValues(values) {
         var viewDataArray = [];
         values.forEach(param => {
-          let output = new ParameterUI(param[4], param[2], param[3], param[1], false);
+          let output = new ParameterUI(param[5], param[3], param[4], param[1], false, param[2]);
           let viewData = new ViewDataUI(param[0], output);
           viewDataArray.push(viewData);
         });
@@ -140,12 +140,12 @@ export class ExtensionService {
     return new Observable(observer => {
       var array = [];
       for (var i = 0; i < setupParametersCount; ++i) {
-        array.push(self.web3Service.callConstMethodWithAbi(extensionAddress, environment.extensionBaseAbi, "getSetupParametersByIndex", ["bool", "bool", "uint256", "uint256", "string"], i + ""));
+        array.push(self.web3Service.callConstMethodWithAbi(extensionAddress, environment.extensionBaseAbi, "getSetupParametersByIndex", ["bool", "bool", "bool", "uint256", "uint256", "string"], i + ""));
       }
       Observable.combineLatest(array).subscribe(function handleValues(values) {
         var setupArray = [];
         values.forEach(param => {
-          let setupParam = new ParameterUI(param[4], param[2], param[3], param[1], param[0]);
+          let setupParam = new ParameterUI(param[5], param[3], param[4], param[1], param[0], param[2]);
           setupArray.push(setupParam);
         });
         observer.next(setupArray);
