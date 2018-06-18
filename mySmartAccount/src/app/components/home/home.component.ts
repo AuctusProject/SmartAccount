@@ -120,7 +120,7 @@ export class HomeComponent implements OnInit {
       } else {
         this.smartAccountService.createAccountSC().subscribe(contractAddress => {
           if (contractAddress) {
-            self.contractAddress.value = contractAddress;
+            self.contractAddress = { value: contractAddress, status: true };
             self.redirect();
           } else {
             this.executing = false;
