@@ -86,7 +86,18 @@ export class ExtensionInstanceDetailsComponent implements OnInit {
         let data = this.web3Service.getSetupData(this.smartAccountAddress, this.extensionInstanceIdentifier);
         let self = this;
         this.web3Service.callConstMethodWithData(data, this.extensionAddress, this.ui.getSetupWeb3Types()).subscribe(ret => {
-            self.setupValues = ret;
+            self.setupValues = new Array<any>();
+            for (let i = 0; i < self.ui.setupParameters.length; ++i) {
+                let value = null;
+                if (self.ui.setupParameters[i].type == 1 || self.ui.setupParameters[i].type == 2) {
+                    value = ret[i] * (self.ui.setupParameters[i].decimals > 1 ? self.ui.setupParameters[i].decimals : 1);
+                } else if (self.ui.setupParameters[i].type == 5) {
+                    value = new Date(ret[i]);
+                } else {
+                    value = ret[i];
+                }
+                self.setupValues.push(value);
+            }
         });
     }
 
