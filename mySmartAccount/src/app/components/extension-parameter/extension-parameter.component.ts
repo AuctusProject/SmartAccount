@@ -14,6 +14,7 @@ export class ExtensionParameterComponent implements OnInit {
     @Input() index: number;
     @Input() parameter: ParameterUI;
     @Input() setValue: any;
+    @Input() forceEditable: boolean;
     @Output() parameterSet = new EventEmitter<any>();
     elements = new Array<any>();
 

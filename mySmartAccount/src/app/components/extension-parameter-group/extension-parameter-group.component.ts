@@ -25,6 +25,7 @@ export class ExtensionParameterGroupComponent implements OnInit {
     @Input() expanded: boolean;
     @Input() parameters: ParameterUI[];
     @Input() initialValues: any[];
+    @Input() forceAllEditable: boolean;
     @Output() backClick = new EventEmitter();
     @Output() executed = new EventEmitter();
     executing: boolean;

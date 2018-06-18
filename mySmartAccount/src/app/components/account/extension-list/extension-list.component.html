@@ -5,9 +5,9 @@
     <mat-list *ngIf="showList">
         <mat-list-item *ngFor="let extension of allExtensions" (click)="extensionDetails(extension.address)" >
             <mat-label fxFlex="72">{{getName(extension.address)}}</mat-label>
-            <span fxFlex="25" class="bold active" *ngIf="isActive(extension.address)">ACTIVE</span>
-            <span fxFlex="25" class="bold inactive" *ngIf="!isActive(extension.address)">INACTIVE</span>
-            <span class="pull-right"><mat-icon>chevron_right</mat-icon></span>
+            <mat-label fxFlex="25" class="bold active" *ngIf="isActive(extension.address)">ACTIVE</mat-label>
+            <mat-label fxFlex="25" class="bold inactive" *ngIf="!isActive(extension.address)">INACTIVE</mat-label>
+            <mat-label class="pull-right"><mat-icon>chevron_right</mat-icon></mat-label>
         </mat-list-item>
         <div fxLayout="row">
             <button fxFlex="100" color="primary" class="mat-raised-button mat-primary" (click)="setNewExtension()">ADD NEW EXTENSION</button>
@@ -28,16 +28,19 @@
         </div>
         <div fxLayout="row" fxLayoutGap="10px">
             <button class="mat-raised-button" fxFlex="50" mat-button (click)="back()">BACK</button>
-            <button color="primary" fxFlex="50" class="mat-raised-button mat-primary" mat-button (click)="setNewConfiguration()">NEW CONFIGURATION</button>
+            <button color="primary" fxFlex="50" class="mat-raised-button mat-primary" mat-button (click)="setNewConfiguration()">NEW INSTANCE</button>
         </div>
     </div>
     <mat-list *ngIf="showNew">
-        <span>ADD CUSTOM EXTENSION</span>
-        <div fxLayout="column">
-            <mat-form-field class="full-width">
-                <input matInput placeholder="Extension Address" [(ngModel)]="selectedExtension.address" />
-            </mat-form-field>
-        </div>
+        <mat-label>ADD CUSTOM EXTENSION</mat-label>
+        <mat-list fxFlex="100">
+            <app-extension-parameter 
+                [smartAccountAddress]="smartAccountAddress" 
+                [index]="getIndex()"
+                [parameter]="getExtensionAddressParameter()"
+                (parameterSet)="setExtensionAddress($event)">
+            </app-extension-parameter>
+        </mat-list>
         <div fxLayout="row" fxLayoutGap="10px">
             <button class="mat-raised-button" fxFlex="50" mat-button (click)="back()">CANCEL</button>
             <button color="primary" fxFlex="50" class="mat-raised-button mat-primary" mat-button (click)="loadCustomExtension()">LOAD</button>
