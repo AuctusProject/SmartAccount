@@ -135,7 +135,7 @@ export class HomeComponent implements OnInit {
     event.stopPropagation();
     let dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '250px',
-      data: { text: "Do you really want to remove " + name + "?" }
+      data: { text: "Do you really want to remove " + name + "?", cancelLabel: "Cancel", confirmationLabel: "Confirm" }
     });
 
     dialogRef.afterClosed().subscribe(result => {
