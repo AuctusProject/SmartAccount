@@ -8,14 +8,22 @@
         </div>
     </mat-panel-title>
   </mat-expansion-panel-header>
-  <div fxLayout="column">
-    <mat-form-field class="full-width">
-      <input matInput placeholder="Recipient Address" [(ngModel)]="recipient" />
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput placeholder="Amount" type="number" [(ngModel)]="value" />
-    </mat-form-field>
-    <button color="primary" class="mat-raised-button mat-primary" mat-button [disabled]="executing" (click)="transferEth()">SEND</button>
-  </div>
+  <mat-list>
+    <app-extension-parameter 
+        [smartAccountAddress]="smartAccountAddress" 
+        [index]="getRecipientIndex()"
+        [parameter]="getRecipientParameter()"
+        (parameterSet)="setRecipientAddress($event)">
+    </app-extension-parameter>
+    <app-extension-parameter 
+        [smartAccountAddress]="smartAccountAddress" 
+        [index]="getAmountIndex()"
+        [parameter]="getAmountParameter()"
+        (parameterSet)="setAmount($event)">
+    </app-extension-parameter>
+    <div fxLayout="row">
+      <button color="primary" class="mat-raised-button mat-primary" mat-button [disabled]="executing" (click)="transferEth()">SEND</button>
+    </div>
+  </mat-list>
 </mat-expansion-panel>
 

@@ -101,7 +101,7 @@ export class ExtensionParameterElementComponent implements OnInit {
         } else if (inputType == 3 || inputType == 8) {
             return "^(0x)?[0-9a-fA-F]{40}$";
         } else if (inputType == 6 || inputType == 7) {
-            return "[\s\S]+";
+            return "[\\s\\S]+";
         } else if (inputType == 5) {
             return "^[0-9][0-9][\/][0-9][0-9][\/][0-9][0-9][0-9][0-9]$";
         }

@@ -207,8 +207,8 @@ export class Web3Service {
     });
   }
 
-  public transferToken(smartAccountAddress: string, loggedWallet: string, tokenAddress: string, to: string, amount: number, decimals: number, chainId: string): Observable<string> {
-    let tokenData = this.getTransferTokenData(to, this.toWei(amount.toString(), decimals));
+  public transferToken(smartAccountAddress: string, loggedWallet: string, tokenAddress: string, to: string, amount: number, chainId: string): Observable<string> {
+    let tokenData = this.getTransferTokenData(to, amount);
     let data = this.getExecuteCallData(tokenAddress, 0, 0, tokenData);
     let self = this;
     return new Observable(observer => {
@@ -219,7 +219,7 @@ export class Web3Service {
   }
 
   public sendEther(smartAccountAddress: string, loggedWallet: string, to: string, amount: number, chainId: string): Observable<string> {
-    let data = this.getExecuteCallData(to, this.toWei(amount.toString()), 0, "");
+    let data = this.getExecuteCallData(to, amount, 0, "");
     let self = this;
     return new Observable(observer => {
       self.sendTransaction(loggedWallet, smartAccountAddress, 0, data, environment.defaultGasPrice, 150000, chainId).subscribe(ret => {

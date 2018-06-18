@@ -1,3 +1,7 @@
-mat-icon {
+.network {
     vertical-align: middle;
+}
+
+.back {
+    vertical-align: text-top;
 }

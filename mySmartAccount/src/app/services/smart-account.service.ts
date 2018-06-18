@@ -155,8 +155,8 @@ export class SmartAccountService {
     this.localStorageService.setAccountData(accountData);
   }
 
-  public transferToken(smartAccountAddress: string, tokenAddress: string, to: string, amount: number, decimals: number): Observable<string> {
-    return this.web3Service.transferToken(smartAccountAddress, this.getAccount(), tokenAddress, to, amount, decimals, this.getNetwork());
+  public transferToken(smartAccountAddress: string, tokenAddress: string, to: string, amount: number): Observable<string> {
+    return this.web3Service.transferToken(smartAccountAddress, this.getAccount(), tokenAddress, to, amount, this.getNetwork());
   }
 
   public sendEther(smartAccountAddress: string, to: string, amount: number): Observable<any> {

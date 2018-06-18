@@ -4,48 +4,66 @@
     </mat-expansion-panel-header>
     <mat-list *ngIf="showList">
         <mat-list-item *ngFor="let tokenBalanceItem of tokenBalanceList" >
-            <span fxFlex="60"><span class="balance">{{tokenBalanceItem.balance}}</span>&nbsp;<strong>{{tokenBalanceItem.symbol}}</strong></span>
-            <div fxLayout="row" fxFlex="40">
+            <span fxFlex="55"><span class="balance">{{tokenBalanceItem.balance}}</span>&nbsp;<strong>{{tokenBalanceItem.symbol}}</strong></span>
+            <div fxLayout="row" fxFlex="45">
                 <button fxFlex="70" class="mat-button mat-primary primary" (click)="setTransferToken(tokenBalanceItem.address)">TRANSFER</button>
                 <button fxFlex="30" class="mat-button" (click)="removeToken(tokenBalanceItem.address)">&times;</button>
             </div>
         </mat-list-item>
-        <mat-divider></mat-divider>
         <div fxLayout="row">
             <button fxFlex="100" color="primary" class="mat-raised-button mat-primary" (click)="setNewToken()">ADD NEW TOKEN</button>
         </div>
     </mat-list>
     <div *ngIf="showTransfer">
         <span>Transfer <strong>{{selectedToken.symbol}}</strong></span>
-        <div fxLayout="column">
-            <mat-form-field class="full-width">
-                <input matInput placeholder="Recipient Address" [(ngModel)]="toAddress" />
-            </mat-form-field>
-            <mat-form-field>
-                <input matInput placeholder="Amount" type="number" [(ngModel)]="amount" />
-            </mat-form-field>
-        </div>
-        <div fxLayout="row" fxLayoutGap="10px">
-            <button class="mat-raised-button" fxFlex="50" mat-button (click)="cancel()" [disabled]="executing">CANCEL</button>
-            <button color="primary" fxFlex="50" class="mat-raised-button mat-primary send-button" mat-button [disabled]="executing" (click)="transferToken()">TRANSFER</button>
+        <div fxLayout="column" fxFlex="100">
+            <mat-list>
+                <app-extension-parameter 
+                    [smartAccountAddress]="smartAccountAddress" 
+                    [index]="getRecipientIndex()"
+                    [parameter]="getRecipientParameter()"
+                    (parameterSet)="setRecipientAddress($event)">
+                </app-extension-parameter>
+                <app-extension-parameter 
+                    [smartAccountAddress]="smartAccountAddress" 
+                    [index]="getAmountIndex()"
+                    [parameter]="amountParameter"
+                    (parameterSet)="setAmount($event)">
+                </app-extension-parameter>
+                <div fxLayout="row" fxLayoutGap="10px">
+                    <button class="mat-raised-button" fxFlex="50" mat-button (click)="cancel()" [disabled]="executing">CANCEL</button>
+                    <button color="primary" fxFlex="50" class="mat-raised-button mat-primary" mat-button [disabled]="executing" (click)="transferToken()">TRANSFER</button>
+                </div>
+            </mat-list>
         </div>
     </div>
     <div *ngIf="showAdd">
         <span>ADD NEW TOKEN</span>
-        <div fxLayout="column">
-            <mat-form-field class="full-width">
-                <input matInput placeholder="Contract Address" [(ngModel)]="contractAddress"/>
-            </mat-form-field>
-            <mat-form-field class="full-width">
-                <input matInput placeholder="Symbol" [(ngModel)]="symbol" />
-            </mat-form-field>
-            <mat-form-field class="full-width">
-                <input matInput placeholder="Decimals" type="number" [(ngModel)]="decimals" />
-            </mat-form-field>
-            <div fxLayout="row" fxLayoutGap="10px">
-                <button class="mat-raised-button" fxFlex="50" mat-button (click)="cancel()" [disabled]="executing">CANCEL</button>
-                <button color="primary" fxFlex="50" class="mat-raised-button mat-primary send-button" mat-button [disabled]="executing" (click)="addToken()">ADD TOKEN</button>
-            </div>
+        <div fxLayout="column" fxFlex="100">
+            <mat-list>
+                <app-extension-parameter 
+                    [smartAccountAddress]="smartAccountAddress" 
+                    [index]="getContractAddressIndex()"
+                    [parameter]="getContractAddressParameter()"
+                    (parameterSet)="setContractAddress($event)">
+                </app-extension-parameter>
+                <app-extension-parameter 
+                    [smartAccountAddress]="smartAccountAddress" 
+                    [index]="getSymbolIndex()"
+                    [parameter]="getSymbolParameter()"
+                    (parameterSet)="setSymbol($event)">
+                </app-extension-parameter>
+                <app-extension-parameter 
+                    [smartAccountAddress]="smartAccountAddress" 
+                    [index]="getDecimalsIndex()"
+                    [parameter]="getDecimalsParameter()"
+                    (parameterSet)="setDecimals($event)">
+                </app-extension-parameter>
+                <div fxLayout="row" fxLayoutGap="10px">
+                    <button class="mat-raised-button" fxFlex="50" mat-button (click)="cancel()" [disabled]="executing">CANCEL</button>
+                    <button color="primary" fxFlex="50" class="mat-raised-button mat-primary" mat-button [disabled]="executing" (click)="addToken()">ADD TOKEN</button>
+                </div>
+            </mat-list>
         </div>
     </div>
 </mat-expansion-panel>

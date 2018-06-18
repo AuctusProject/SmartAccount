@@ -1,8 +1,8 @@
 <div fxLayout="row" fxLayoutGap="5px">
-    <h1 *ngIf="backDestination && backDestination.length > 0" (click)="back()"><mat-icon>chevron_left</mat-icon></h1>
+    <h1 *ngIf="backDestination && backDestination.length > 0" (click)="back()" class="back"><mat-icon>chevron_left</mat-icon></h1>
     <h2 fxFlex="75">Smart Account</h2>
     <h5 fxFlex="25" class="pull-right">{{chain}}
-        <span *ngIf="!unlocked"><mat-icon>lock</mat-icon></span>
-        <span *ngIf="unlocked"><mat-icon>lock_open</mat-icon></span>
+        <span *ngIf="!unlocked"><mat-icon class="network">lock</mat-icon></span>
+        <span *ngIf="unlocked"><mat-icon class="network">lock_open</mat-icon></span>
     </h5>
 </div>

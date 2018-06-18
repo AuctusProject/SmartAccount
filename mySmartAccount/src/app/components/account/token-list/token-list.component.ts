@@ -3,6 +3,8 @@ import { LocalStorageService } from '../../../services/local-storage.service';
 import { SmartAccountService } from '../../../services/smart-account.service';
 import { TokenStorage } from '../../../model/TokenStorage';
 import { AddressUtil } from '../../../util/addressUtil';
+import { ParameterUI } from '../../../model/ParameterUI';
+import { Web3Service } from '../../../services/web3.service';
 
 @Component({
   selector: 'app-token-list',
@@ -17,16 +19,19 @@ export class TokenListComponent implements OnInit {
   showList: boolean;
   showAdd: boolean;
   executing: boolean;
-  contractAddress: string;
-  symbol: string;
-  decimals: number;
-  toAddress: string;
-  amount: number;
+  contractAddress: any;
+  symbol: any;
+  decimals: any;
+  toAddress: any;
+  amount: any;
   selectedToken: TokenStorage;
+  amountParameter: ParameterUI;
 
   constructor(
     private localStorageService: LocalStorageService,
-    private smartAccountService: SmartAccountService, private ref: ChangeDetectorRef) { }
+    private smartAccountService: SmartAccountService, 
+    private ref: ChangeDetectorRef,
+    private web3Service: Web3Service) { }
 
   ngOnInit() {
     this.cancel();
@@ -58,17 +63,18 @@ export class TokenListComponent implements OnInit {
   }
 
   addToken() {
-    if (this.contractAddress && this.decimals > 0 && this.symbol && AddressUtil.isValid(this.contractAddress)) {
+    if (this.contractAddress && this.contractAddress.status && this.decimals && this.decimals.status 
+      && this.decimals.value > 0 && this.symbol && this.symbol.status) {
       this.executing = true;
       let accountData = this.localStorageService.getAccountData();
       let smartAccount = accountData.getSmartAccount(this.smartAccountAddress);
-      smartAccount.addTokenData(this.symbol.toUpperCase(), this.decimals, this.contractAddress.toLowerCase());
+      smartAccount.addTokenData(this.symbol.value.toUpperCase(), this.decimals.value, this.contractAddress.value);
       this.tokenBalanceList = smartAccount.tokens;
       accountData.updateSmartAccount(smartAccount);
       this.localStorageService.setAccountData(accountData);
       let self = this;
-      this.smartAccountService.getTokenBalance(this.smartAccountAddress, this.contractAddress, this.decimals).subscribe(ret => {
-        self.updateBalance(self.contractAddress, ret);
+      this.smartAccountService.getTokenBalance(this.smartAccountAddress, this.contractAddress.value, this.decimals).subscribe(ret => {
+        self.updateBalance(self.contractAddress.value, ret);
         self.cancel();
       });
     }
@@ -81,18 +87,25 @@ export class TokenListComponent implements OnInit {
         break;
       }
     }
+    this.amountParameter = new ParameterUI("Amount", 2, this.selectedToken.decimals, false, true, false);
     this.showTransfer = true;
     this.showList = false;
     this.showAdd = false;
   }
 
   transferToken() {
-    if (this.toAddress && AddressUtil.isValid(this.toAddress) && this.amount > 0) {
+    if (this.toAddress && this.toAddress.status && this.amount && this.amount.status && this.amount.value > 0) {
       this.executing = true;
       let self = this;
+      let tokenAddress = this.selectedToken.address;
       this.smartAccountService.transferToken(this.smartAccountAddress, this.selectedToken.address, 
-        this.toAddress, this.amount, this.selectedToken.decimals).subscribe(ret => {
-          self.cancel();
+        this.toAddress.value, this.amount.value).subscribe(txHash => {
+          self.web3Service.isMined(txHash).subscribe(ret => {
+            self.smartAccountService.getTokenBalance(self.smartAccountAddress, tokenAddress, self.selectedToken.decimals).subscribe(ret => {
+              self.updateBalance(tokenAddress, ret);
+            });
+            self.cancel();
+          });
       });
     }
   }
@@ -115,5 +128,61 @@ export class TokenListComponent implements OnInit {
         break;
       }
     }
+  }
+
+  getRecipientIndex(): number {
+    return 0;
+  }
+
+  getRecipientParameter(): ParameterUI {
+    return new ParameterUI("Recipient Address", 3, 0, false, true, false);
+  }
+
+  setRecipientAddress(address: any) {
+    this.toAddress = address;
+  }
+
+  getAmountIndex(): number {
+    return 1;
+  }
+
+  setAmount(amount: any) {
+    this.amount = amount;
+  }
+
+  getContractAddressIndex(): number {
+    return 0;
+  }
+
+  getContractAddressParameter(): ParameterUI {
+    return new ParameterUI("Contract Address", 3, 0, false, true, false);
+  }
+
+  setContractAddress(address: any) {
+    this.contractAddress = address;
+  }
+
+  getSymbolIndex(): number {
+    return 1;
+  }
+
+  getSymbolParameter(): ParameterUI {
+    return new ParameterUI("Symbol", 6, 0, false, true, false);
+  }
+
+  setSymbol(symbol: any) {
+    this.symbol = symbol;
+  }
+
+  getDecimalsIndex(): number {
+    return 2;
+  }
+
+  getDecimalsParameter(): ParameterUI {
+    return new ParameterUI("Decimals", 1, 1, false, true, false);
+  }
+
+  setDecimals(decimals: any) {
+    this.decimals = decimals;
   }
 }

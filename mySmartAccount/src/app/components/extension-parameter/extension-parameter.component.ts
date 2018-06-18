@@ -98,8 +98,6 @@ export class ExtensionParameterComponent implements OnInit {
             return valueLower.startsWith("0x") ? valueLower : "0x" + valueLower;
         } else if (this.parameter.type == 5) {
             return value.getTime() / 1000;
-        } else if (this.parameter.type == 4) {
-            return value ? 1 : 0;
         } else if (this.parameter.type == 1 || this.parameter.type == 2) {
             return value * (this.parameter.decimals > 1 ? this.parameter.decimals : 1);
         } else {

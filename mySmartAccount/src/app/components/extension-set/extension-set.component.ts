@@ -22,6 +22,7 @@ export class ExtensionSetComponent implements OnInit {
   roles: string[];
   name: string;
   description: string;
+  note: string;
 
   constructor(private route: ActivatedRoute, 
     private zone: NgZone, 
@@ -52,6 +53,8 @@ export class ExtensionSetComponent implements OnInit {
               break;
             }
           }
+          self.note = !self.active ? "After activating you still need set the extension's configuration." 
+            : "After inactivating all existing extension's configuration will be disabled.";
           self.executing = false;
         }
       }
