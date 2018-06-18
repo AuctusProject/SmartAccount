@@ -1,6 +1,19 @@
 <app-header [backDestination]="getBackDestination()"></app-header>
 <div fxLayout="column">
-  <h2 fxFlex="100">{{name}}</h2>
+  <h2 fxFlex="100" *ngIf="!editing">{{name}}<mat-icon class="pull-right" (click)="setEditName()">create</mat-icon></h2>
+  <mat-list *ngIf="editing">
+    <app-extension-parameter 
+        [smartAccountAddress]="smartAccount.address" 
+        [index]="getIndex()"
+        [parameter]="getNameParameter()"
+        [setValue]="smartAccount.name"
+        (parameterSet)="setName($event)">
+    </app-extension-parameter>
+    <div fxLayout="row" fxLayoutGap="10px">
+        <button class="mat-raised-button" fxFlex="50" mat-button (click)="back()">CANCEL</button>
+        <button color="primary" fxFlex="50" class="mat-raised-button mat-primary" mat-button (click)="saveName()">SAVE</button>
+    </div>
+  </mat-list>
   <h3 fxFlex="100">{{ui.name}}</h3>
   <mat-expansion-panel fxFlex="100">
     <mat-expansion-panel-header>

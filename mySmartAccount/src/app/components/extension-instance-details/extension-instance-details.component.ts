@@ -8,6 +8,7 @@ import { GeneralUtil } from '../../util/generalUtil';
 import { ActionUI } from '../../model/ActionUI';
 import * as SolidityCoder from 'web3/lib/solidity/coder';
 import { Observable } from 'rxjs/Observable';
+import { ParameterUI } from '../../model/ParameterUI';
 
 @Component({
     selector: 'app-extension-instance-details',
@@ -20,6 +21,8 @@ export class ExtensionInstanceDetailsComponent implements OnInit {
   extensionInstanceIdentifier: string;
   ui: ExtensionUI;
   name: string;
+  nameEditing: any;
+  editing: boolean;
   roles: string[];
   showActionDetails: boolean;
   setupValues: any[];
@@ -161,5 +164,47 @@ export class ExtensionInstanceDetailsComponent implements OnInit {
     actionExecuted() {
         this.showActionDetails = false;
         this.setDataValues();
+    }
+
+    setEditName() {
+        this.editing = true;
+        this.nameEditing = null;
+      }
+    
+    back() {
+        this.editing = false;
+    }
+
+    getIndex(): number {
+        return 0;
+    }
+
+    getNameParameter(): ParameterUI {
+        return new ParameterUI("Name", 6, 0, false, true, false);
+    }
+
+    setName(name: any) {
+        this.nameEditing = name;
+    }
+
+    saveName() {
+        if (this.nameEditing && this.nameEditing.status) {
+            this.name = this.nameEditing.value;
+            let self = this;
+            let account = this.localStorageService.getAccountData();
+            let smartAccount = account.getSmartAccount(this.smartAccountAddress);
+            smartAccount.extensions.forEach(ext => {
+                if (ext.address == self.extensionAddress) {
+                    ext.identifiers.forEach(iden => {
+                        if (iden.identifier == self.extensionInstanceIdentifier) {
+                            iden.name = self.name;
+                        }
+                    });
+                }
+            });
+            account.updateSmartAccount(smartAccount);
+            this.localStorageService.setAccountData(account);
+            this.back();
+        }
     }
 }
