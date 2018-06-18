@@ -45,10 +45,6 @@ export class SmartAccountService {
     setTimeout(() => this.monitoreAccount(), 2000);
   }
 
-  startWeb3() {
-    return this.web3Service.hasWeb3();
-  }
-
   private runChecks() {
     let self = this;
     self.web3Service.hasWeb3().subscribe(web3 => {
@@ -205,6 +201,20 @@ export class SmartAccountService {
       self.web3Service.callConstMethodWithData(data, smartAccountAddress, ["string"]).subscribe(result => {
         observer.next(result);
       });
+    });
+  }
+
+  public isSmartAccountBouncer(smartAccountAddress: string): Observable<boolean> {
+    let self = this;
+    return new Observable(observer => {
+      if (!smartAccountAddress || !self.account) {
+        observer.next(false);
+      } else {
+        let data = self.web3Service.getIsBouncerData(self.account);
+        self.web3Service.callConstMethodWithData(data, smartAccountAddress, ["bool"]).subscribe(result => {
+          observer.next(result);
+        });
+      }
     });
   }
 

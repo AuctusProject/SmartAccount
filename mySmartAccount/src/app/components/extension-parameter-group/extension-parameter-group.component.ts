@@ -38,7 +38,6 @@ export class ExtensionParameterGroupComponent implements OnInit {
     
     ngOnInit() {
         this.executing = false;
-        this.smartAccountService.startWeb3();
     }
 
     execute() {

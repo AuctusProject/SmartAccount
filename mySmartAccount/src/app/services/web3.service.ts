@@ -94,6 +94,10 @@ export class Web3Service {
     return "0x54fd4d50";
   }
 
+  public getIsBouncerData(address: string): string {
+    return "0xac4ab3fb" + SolidityCoder.encodeParams(["address", "bytes32"], [address,"0x6ac111a9c17d7cd460068909fd36118d5e2435d06df0692ae42adf660375fabe"]);
+  }
+
   public getNetwork(): Observable<string> {
     let self = this;
     return new Observable(observer => {
