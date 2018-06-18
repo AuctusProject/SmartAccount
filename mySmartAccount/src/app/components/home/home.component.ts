@@ -8,6 +8,8 @@ import { AccountDataStorage } from '../../model/AccountDataStorage';
 import { SmartAccountStorage } from '../../model/SmartAccountStorage';
 import { Observable } from 'rxjs/Observable';
 import { AddressUtil } from '../../util/addressUtil';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { ConfirmationDialogComponent } from "../confirmation-dialog/confirmation-dialog.component";
 
 @Component({
   selector: 'app-home',
@@ -27,7 +29,8 @@ export class HomeComponent implements OnInit {
     private extensionService: ExtensionService,
     private localStorageService: LocalStorageService,
     private router: Router, 
-    private zone : NgZone) {
+    private zone : NgZone,
+    public dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -128,10 +131,21 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  remove(address: string) {
-    let accountData = this.localStorageService.getAccountData();
-    accountData.removeSmartAccount(address);
-    this.localStorageService.setAccountData(accountData);
+  remove(event: Event, name: string, address: string) {
+    event.stopPropagation();
+    let dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '250px',
+      data: { text: "Do you really want to remove " + name + "?" }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        let accountData = this.localStorageService.getAccountData();
+        accountData.removeSmartAccount(address);
+        this.localStorageService.setAccountData(accountData);
+        this.load();
+      }
+    });
   }
 
   goToSmartAccount(address: string) {

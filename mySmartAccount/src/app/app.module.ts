@@ -14,6 +14,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {MatDialogModule} from '@angular/material';
 import { Angular2PromiseButtonModule } from 'angular2-promise-buttons/dist';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { UiSwitchModule } from 'angular2-ui-switch'
@@ -36,6 +37,7 @@ import { ExtensionParameterComponent } from './components/extension-parameter/ex
 import { ExtensionParameterElementComponent } from './components/extension-parameter/extension-parameter-element/extension-parameter-element.component';
 import { ExtensionParameterGroupComponent } from './components/extension-parameter-group/extension-parameter-group.component';
 import { ExtensionSetupComponent } from './components/extension-setup/extension-setup.component';
+import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 
 
 @NgModule({
@@ -52,10 +54,12 @@ import { ExtensionSetupComponent } from './components/extension-setup/extension-
     ExtensionParameterComponent,
     ExtensionParameterElementComponent,
     ExtensionParameterGroupComponent,
-    ExtensionSetupComponent
+    ExtensionSetupComponent,
+    ConfirmationDialogComponent
   ],
   entryComponents: [
-    ExtensionParameterElementComponent
+    ExtensionParameterElementComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -84,7 +88,8 @@ import { ExtensionSetupComponent } from './components/extension-setup/extension-
         btnLoadingClass: 'is-loading',
         handleCurrentBtnOnly: true,
       }),
-    FormsModule
+    FormsModule,
+    MatDialogModule
   ],
 
   providers: [
