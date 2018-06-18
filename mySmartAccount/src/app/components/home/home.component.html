@@ -6,7 +6,7 @@
         <span fxFlex="70">{{smartAccount.name}}</span>
         <span fxFlex="20" *ngIf="!smartAccount.version"><mat-icon>warning</mat-icon></span>
         <span fxFlex="20" *ngIf="smartAccount.version"><small>{{smartAccount.balance}} ETH</small></span>
-        <span class="pull-right" (click)="remove(smartAccount.address)"><mat-icon>clear</mat-icon></span>
+        <span class="pull-right" (click)="remove($event, smartAccount.name, smartAccount.address)"><mat-icon>clear</mat-icon></span>
       </mat-list-item>
     </mat-list>
   </mat-expansion-panel>
