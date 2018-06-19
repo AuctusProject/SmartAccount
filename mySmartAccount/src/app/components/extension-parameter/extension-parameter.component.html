@@ -1,7 +1,7 @@
 <div fxLayout="column">
     <div fxFlex="100" fxLayout="row" class="array" *ngIf="isArray()">
-        <mat-label fxFlex="95" *ngIf="isArray()">{{getDescription()}}</mat-label>
-        <mat-icon fxFlex="5" class="pull-right"  *ngIf="parameter.isEditable" (click)="addNewElement()">add_circle_outline</mat-icon>
+        <mat-label fxFlex="100" *ngIf="isArray()" [class]="parameter.isEditable ? 'label-normal' : 'label-disabled'">{{getDescription()}}</mat-label>
+        <mat-icon class="pull-right" *ngIf="parameter.isEditable" (click)="addNewElement()">add_circle_outline</mat-icon>
     </div>
     <mat-list-item *ngFor="let element of elements" >
         <app-extension-parameter-element

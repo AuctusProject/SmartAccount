@@ -34,10 +34,6 @@ h1, h2, h3, p, span, body {
     font-family: 'Roboto';
 }
 
-.mat-input-element:read-only {
-    color: rgba(0,0,0,.38);
-}
-
 button .btn-spinner {
     font-family: sans-serif;
     font-weight: 100;
