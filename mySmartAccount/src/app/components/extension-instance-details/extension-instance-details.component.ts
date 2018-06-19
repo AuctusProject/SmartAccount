@@ -28,6 +28,8 @@ export class ExtensionInstanceDetailsComponent implements OnInit {
   setupValues: any[];
   dataValues: any[];
   actionSelected: ActionUI;
+  showData: boolean;
+  showSetup: boolean;
   
   constructor(private route: ActivatedRoute, 
     private zone: NgZone, 
@@ -77,9 +79,7 @@ export class ExtensionInstanceDetailsComponent implements OnInit {
     setDataValues() {
         let suffixData = SolidityCoder.encodeParams(["address", "bytes32"], [this.smartAccountAddress, this.extensionInstanceIdentifier]);
         let array = [];
-        this.dataValues = [];
         for (let i = 0; i < this.ui.viewDataParameters.length; ++i) {
-            this.dataValues.push(null);
             array.push(this.web3Service.callConstMethodWithData(this.ui.viewDataParameters[i].funcSignature + suffixData, 
                 this.extensionAddress, [GeneralUtil.getWeb3Type(this.ui.viewDataParameters[i].output)]));
         }
@@ -89,16 +89,12 @@ export class ExtensionInstanceDetailsComponent implements OnInit {
             values.forEach(val => {
                 self.dataValues.push(val[0]);
             });
-            self.ref.detectChanges();
+            self.showData = true;
         });
     }
 
     setSetupValues() {
         let data = this.web3Service.getSetupData(this.smartAccountAddress, this.extensionInstanceIdentifier);
-        this.setupValues = [];
-        for (let i = 0; i < this.ui.setupParameters.length; ++i) {
-            this.setupValues.push(null);
-        }
         let self = this;
         this.web3Service.callConstMethodWithData(data, this.extensionAddress, this.ui.getSetupWeb3Types()).subscribe(ret => {
             self.setupValues = new Array<any>();
@@ -113,7 +109,7 @@ export class ExtensionInstanceDetailsComponent implements OnInit {
                 }
                 self.setupValues.push(value);
             }
-            self.ref.detectChanges();
+            self.showSetup = true;
         });
     }
 

@@ -36,7 +36,7 @@
       </mat-list-item>
     </mat-list>
   </mat-expansion-panel> 
-  <app-extension-parameter-group fxFlex="100"
+  <app-extension-parameter-group fxFlex="100" *ngIf="showData"
       [title]="getDataTitle()"
       [smartAccountAddress]="smartAccountAddress"
       [extensionAddress]="extensionAddress"
@@ -45,7 +45,7 @@
       [parameters]="getDataParameters()"
       [initialValues]="dataValues">
   </app-extension-parameter-group>
-  <app-extension-parameter-group
+  <app-extension-parameter-group fxFlex="100" *ngIf="showSetup"
       [title]="getSetupTitle()"
       [actionButtonName]="getSetupActionName()"
       [functionSignature]="ui.updateSetupFunctionSignature"
@@ -57,7 +57,7 @@
       [initialValues]="setupValues"
       (executed)="setupExecuted()">
   </app-extension-parameter-group>
-  <mat-expansion-panel *ngIf="!showActionDetails">
+  <mat-expansion-panel fxFlex="100" *ngIf="!showActionDetails">
     <mat-expansion-panel-header>
         <mat-panel-title>{{getActionTitle()}}</mat-panel-title>
     </mat-expansion-panel-header>
@@ -67,7 +67,7 @@
       </mat-list-item>
     </mat-list>
   </mat-expansion-panel>
-  <app-extension-parameter-group *ngIf="showActionDetails"
+  <app-extension-parameter-group fxFlex="100" *ngIf="showActionDetails"
       [title]="getActionTitle()"
       [actionButtonName]="getButtonActionName()"
       [backButtonName]="getBackActionName()"
