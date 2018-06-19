@@ -8,12 +8,12 @@
                 [smartAccountAddress]="smartAccountAddress" 
                 [index]="i"
                 [parameter]="param"
-                [setValue]="values[i]"
+                [setValue]="initialValues[i]"
                 [forceEditable]="forceAllEditable"
                 (parameterSet)="parameterSet($event)">
             </app-extension-parameter>
         </div>
-        <div fxLayout="row" *ngIf="!!functionSignature">
+        <div fxLayout="row" *ngIf="!!functionSignature" fxLayoutGap="10px">
             <button class="mat-raised-button" fxFlex="50" *ngIf="!!backButtonName" mat-button (click)="back()" [disabled]="executing">{{backButtonName}}</button>
             <button color="primary" fxFlex="!!backButtonName ? 50 : 100" class="mat-raised-button mat-primary" mat-button (click)="execute()" [disabled]="executing">{{actionButtonName}}</button>
         </div>

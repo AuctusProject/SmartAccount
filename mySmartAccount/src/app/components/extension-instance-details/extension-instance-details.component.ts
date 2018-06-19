@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { Web3Service } from '../../services/web3.service';
@@ -32,6 +32,7 @@ export class ExtensionInstanceDetailsComponent implements OnInit {
   constructor(private route: ActivatedRoute, 
     private zone: NgZone, 
     private router: Router,
+    private ref: ChangeDetectorRef,
     private localStorageService: LocalStorageService,
     private smartAccountService: SmartAccountService,
     private web3Service: Web3Service) {}
@@ -54,17 +55,20 @@ export class ExtensionInstanceDetailsComponent implements OnInit {
                     self.setDataValues();
                     self.setSetupValues();
                     let addedExtensions = accountData.getSmartAccount(self.smartAccountAddress).extensions;
-                    addedExtensions.forEach(ext => {
-                        if (ext.address == self.extensionAddress) {
-                            ext.identifiers.forEach(iden => {
-                                if (iden.identifier == self.extensionInstanceIdentifier) {
-                                    self.name = iden.name;
-                                    return;
+                    for (let i = 0; i < addedExtensions.length; ++i) {
+                        if (addedExtensions[i].address == self.extensionAddress) {
+                            for (let j = 0; j < addedExtensions[i].identifiers.length; ++j) {
+                                if (addedExtensions[i].identifiers[j].identifier == self.extensionInstanceIdentifier) {
+                                    self.name = addedExtensions[i].identifiers[j].name;
+                                    break;
                                 }
-                            });
+                            }
+                            break;
                         }
-                    });
-                    self.name = 'Not defined';
+                    }
+                    if (!self.name) {
+                        self.name = 'Not defined';
+                    }
                 }
             }
         });
@@ -73,24 +77,35 @@ export class ExtensionInstanceDetailsComponent implements OnInit {
     setDataValues() {
         let suffixData = SolidityCoder.encodeParams(["address", "bytes32"], [this.smartAccountAddress, this.extensionInstanceIdentifier]);
         let array = [];
+        this.dataValues = [];
+        for (let i = 0; i < this.ui.viewDataParameters.length; ++i) {
+            this.dataValues.push(null);
+            array.push(this.web3Service.callConstMethodWithData(this.ui.viewDataParameters[i].funcSignature + suffixData, 
+                this.extensionAddress, [GeneralUtil.getWeb3Type(this.ui.viewDataParameters[i].output)]));
+        }
         let self = this;
-        this.ui.viewDataParameters.forEach(view => {
-            array.push(self.web3Service.callConstMethodWithData(view.funcSignature + suffixData, self.extensionAddress, [GeneralUtil.getWeb3Type(view.output)]));
-        });
         Observable.combineLatest(array).subscribe(function handleValues(values) {
-            self.dataValues = values;
+            self.dataValues = new Array<any>();
+            values.forEach(val => {
+                self.dataValues.push(val[0]);
+            });
+            self.ref.detectChanges();
         });
     }
 
     setSetupValues() {
         let data = this.web3Service.getSetupData(this.smartAccountAddress, this.extensionInstanceIdentifier);
+        this.setupValues = [];
+        for (let i = 0; i < this.ui.setupParameters.length; ++i) {
+            this.setupValues.push(null);
+        }
         let self = this;
         this.web3Service.callConstMethodWithData(data, this.extensionAddress, this.ui.getSetupWeb3Types()).subscribe(ret => {
             self.setupValues = new Array<any>();
             for (let i = 0; i < self.ui.setupParameters.length; ++i) {
                 let value = null;
                 if (self.ui.setupParameters[i].type == 1 || self.ui.setupParameters[i].type == 2) {
-                    value = ret[i] * (self.ui.setupParameters[i].decimals > 1 ? self.ui.setupParameters[i].decimals : 1);
+                    value = ret[i] / (self.ui.setupParameters[i].decimals > 1 ? self.ui.setupParameters[i].decimals : 1);
                 } else if (self.ui.setupParameters[i].type == 5) {
                     value = new Date(ret[i]);
                 } else {
@@ -98,11 +113,12 @@ export class ExtensionInstanceDetailsComponent implements OnInit {
                 }
                 self.setupValues.push(value);
             }
+            self.ref.detectChanges();
         });
     }
 
     getBackDestination() {
-        this.zone.run(() => this.router.navigate(['account', this.smartAccountAddress])); 
+        return ['account', this.smartAccountAddress]; 
     }
 
     getDataTitle() {

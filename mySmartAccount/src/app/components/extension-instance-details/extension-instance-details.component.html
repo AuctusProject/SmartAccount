@@ -1,12 +1,12 @@
 <app-header [backDestination]="getBackDestination()"></app-header>
 <div fxLayout="column">
-  <h2 fxFlex="100" *ngIf="!editing">{{name}}<mat-icon class="pull-right" (click)="setEditName()">create</mat-icon></h2>
+  <h3 fxFlex="100" *ngIf="!editing">{{name}}<mat-icon class="pull-right" (click)="setEditName()">create</mat-icon></h3>
   <mat-list *ngIf="editing">
     <app-extension-parameter 
-        [smartAccountAddress]="smartAccount.address" 
+        [smartAccountAddress]="smartAccountAddress" 
         [index]="getIndex()"
         [parameter]="getNameParameter()"
-        [setValue]="smartAccount.name"
+        [setValue]="name"
         (parameterSet)="setName($event)">
     </app-extension-parameter>
     <div fxLayout="row" fxLayoutGap="10px">
@@ -14,7 +14,7 @@
         <button color="primary" fxFlex="50" class="mat-raised-button mat-primary" mat-button (click)="saveName()">SAVE</button>
     </div>
   </mat-list>
-  <h3 fxFlex="100">{{ui.name}}</h3>
+  <h4 fxFlex="100" class="extension-type">{{ui.name}}</h4>
   <mat-expansion-panel fxFlex="100">
     <mat-expansion-panel-header>
         <mat-panel-title>DESCRIPTION</mat-panel-title>
@@ -27,7 +27,7 @@
   </mat-expansion-panel>
   <mat-expansion-panel fxFlex="100">
     <mat-expansion-panel-header>
-        <mat-panel-title>Permissions</mat-panel-title>
+        <mat-panel-title>PERMISSIONS</mat-panel-title>
     </mat-expansion-panel-header>
     <mat-list>
       <mat-list-item *ngFor="let role of roles">
@@ -63,7 +63,7 @@
     </mat-expansion-panel-header>
     <mat-list>
       <mat-list-item *ngFor="let action of ui.actions" >
-        <button class="mat-button mat-primary primary" (click)="clickAction(action.funcSignature)">{{action.description}}</button>
+        <button fxFlex="100" class="mat-raised-button mat-primary mat-button" (click)="clickAction(action.funcSignature)">{{action.description}}</button>
       </mat-list-item>
     </mat-list>
   </mat-expansion-panel>
@@ -76,7 +76,7 @@
       [extensionAddress]="extensionAddress"
       [identifier]="extensionInstanceIdentifier"
       [disabled]="false"
-      [expanded]="false"
+      [expanded]="true"
       [parameters]="getActionParameters()"
       [initialValues]="getActionValues()"
       (backClick)="actionBack()"

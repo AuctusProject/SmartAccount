@@ -95,7 +95,7 @@ export class AccountDataStorage {
     getExtensionUI(address: string): ExtensionUI {
         for(let i = 0; i < this.extensionUIs.length; ++i) {
             if (this.extensionUIs[i].address == address) {
-                return this.extensionUIs[i];
+                return Object.assign(new ExtensionUI, this.extensionUIs[i]);
             }
         }
         return null;

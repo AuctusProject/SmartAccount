@@ -237,7 +237,7 @@ export class SmartAccountService {
           var array = [];
           for (var i = 0; i < result[0]; ++i) {
             let dataIndex = self.web3Service.getExtensionByIndexData(i);
-            array.push(self.web3Service.callConstMethodWithData(dataIndex, smartAccountAddress, ["address","uint256","bytes32[]"]));
+            array.push(self.web3Service.callConstMethodWithData(dataIndex, smartAccountAddress, ["address","uint256"]));
           }
           Observable.combineLatest(array)
             .subscribe(function handleValues(values) {
@@ -274,7 +274,7 @@ export class SmartAccountService {
           Observable.combineLatest(array)
             .subscribe(function handleValues(values) {
               values.forEach(item => {
-                extension.addIdentifier(undefined, item);
+                extension.addIdentifier(undefined, item[0]);
               });
               observer.next(extension);
             });

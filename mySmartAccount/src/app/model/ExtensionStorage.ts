@@ -43,16 +43,25 @@ export class ExtensionStorage {
             this.identifiers.splice(removedIndexes[i], 1);
         }
         let newIdentifiers: string[] = new Array<string>();
+        let countNoName = 0;
         for(let i = 0; i < readIdentifiers.length; ++i) {
+            let newIdentifier = true;
             for(let j = 0; j < this.identifiers.length; ++j) {
                 if (readIdentifiers[i] == this.identifiers[j].identifier) {
+                    if (!this.identifiers[j].name) {
+                        this.identifiers[j].name = 'Not defined ' + countNoName;
+                        ++countNoName;
+                    }
+                    newIdentifier = false;
                     break;
                 }
+            }
+            if (newIdentifier) {
                 newIdentifiers.push(readIdentifiers[i]);
             }
         }
         for(let i = 0; i < newIdentifiers.length; ++i) {
-            this.identifiers.push(new ExtensionIdentifierStorage('Not defined ' + i, newIdentifiers[i]));
+            this.identifiers.push(new ExtensionIdentifierStorage('Not defined ' + (i + countNoName), newIdentifiers[i]));
         }
     }
 }
