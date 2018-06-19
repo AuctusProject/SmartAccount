@@ -2,10 +2,6 @@
 <div fxLayout="column">
   <h2 fxFlex="100">Set new instance</h2>
   <div fxLayout="column">
-        <mat-form-field class="full-width" fxFlex="100">
-            <input matInput placeholder="Name" [(ngModel)]="name" />
-        </mat-form-field>
-
         <app-extension-parameter-group
             [title]="getTitle()"
             [actionButtonName]="getActionButtonName()"
@@ -14,6 +10,7 @@
             [extensionAddress]="extensionAddress"
             [disabled]="true"
             [expanded]="true"
+            [forceAllEditable]="true"
             [parameters]="getParameters()"
             [initialValues]="getValues()"
             (executed)="executed()">

@@ -3,27 +3,33 @@
   <mat-expansion-panel [disabled]="true" [hideToggle]="true" [expanded]="true" *ngIf="accountData.smartAccounts.length > 0">
     <mat-list>
       <mat-list-item *ngFor="let smartAccount of accountData.smartAccounts" (click)="goToSmartAccount(smartAccount.address)" >
-        <span fxFlex="70">{{smartAccount.name}}</span>
-        <span fxFlex="20" *ngIf="!smartAccount.version"><mat-icon>warning</mat-icon></span>
-        <span fxFlex="20" *ngIf="smartAccount.version"><small>{{smartAccount.balance}} ETH</small></span>
-        <span class="pull-right" (click)="remove($event, smartAccount.name, smartAccount.address)"><mat-icon>clear</mat-icon></span>
+        <span fxFlex="75">{{smartAccount.name}}</span>
+        <span fxFlex="25" *ngIf="!smartAccount.version"><mat-icon>warning</mat-icon></span>
+        <span fxFlex="25" *ngIf="smartAccount.version"><small>{{smartAccount.balance}} ETH</small></span>
+        <mat-icon class="pull-right" (click)="remove($event, smartAccount.name, smartAccount.address)">clear</mat-icon>
       </mat-list-item>
     </mat-list>
   </mat-expansion-panel>
-  <div fxLayout="column" fxLayoutGap="20px">
-    <form (ngSubmit)="save()" *ngIf="adding">
-      <mat-form-field class="full-width">
-        <input matInput name="name" [(ngModel)]="name" placeholder="Set a name" />
-      </mat-form-field>
-      <mat-form-field class="full-width" *ngIf="importing">
-        <input matInput name="address" [(ngModel)]="contractAddress" ng-pattern="^(0x)?[0-9a-fA-F]{40}$" placeholder="Account address" />
-      </mat-form-field>
-      <div fxLayout="column" fxLayoutGap="20px">
-        <button mat-raised-button fxFlex="50" type="submit" color="primary" [disabled]="executing" [promiseBtn]="savePromise">{{getAction()}}</button>
-        <button mat-raised-button fxFlex="50" [disabled]="executing" (click)="clearAdding()">CANCEL</button>
-      </div>
+  <div fxLayout="row" fxLayoutGap="10px">
+    <form (ngSubmit)="save()" *ngIf="adding" fxFlex="100">
+      <mat-list>
+        <app-extension-parameter 
+          [index]="getNameIndex()"
+          [parameter]="getNameParameter()"
+          (parameterSet)="setName($event)">
+        </app-extension-parameter>
+        <app-extension-parameter *ngIf="importing" 
+          [index]="getContractAddressIndex()"
+          [parameter]="getContractAddressParameter()"
+          (parameterSet)="setContractAddress($event)">
+        </app-extension-parameter>
+        <div fxLayout="row" fxLayoutGap="10px">
+          <button mat-raised-button fxFlex="50" [disabled]="executing" (click)="clearAdding()">CANCEL</button>
+          <button mat-raised-button fxFlex="50" type="submit" color="primary" [disabled]="executing">{{getAction()}}</button>
+        </div>
+      </mat-list>
     </form>
-    <button mat-raised-button fxFlex="100" color="primary" (click)="create()" *ngIf="!adding">CREATE NEW</button>
-    <button mat-raised-button fxFlex="100" (click)="import()" *ngIf="!adding">IMPORT EXISTING</button>
+    <button mat-raised-button fxFlex="50" (click)="import()" *ngIf="!adding">IMPORT EXISTING</button>
+    <button mat-raised-button fxFlex="50" color="primary" (click)="create()" *ngIf="!adding">CREATE NEW</button>
   </div>
 </div>

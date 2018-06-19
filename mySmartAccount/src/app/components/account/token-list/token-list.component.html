@@ -5,13 +5,13 @@
     <mat-list *ngIf="showList">
         <mat-list-item *ngFor="let tokenBalanceItem of tokenBalanceList" >
             <span fxFlex="55"><span class="balance">{{tokenBalanceItem.balance}}</span>&nbsp;<strong>{{tokenBalanceItem.symbol}}</strong></span>
-            <div fxLayout="row" fxFlex="45">
-                <button fxFlex="70" class="mat-button mat-primary primary" (click)="setTransferToken(tokenBalanceItem.address)">TRANSFER</button>
-                <button fxFlex="30" class="mat-button" (click)="removeToken(tokenBalanceItem.address)">&times;</button>
+            <div fxLayout="row" fxFlex="45" fxLayoutGap="5px">
+                <button fxFlex="100" class="mat-raised-button transfer-btn" mat-button (click)="setTransferToken(tokenBalanceItem.address)">TRANSFER</button>
+                <mat-icon class="pull-right" (click)="removeToken(tokenBalanceItem.address)">clear</mat-icon>
             </div>
         </mat-list-item>
         <div fxLayout="row">
-            <button fxFlex="100" color="primary" class="mat-raised-button mat-primary" (click)="setNewToken()">ADD NEW TOKEN</button>
+            <button fxFlex="100" color="primary" class="mat-raised-button mat-primary" mat-button (click)="setNewToken()">ADD NEW TOKEN</button>
         </div>
     </mat-list>
     <div *ngIf="showTransfer">

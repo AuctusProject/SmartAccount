@@ -6,6 +6,8 @@ import { SmartAccountStorage } from '../../model/SmartAccountStorage';
 import { TokenStorage } from '../../model/TokenStorage';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { ParameterUI } from '../../model/ParameterUI';
+import { ExtensionStorage } from '../../model/ExtensionStorage';
 
 @Component({
   selector: 'app-account',
@@ -15,6 +17,9 @@ import { Observable } from 'rxjs/Observable';
 export class AccountComponent implements OnInit {
 
   smartAccount: SmartAccountStorage;
+  editing: boolean;
+  name: any;
+  allExtensions: ExtensionStorage[];
 
   constructor(private smartAccountService: SmartAccountService, 
     private localStorageService: LocalStorageService,
@@ -74,11 +79,11 @@ export class AccountComponent implements OnInit {
   setExtensionUIs() {
     let self = this;
     let accountData = this.localStorageService.getAccountData();
-    let allExtensions = this.smartAccount.getAllExtensionList(this.smartAccountService.getNetwork());
-    for (let i = 0; i < allExtensions.length; ++i) {
-      let ui = accountData.getExtensionUI(allExtensions[i].address);
+    this.allExtensions = this.smartAccount.getAllExtensionList(this.smartAccountService.getNetwork());
+    for (let i = 0; i < this.allExtensions.length; ++i) {
+      let ui = accountData.getExtensionUI(this.allExtensions[i].address);
       if (!ui) {
-        this.extensionService.getExtension(allExtensions[i].address).subscribe(ret => {
+        this.extensionService.getExtension(this.allExtensions[i].address).subscribe(ret => {
           if (ret) {
             accountData.setExtensionUI(ret);
             self.localStorageService.setAccountData(accountData);
@@ -118,5 +123,36 @@ export class AccountComponent implements OnInit {
         return "#";
     }
     return "https://" + start + "etherscan.io/address/" + this.smartAccount.address;
+  }
+
+  setEditName() {
+    this.editing = true;
+    this.name = null;
+  }
+
+  back() {
+    this.editing = false;
+  }
+
+  getIndex(): number {
+    return 0;
+  }
+
+  getNameParameter(): ParameterUI {
+    return new ParameterUI("Name", 6, 0, false, true, false);
+  }
+
+  setName(name: any) {
+    this.name = name;
+  }
+
+  saveName() {
+    if (this.name && this.name.status) {
+      this.smartAccount.name = this.name.value;
+      let account = this.localStorageService.getAccountData();
+      account.updateSmartAccount(this.smartAccount);
+      this.localStorageService.setAccountData(account);
+      this.back();
+    }
   }
 }

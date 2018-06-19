@@ -1,3 +1,11 @@
 .array {
     padding: 0px 16px;
 }
+
+.label-disabled {
+    color: rgba(0,0,0,.38);
+}
+
+.label-normal {
+    color: rgba(0,0,0,.54);
+}

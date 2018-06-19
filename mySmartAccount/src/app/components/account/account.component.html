@@ -1,13 +1,25 @@
 <app-header [backDestination]="getBackDestination()"></app-header>
-<div fxLayout="row">
-    <h2>{{smartAccount.name}} 
-      <div class="address-container">
-        <a class="address" href="{{getAddressLink()}}" target="_blank">{{smartAccount.address}}</a>
+<div fxLayout="column" fxFlex="100">
+    <h2 *ngIf="!editing">{{smartAccount.name}}<mat-icon class="pull-right" (click)="setEditName()">create</mat-icon></h2>
+    <mat-list *ngIf="editing">
+      <app-extension-parameter 
+          [smartAccountAddress]="smartAccount.address" 
+          [index]="getIndex()"
+          [parameter]="getNameParameter()"
+          [setValue]="smartAccount.name"
+          (parameterSet)="setName($event)">
+      </app-extension-parameter>
+      <div fxLayout="row" fxLayoutGap="10px">
+          <button class="mat-raised-button" fxFlex="50" mat-button (click)="back()">CANCEL</button>
+          <button color="primary" fxFlex="50" class="mat-raised-button mat-primary" mat-button (click)="saveName()">SAVE</button>
       </div>
-    </h2>
+    </mat-list>
+    <div class="address-container" fxFlex="100">
+      <a class="address" href="{{getAddressLink()}}" target="_blank">{{smartAccount.address}}</a>
+    </div>
 </div>
 <mat-accordion>
   <app-eth-balance [smartAccountAddress]="smartAccount.address" [ethBalance]="smartAccount.balance"></app-eth-balance>
   <app-token-list [smartAccountAddress]="smartAccount.address" [tokenBalanceList]="smartAccount.tokens"></app-token-list>
-  <app-extension-list [smartAccountAddress]="smartAccount.address" [extensionList]="smartAccount.extensions"></app-extension-list>
+  <app-extension-list [smartAccountAddress]="smartAccount.address" [allExtensions]="allExtensions" [extensionList]="smartAccount.extensions"></app-extension-list>
 </mat-accordion>

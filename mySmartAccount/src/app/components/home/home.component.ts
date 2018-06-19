@@ -10,6 +10,7 @@ import { Observable } from 'rxjs/Observable';
 import { AddressUtil } from '../../util/addressUtil';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ConfirmationDialogComponent } from "../confirmation-dialog/confirmation-dialog.component";
+import { ParameterUI } from '../../model/ParameterUI';
 
 @Component({
   selector: 'app-home',
@@ -18,8 +19,8 @@ import { ConfirmationDialogComponent } from "../confirmation-dialog/confirmation
 })
 export class HomeComponent implements OnInit {
 
-  contractAddress: string;
-  name: string;
+  contractAddress: any;
+  name: any;
   executing: boolean;
   adding: boolean;
   importing: boolean;
@@ -38,7 +39,6 @@ export class HomeComponent implements OnInit {
     this.executing = false;
     this.adding = false;
     this.importing = false;
-    this.contractAddress = "";
     this.load();
   }
 
@@ -46,8 +46,8 @@ export class HomeComponent implements OnInit {
     this.executing = false;
     this.adding = false;
     this.importing = false;
-    this.contractAddress = "";
-    this.name = "";
+    this.contractAddress = null;
+    this.name = null;
   }
 
   load() {
@@ -103,13 +103,12 @@ export class HomeComponent implements OnInit {
   }
 
   save() {
-    if (this.name) {
+    if (this.name && this.name.status) {
       let self = this;
       this.executing = true;
       if (this.importing) {
-        if (this.contractAddress && AddressUtil.isValid(this.contractAddress)) {
-          this.contractAddress = this.contractAddress.toLowerCase();
-          this.savePromise = this.smartAccountService.getSmartAccountVersion(this.contractAddress).subscribe(ret => {
+        if (this.contractAddress && this.contractAddress.status) {
+          this.smartAccountService.getSmartAccountVersion(this.contractAddress.value).subscribe(ret => {
             if (ret) {
               self.redirect();
             } else {
@@ -122,7 +121,7 @@ export class HomeComponent implements OnInit {
       } else {
         this.savePromise = this.smartAccountService.createAccountSC().subscribe(contractAddress => {
           if (contractAddress) {
-            self.contractAddress = contractAddress;
+            self.contractAddress = { value: contractAddress, status: true };
             self.redirect();
           } else {
             this.executing = false;
@@ -154,10 +153,34 @@ export class HomeComponent implements OnInit {
 
   redirect() {
     let accountData = this.localStorageService.getAccountData();
-    accountData.addSmartAccount(this.name, this.contractAddress);
+    accountData.addSmartAccount(this.name.value, this.contractAddress.value);
     this.localStorageService.setAccountData(accountData);
-    let address = this.contractAddress;
+    let address = this.contractAddress.value;
     this.clearAdding();
     this.goToSmartAccount(address);
+  }
+
+  getNameIndex(): number {
+    return 0;
+  }
+
+  getNameParameter(): ParameterUI {
+    return new ParameterUI("Set a name", 6, 0, false, true, false);
+  }
+
+  setName(name: any) {
+    this.name = name;
+  }
+
+  getContractAddressIndex(): number {
+    return 1;
+  }
+
+  getContractAddressParameter(): ParameterUI {
+    return new ParameterUI("Contract Address", 3, 0, false, true, false);
+  }
+
+  setContractAddress(contractAddress: any) {
+    this.contractAddress = contractAddress;
   }
 }

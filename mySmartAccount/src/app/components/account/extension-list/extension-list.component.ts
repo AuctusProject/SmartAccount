@@ -7,6 +7,7 @@ import { ExtensionStorage } from '../../../model/ExtensionStorage';
 import { Observable } from 'rxjs/Observable';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AddressUtil } from '../../../util/addressUtil';
+import { ParameterUI } from '../../../model/ParameterUI';
 
 @Component({
   selector: 'app-extension-list',
@@ -16,14 +17,15 @@ import { AddressUtil } from '../../../util/addressUtil';
 export class ExtensionListComponent implements OnInit {
 
   @Input() extensionList: ExtensionStorage[];
+  @Input() allExtensions: ExtensionStorage[];
   @Input() smartAccountAddress: string;
-  allExtensions: ExtensionStorage[];
   showList: boolean;
   showIdentifiers: boolean;
   showNew: boolean;
   selectedExtension: ExtensionStorage;
   selectedActive: boolean;
   executing: boolean;
+  extensionAddress: any;
 
   constructor(private localStorageService: LocalStorageService, 
     private smartAccountService : SmartAccountService,
@@ -32,7 +34,6 @@ export class ExtensionListComponent implements OnInit {
     private zone : NgZone) { }
 
   ngOnInit() {
-    this.allExtensions = this.localStorageService.getAccountData().getSmartAccount(this.smartAccountAddress).getAllExtensionList(this.smartAccountService.getNetwork());
     this.back();
   }
 
@@ -77,13 +78,13 @@ export class ExtensionListComponent implements OnInit {
   }
 
   loadCustomExtension() {
-    if (this.selectedExtension && this.selectedExtension.address && AddressUtil.isValid(this.selectedExtension.address)) {
+    if (this.extensionAddress && this.extensionAddress.status) {
       this.executing = true;
       let self = this;
       let accountData = this.localStorageService.getAccountData();
-      let ui = accountData.getExtensionUI(this.selectedExtension.address.toLowerCase());
+      let ui = accountData.getExtensionUI(this.extensionAddress.value);
       if (!ui) {
-        this.extensionService.getExtension(this.selectedExtension.address.toLowerCase()).subscribe(ret => {
+        this.extensionService.getExtension(this.extensionAddress.value).subscribe(ret => {
           self.executing = false;
           if (ret) {
             accountData.setExtensionUI(ret);
@@ -105,6 +106,7 @@ export class ExtensionListComponent implements OnInit {
     this.showList = false;
     this.showNew = true;
     this.executing = false;
+    this.extensionAddress = null;
   }
 
   goToIdentifier(identifier: string) {
@@ -117,5 +119,17 @@ export class ExtensionListComponent implements OnInit {
 
   goToExtension() {
     this.zone.run(() => this.router.navigate([ 'extension', this.smartAccountAddress, this.selectedExtension.address ]));
+  }
+
+  getIndex(): number {
+    return 0;
+  }
+
+  getExtensionAddressParameter(): ParameterUI {
+    return new ParameterUI("Extension Address", 3, 0, false, true, false);
+  }
+
+  setExtensionAddress(address: any) {
+    this.extensionAddress = address;
   }
 }

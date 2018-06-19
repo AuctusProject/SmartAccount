@@ -15,6 +15,7 @@ export class ExtensionParameterElementComponent implements OnInit {
     @Input() parameter: ParameterUI;
     @Input() setValue: any;
     @Input() description: string;
+    @Input() forceEditable: boolean;
     @Output() parameterSet = new EventEmitter<any>();
     @Output() removed = new EventEmitter<string>();
     value: any;
@@ -37,6 +38,8 @@ export class ExtensionParameterElementComponent implements OnInit {
             this.parameter.isEditable = false;
         } else if (this.setValue) {
             this.value = this.setValue;
+        } else if (this.parameter.type == 4) {
+            this.value = false;
         }
         
         if (this.parameter.type == 4) {
@@ -59,7 +62,7 @@ export class ExtensionParameterElementComponent implements OnInit {
     }
 
     isDisabled(): boolean {
-        return !this.parameter.isEditable;
+        return !this.forceEditable && !this.parameter.isEditable;
     }
 
     canRemoveArray(): boolean {

@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { Web3Service } from '../../services/web3.service';
@@ -8,6 +8,7 @@ import { GeneralUtil } from '../../util/generalUtil';
 import { ActionUI } from '../../model/ActionUI';
 import * as SolidityCoder from 'web3/lib/solidity/coder';
 import { Observable } from 'rxjs/Observable';
+import { ParameterUI } from '../../model/ParameterUI';
 
 @Component({
     selector: 'app-extension-instance-details',
@@ -20,15 +21,20 @@ export class ExtensionInstanceDetailsComponent implements OnInit {
   extensionInstanceIdentifier: string;
   ui: ExtensionUI;
   name: string;
+  nameEditing: any;
+  editing: boolean;
   roles: string[];
   showActionDetails: boolean;
   setupValues: any[];
   dataValues: any[];
   actionSelected: ActionUI;
+  showData: boolean;
+  showSetup: boolean;
   
   constructor(private route: ActivatedRoute, 
     private zone: NgZone, 
     private router: Router,
+    private ref: ChangeDetectorRef,
     private localStorageService: LocalStorageService,
     private smartAccountService: SmartAccountService,
     private web3Service: Web3Service) {}
@@ -51,17 +57,20 @@ export class ExtensionInstanceDetailsComponent implements OnInit {
                     self.setDataValues();
                     self.setSetupValues();
                     let addedExtensions = accountData.getSmartAccount(self.smartAccountAddress).extensions;
-                    addedExtensions.forEach(ext => {
-                        if (ext.address == self.extensionAddress) {
-                            ext.identifiers.forEach(iden => {
-                                if (iden.identifier == self.extensionInstanceIdentifier) {
-                                    self.name = iden.name;
-                                    return;
+                    for (let i = 0; i < addedExtensions.length; ++i) {
+                        if (addedExtensions[i].address == self.extensionAddress) {
+                            for (let j = 0; j < addedExtensions[i].identifiers.length; ++j) {
+                                if (addedExtensions[i].identifiers[j].identifier == self.extensionInstanceIdentifier) {
+                                    self.name = addedExtensions[i].identifiers[j].name;
+                                    break;
                                 }
-                            });
+                            }
+                            break;
                         }
-                    });
-                    self.name = 'Not defined';
+                    }
+                    if (!self.name) {
+                        self.name = 'Not defined';
+                    }
                 }
             }
         });
@@ -70,12 +79,17 @@ export class ExtensionInstanceDetailsComponent implements OnInit {
     setDataValues() {
         let suffixData = SolidityCoder.encodeParams(["address", "bytes32"], [this.smartAccountAddress, this.extensionInstanceIdentifier]);
         let array = [];
+        for (let i = 0; i < this.ui.viewDataParameters.length; ++i) {
+            array.push(this.web3Service.callConstMethodWithData(this.ui.viewDataParameters[i].funcSignature + suffixData, 
+                this.extensionAddress, [GeneralUtil.getWeb3Type(this.ui.viewDataParameters[i].output)]));
+        }
         let self = this;
-        this.ui.viewDataParameters.forEach(view => {
-            array.push(self.web3Service.callConstMethodWithData(view.funcSignature + suffixData, self.extensionAddress, [GeneralUtil.getWeb3Type(view.output)]));
-        });
         Observable.combineLatest(array).subscribe(function handleValues(values) {
-            self.dataValues = values;
+            self.dataValues = new Array<any>();
+            values.forEach(val => {
+                self.dataValues.push(val[0]);
+            });
+            self.showData = true;
         });
     }
 
@@ -83,12 +97,24 @@ export class ExtensionInstanceDetailsComponent implements OnInit {
         let data = this.web3Service.getSetupData(this.smartAccountAddress, this.extensionInstanceIdentifier);
         let self = this;
         this.web3Service.callConstMethodWithData(data, this.extensionAddress, this.ui.getSetupWeb3Types()).subscribe(ret => {
-            self.setupValues = ret;
+            self.setupValues = new Array<any>();
+            for (let i = 0; i < self.ui.setupParameters.length; ++i) {
+                let value = null;
+                if (self.ui.setupParameters[i].type == 1 || self.ui.setupParameters[i].type == 2) {
+                    value = ret[i] / (self.ui.setupParameters[i].decimals > 1 ? self.ui.setupParameters[i].decimals : 1);
+                } else if (self.ui.setupParameters[i].type == 5) {
+                    value = new Date(ret[i]);
+                } else {
+                    value = ret[i];
+                }
+                self.setupValues.push(value);
+            }
+            self.showSetup = true;
         });
     }
 
     getBackDestination() {
-        this.zone.run(() => this.router.navigate(['account', this.smartAccountAddress])); 
+        return ['account', this.smartAccountAddress]; 
     }
 
     getDataTitle() {
@@ -161,5 +187,47 @@ export class ExtensionInstanceDetailsComponent implements OnInit {
     actionExecuted() {
         this.showActionDetails = false;
         this.setDataValues();
+    }
+
+    setEditName() {
+        this.editing = true;
+        this.nameEditing = null;
+      }
+    
+    back() {
+        this.editing = false;
+    }
+
+    getIndex(): number {
+        return 0;
+    }
+
+    getNameParameter(): ParameterUI {
+        return new ParameterUI("Name", 6, 0, false, true, false);
+    }
+
+    setName(name: any) {
+        this.nameEditing = name;
+    }
+
+    saveName() {
+        if (this.nameEditing && this.nameEditing.status) {
+            this.name = this.nameEditing.value;
+            let self = this;
+            let account = this.localStorageService.getAccountData();
+            let smartAccount = account.getSmartAccount(this.smartAccountAddress);
+            smartAccount.extensions.forEach(ext => {
+                if (ext.address == self.extensionAddress) {
+                    ext.identifiers.forEach(iden => {
+                        if (iden.identifier == self.extensionInstanceIdentifier) {
+                            iden.name = self.name;
+                        }
+                    });
+                }
+            });
+            account.updateSmartAccount(smartAccount);
+            this.localStorageService.setAccountData(account);
+            this.back();
+        }
     }
 }
