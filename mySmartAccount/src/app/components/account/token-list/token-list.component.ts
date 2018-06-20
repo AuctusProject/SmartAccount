@@ -103,7 +103,7 @@ export class TokenListComponent implements OnInit {
       let tokenAddress = this.selectedToken.address;
       this.smartAccountService.transferToken(this.smartAccountAddress, this.selectedToken.address, 
         this.toAddress.value, this.amount.value).subscribe(txHash => {
-          self.web3Service.isMined(txHash).subscribe(ret => {
+          self.web3Service.isSuccessfullyMinedTransaction(txHash).subscribe(ret => {
             self.smartAccountService.getTokenBalance(self.smartAccountAddress, tokenAddress, self.selectedToken.decimals).subscribe(ret => {
               self.updateBalance(tokenAddress, ret);
             });

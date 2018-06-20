@@ -78,13 +78,13 @@ export class ExtensionSetComponent implements OnInit {
     this.executing = true;
     if (!this.active) {
       this.smartAccountService.addExtension(this.smartAccountAddress, this.extensionAddress).subscribe(txHash => {
-        self.web3Service.isMined(txHash).subscribe(ret => {
+        self.web3Service.isSuccessfullyMinedTransaction(txHash).subscribe(ret => {
           self.zone.run(() => self.router.navigate(['extension-setup', self.smartAccountAddress, self.extensionAddress]));
         });
       });
     } else {
       this.smartAccountService.removeExtension(this.smartAccountAddress, this.extensionAddress).subscribe(txHash => {
-        self.web3Service.isMined(txHash).subscribe(ret => {
+        self.web3Service.isSuccessfullyMinedTransaction(txHash).subscribe(ret => {
           self.back();
         });
       });

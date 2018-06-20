@@ -228,23 +228,23 @@ export class Web3Service {
     });
   }
 
-  public isMined(txHash): Observable<boolean> {
+  public isSuccessfullyMinedTransaction(txHash): Observable<boolean> {
     let self = this;
     return new Observable(observer => {
-      return self.isMinedTransaction(observer, txHash);
+      return self.isSuccessfullyTransaction(observer, txHash);
     });
   }
 
-  private isMinedTransaction(observer: Subscriber<boolean>, txHash: string) {
+  private isSuccessfullyTransaction(observer: Subscriber<boolean>, txHash: string) {
     var self = this;
     self.getTransactionReceipt(txHash).subscribe(
       receipt => {
         if (receipt) {
-          observer.next(true);
+          observer.next(!!parseInt(receipt.status));
         } else {
           setTimeout(() => {
-            self.isMinedTransaction(observer, txHash);
-          }, 5000);
+            self.isSuccessfullyTransaction(observer, txHash);
+          }, 4000);
         }
       });
   }

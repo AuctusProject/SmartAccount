@@ -29,7 +29,7 @@ export class EthBalanceComponent implements OnInit {
       this.executing = true;
       let self = this;
       this.smartAccountService.sendEther(this.smartAccountAddress, this.recipient.value, this.value.value).subscribe(txHash => {
-        self.web3Service.isMined(txHash).subscribe(ret => {
+        self.web3Service.isSuccessfullyMinedTransaction(txHash).subscribe(ret => {
           self.executing = false;
           self.smartAccountService.getETHBalance(self.smartAccountAddress).subscribe(ret => {
             self.ethBalance = ret;

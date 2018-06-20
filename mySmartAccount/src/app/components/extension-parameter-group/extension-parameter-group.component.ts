@@ -69,7 +69,7 @@ export class ExtensionParameterGroupComponent implements OnInit {
             this.executing = true;
             let self = this;
             this.smartAccountService.sendGenericTransaction(to, 0, 0, data).subscribe(txHash => {
-                self.web3Service.isMined(txHash).subscribe(ret => {
+                self.web3Service.isSuccessfullyMinedTransaction(txHash).subscribe(ret => {
                     this.executing = false;
                     self.executed.emit();
                 });
