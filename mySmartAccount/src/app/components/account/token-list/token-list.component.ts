@@ -90,7 +90,7 @@ export class TokenListComponent implements OnInit {
         break;
       }
     }
-    this.amountParameter = new ParameterUI("Amount", 2, this.selectedToken.decimals, false, true, false);
+    this.amountParameter = new ParameterUI("Amount", 2, 10**this.selectedToken.decimals, false, true, false);
     this.showTransfer = true;
     this.showList = false;
     this.showAdd = false;
