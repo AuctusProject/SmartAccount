@@ -25,6 +25,7 @@ export class HomeComponent implements OnInit {
   adding: boolean;
   importing: boolean;
   accountData: AccountDataStorage;
+  savePromise: Subscription;
   
   constructor(private smartAccountService: SmartAccountService,
     private extensionService: ExtensionService,
@@ -118,7 +119,7 @@ export class HomeComponent implements OnInit {
           this.executing = false;
         }
       } else {
-        this.smartAccountService.createAccountSC().subscribe(contractAddress => {
+        this.savePromise = this.smartAccountService.createAccountSC().subscribe(contractAddress => {
           if (contractAddress) {
             self.contractAddress = { value: contractAddress, status: true };
             self.redirect();
@@ -133,7 +134,6 @@ export class HomeComponent implements OnInit {
   remove(event: Event, name: string, address: string) {
     event.stopPropagation();
     let dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '250px',
       data: { text: "Do you really want to remove " + name + "?", cancelLabel: "Cancel", confirmationLabel: "Confirm" }
     });
 

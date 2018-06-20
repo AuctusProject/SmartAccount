@@ -7,7 +7,7 @@
             <span fxFlex="55"><span class="balance">{{tokenBalanceItem.balance}}</span>&nbsp;<strong>{{tokenBalanceItem.symbol}}</strong></span>
             <div fxLayout="row" fxFlex="45" fxLayoutGap="5px">
                 <button fxFlex="100" class="mat-raised-button transfer-btn" mat-button (click)="setTransferToken(tokenBalanceItem.address)">TRANSFER</button>
-                <mat-icon class="pull-right" (click)="removeToken(tokenBalanceItem.address)">clear</mat-icon>
+                <mat-icon class="pull-right" (click)="removeToken($event, tokenBalanceItem.symbol, tokenBalanceItem.address)">clear</mat-icon>
             </div>
         </mat-list-item>
         <div fxLayout="row">

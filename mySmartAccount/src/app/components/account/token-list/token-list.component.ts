@@ -1,10 +1,12 @@
 import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { LocalStorageService } from '../../../services/local-storage.service';
 import { SmartAccountService } from '../../../services/smart-account.service';
 import { TokenStorage } from '../../../model/TokenStorage';
 import { AddressUtil } from '../../../util/addressUtil';
 import { ParameterUI } from '../../../model/ParameterUI';
 import { Web3Service } from '../../../services/web3.service';
+import { ConfirmationDialogComponent } from "../../confirmation-dialog/confirmation-dialog.component";
 
 @Component({
   selector: 'app-token-list',
@@ -31,7 +33,8 @@ export class TokenListComponent implements OnInit {
     private localStorageService: LocalStorageService,
     private smartAccountService: SmartAccountService, 
     private ref: ChangeDetectorRef,
-    private web3Service: Web3Service) { }
+    private web3Service: Web3Service,
+    public dialog: MatDialog) { }
 
   ngOnInit() {
     this.cancel();
@@ -110,15 +113,24 @@ export class TokenListComponent implements OnInit {
     }
   }
 
-  removeToken(address: string) {
-    if (address && AddressUtil.isValid(address)) {
-      let accountData = this.localStorageService.getAccountData();
-      let smartAccount = accountData.getSmartAccount(this.smartAccountAddress);
-      smartAccount.removeTokenData(address);
-      this.tokenBalanceList = smartAccount.tokens;
-      accountData.updateSmartAccount(smartAccount);
-      this.localStorageService.setAccountData(accountData);
-    }
+  removeToken(event: Event, symbol: string, address: string) {
+    event.stopPropagation();
+    let dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: { text: "Do you really want to remove " + symbol + "?", cancelLabel: "Cancel", confirmationLabel: "Confirm" }
+    });
+    
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        if (address && AddressUtil.isValid(address)) {
+          let accountData = this.localStorageService.getAccountData();
+          let smartAccount = accountData.getSmartAccount(this.smartAccountAddress);
+          smartAccount.removeTokenData(address);
+          this.tokenBalanceList = smartAccount.tokens;
+          accountData.updateSmartAccount(smartAccount);
+          this.localStorageService.setAccountData(accountData);
+        }
+      }
+    });
   }
 
   updateBalance(tokenAddress: string, balance: number) {
