@@ -12,6 +12,8 @@ export class GeneralUtil {
             return "address" + append;
         } else if (parameter.type == 6) {
             return "string";
+        } else if (parameter.type == 9) {
+            return "bytes32";
         } else {
             return "bytes";
         }

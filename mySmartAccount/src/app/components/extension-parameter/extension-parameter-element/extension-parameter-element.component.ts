@@ -11,6 +11,7 @@ import { ThrowStmt } from '@angular/compiler';
 export class ExtensionParameterElementComponent implements OnInit {
   
     @Input() smartAccountAddress: string;
+    @Input() identifier: string;
     @Input() id: string;
     @Input() parameter: ParameterUI;
     @Input() setValue: any;
@@ -35,6 +36,9 @@ export class ExtensionParameterElementComponent implements OnInit {
     ngOnInit() {
         if (this.parameter.type == 8) {
             this.value = this.smartAccountAddress;
+            this.parameter.isEditable = false;
+        } else if (this.parameter.type == 9) {
+            this.value = this.identifier;
             this.parameter.isEditable = false;
         } else if (this.setValue) {
             this.value = this.setValue;
@@ -88,7 +92,7 @@ export class ExtensionParameterElementComponent implements OnInit {
             return this.parameter.isOptional ? this.formFloatCtrl : this.formFloatRequiredCtrl;
         } else if (this.parameter.type == 3 || this.parameter.type == 8) {
             return this.parameter.isOptional ? this.formAddressCtrl : this.formAddressRequiredCtrl;
-        } else if (this.parameter.type == 6 || this.parameter.type == 7) {
+        } else if (this.parameter.type == 6 || this.parameter.type == 7 || this.parameter.type == 9) {
             return this.parameter.isOptional ? this.formStringCtrl : this.formStringRequiredCtrl;
         } else if (this.parameter.type == 5) {
             return this.parameter.isOptional ? this.formDateCtrl : this.formDateRequiredCtrl;
@@ -103,7 +107,7 @@ export class ExtensionParameterElementComponent implements OnInit {
             return "^[0-9]+(\.[0-9]+)?$";
         } else if (inputType == 3 || inputType == 8) {
             return "^(0x)?[0-9a-fA-F]{40}$";
-        } else if (inputType == 6 || inputType == 7) {
+        } else if (inputType == 6 || inputType == 7 || inputType == 9) {
             return "[\\s\\S]+";
         } else if (inputType == 5) {
             return "^[0-9][0-9][\/][0-9][0-9][\/][0-9][0-9][0-9][0-9]$";

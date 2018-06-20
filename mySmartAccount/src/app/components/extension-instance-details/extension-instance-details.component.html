@@ -53,6 +53,8 @@
       [extensionAddress]="extensionAddress"
       [disabled]="false"
       [expanded]="false"
+      [identifier]="extensionInstanceIdentifier"
+      [forceIdentifierFirst]="true"
       [parameters]="ui.setupParameters"
       [initialValues]="setupValues"
       (executed)="setupExecuted()">
@@ -62,13 +64,20 @@
         <mat-panel-title>{{getActionTitle()}}</mat-panel-title>
     </mat-expansion-panel-header>
     <mat-list>
-      <mat-list-item *ngFor="let action of ui.actions" >
-        <button fxFlex="100" class="mat-raised-button mat-primary mat-button" (click)="clickAction(action.funcSignature)">{{action.description}}</button>
+        <mat-label *ngIf="ownerActions.length > 0" class="action-label">Owner actions</mat-label>
+      <mat-list-item *ngFor="let action of ownerActions" >
+        <button fxFlex="100" class="mat-raised-button mat-primary" mat-button (click)="clickAction(action.funcSignature)">{{action.description}}</button>
+      </mat-list-item>
+      <mat-divider *ngIf="externalActions.length > 0 && ownerActions.length > 0" class="action-divider"></mat-divider>
+      <mat-label *ngIf="externalActions.length > 0" class="action-label">Actions authorized by the extension</mat-label>
+      <mat-list-item *ngFor="let action of externalActions" >
+        <button fxFlex="100" class="mat-raised-button mat-primary" mat-button (click)="clickAction(action.funcSignature)">{{action.description}}</button>
       </mat-list-item>
     </mat-list>
   </mat-expansion-panel>
   <app-extension-parameter-group fxFlex="100" *ngIf="showActionDetails"
       [title]="getActionTitle()"
+      [subtitle]="getActionSubtitle()"
       [actionButtonName]="getButtonActionName()"
       [backButtonName]="getBackActionName()"
       [functionSignature]="getActionSignature()"
@@ -79,6 +88,7 @@
       [expanded]="true"
       [parameters]="getActionParameters()"
       [initialValues]="getActionValues()"
+      [directlyCallFunction]="getActionDirectlyCall()"
       (backClick)="actionBack()"
       (executed)="actionExecuted()">
   </app-extension-parameter-group>

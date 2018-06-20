@@ -96,16 +96,16 @@ export class SmartAccountStorage {
                 //result.push(new ExtensionStorage('', null));
                 break;
             case "42":
-                result.push(new ExtensionStorage('0x94f1de751407dd25a7b865fa4d64a4b69080d5ed', null));
-                result.push(new ExtensionStorage('0x6100f93f5c0b3b2a49af866a49ce5d4357f4934b', null));
+                result.push(new ExtensionStorage('0x67c5ca5378472889683fa3c6e22cb3a408fb3950', null));
+                result.push(new ExtensionStorage('0x5c28a75f6ed8feb7c1dd1a933ad940228dc07b1a', null));
                 break;
             case "3":
-                result.push(new ExtensionStorage('0x138eb47c578bf7f687fb9c1be43ba224f02dda10', null));
-                result.push(new ExtensionStorage('0x21fcface25d5876a50cb61d2f939b8b8d5de9efb', null));
+                result.push(new ExtensionStorage('0xc8b40177ee3c704228079bc959af595e4396c81b', null));
+                result.push(new ExtensionStorage('0x1a930eeab0e0c54e95315dca5210ed5b8f647be8', null));
                 break;
             case "4":
-                result.push(new ExtensionStorage('0x63101c3fd1d6a7a5e0b04fbd79c326caa759b04c', null));
-                result.push(new ExtensionStorage('0xe3cb8100e5f9fa616c386ddb158b73b9395c7ca4', null));
+                result.push(new ExtensionStorage('0x4581c9cd11efeaf9448d99ee5b91e8e9ca2425c8', null));
+                result.push(new ExtensionStorage('0x45df523c577b48ab7e871b9aaec86a2ee38b9081', null));
                 break;
             default: 
                 break;

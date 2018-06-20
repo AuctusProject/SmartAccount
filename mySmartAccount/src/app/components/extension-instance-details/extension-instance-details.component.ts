@@ -30,6 +30,8 @@ export class ExtensionInstanceDetailsComponent implements OnInit {
   actionSelected: ActionUI;
   showData: boolean;
   showSetup: boolean;
+  ownerActions: ActionUI[];
+  externalActions: ActionUI[];
   
   constructor(private route: ActivatedRoute, 
     private zone: NgZone, 
@@ -53,6 +55,15 @@ export class ExtensionInstanceDetailsComponent implements OnInit {
                 if (!self.ui) {
                     self.zone.run(() => self.router.navigate(['account', self.smartAccountAddress]));
                 } else {
+                    self.externalActions = new Array<ActionUI>();
+                    self.ownerActions = new Array<ActionUI>();
+                    for (let i = 0; i < self.ui.actions.length; ++i) {
+                        if (self.ui.actions[i].directlyCallFunction) {
+                            self.externalActions.push(self.ui.actions[i]);
+                        } else {
+                            self.ownerActions.push(self.ui.actions[i]);
+                        }
+                    }
                     self.roles = GeneralUtil.getRolesNames(self.ui.rolesIds);
                     self.setDataValues();
                     self.setSetupValues();
@@ -168,8 +179,16 @@ export class ExtensionInstanceDetailsComponent implements OnInit {
         return this.actionSelected.funcSignature;
     }
 
+    getActionDirectlyCall() {
+        return this.actionSelected.directlyCallFunction;
+    }
+
     getActionParameters() {
         return this.actionSelected.args;
+    }
+
+    getActionSubtitle() {
+        return this.actionSelected.description;
     }
 
     getActionValues() {
@@ -187,6 +206,7 @@ export class ExtensionInstanceDetailsComponent implements OnInit {
     actionExecuted() {
         this.showActionDetails = false;
         this.setDataValues();
+        this.ref.detectChanges();
     }
 
     setEditName() {

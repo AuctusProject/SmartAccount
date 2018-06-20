@@ -76,13 +76,13 @@ export class ExtensionService {
       var array = [];
       var paramCountArray = [];
       for (var i = 0; i < actionsCount; ++i) {
-        array.push(self.web3Service.callConstMethodWithAbi(extensionAddress, environment.extensionBaseAbi, "getActionByIndex", ["bytes4", "string", "uint256"], i + ""));
+        array.push(self.web3Service.callConstMethodWithAbi(extensionAddress, environment.extensionBaseAbi, "getActionByIndex", ["bytes4", "bool", "uint256", "string"], i + ""));
         paramCountArray.push(self.web3Service.callConstMethodWithAbi(extensionAddress, environment.extensionBaseAbi, "getActionParametersCountByIndex", ["uint256"], i + ""));
       }
       Observable.combineLatest(array).subscribe(function handleValues(actions) {
         var actionArray = [];
         actions.forEach(param => {
-          let action = new ActionUI(param[0], param[1]);
+          let action = new ActionUI(param[0], param[1], param[3]);
           actionArray.push(action);
         });
         Observable.combineLatest(paramCountArray).subscribe(function handleValues(paramCounts) {

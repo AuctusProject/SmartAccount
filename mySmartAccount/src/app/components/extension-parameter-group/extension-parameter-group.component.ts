@@ -15,6 +15,7 @@ import { GeneralUtil } from '../../util/generalUtil';
 export class ExtensionParameterGroupComponent implements OnInit {
 
     @Input() title: string;
+    @Input() subtitle: string;
     @Input() actionButtonName: string;
     @Input() backButtonName: string;
     @Input() functionSignature: string;
@@ -26,6 +27,8 @@ export class ExtensionParameterGroupComponent implements OnInit {
     @Input() parameters: ParameterUI[];
     @Input() initialValues: any[];
     @Input() forceAllEditable: boolean;
+    @Input() forceIdentifierFirst: boolean;
+    @Input() directlyCallFunction: boolean;
     @Output() backClick = new EventEmitter();
     @Output() executed = new EventEmitter();
     executing: boolean;
@@ -45,15 +48,27 @@ export class ExtensionParameterGroupComponent implements OnInit {
         if (this.isValidParameters()) {
             let types = [];
             let values = [];
+            if (this.forceIdentifierFirst) {
+                types.push("bytes32");
+                values.push(this.identifier);
+            }
             for (let i = 0; i < this.values.length; ++ i) {
                 types.push(GeneralUtil.getWeb3Type(this.parameters[i]));
                 values.push(this.values[i].value)
             }
-            let data = this.web3Service.getExecuteCallData(this.extensionAddress, 0, 0, 
-                this.functionSignature + SolidityCoder.encodeParams(types, values));
+            let baseData = this.functionSignature + SolidityCoder.encodeParams(types, values);
+            let data;
+            let to;
+            if (this.directlyCallFunction) {
+                data = baseData;
+                to = this.extensionAddress;
+            } else {
+                data = this.web3Service.getExecuteCallData(this.extensionAddress, 0, 0, baseData);
+                to = this.smartAccountAddress;
+            }
             this.executing = true;
             let self = this;
-            this.smartAccountService.sendGenericTransaction(this.smartAccountAddress, 0, 0, data).subscribe(txHash => {
+            this.smartAccountService.sendGenericTransaction(to, 0, 0, data).subscribe(txHash => {
                 self.web3Service.isMined(txHash).subscribe(ret => {
                     this.executing = false;
                     self.executed.emit();

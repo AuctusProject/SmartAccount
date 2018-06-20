@@ -35,7 +35,7 @@ export class ExtensionParameterComponent implements OnInit {
     }
 
     isArray(): boolean {
-        return this.parameter.isArray && this.parameter.type != 6 && this.parameter.type != 7 && this.parameter.type != 8;
+        return this.parameter.isArray && this.parameter.type != 6 && this.parameter.type != 7 && this.parameter.type != 8 && this.parameter.type != 9;
     }
 
     getDescription(): string {
@@ -94,7 +94,7 @@ export class ExtensionParameterComponent implements OnInit {
     getFormattedValue(value: any) {
         if (!value && value != 0) {
             return "";
-        } else if (this.parameter.type == 3 || this.parameter.type == 7 || this.parameter.type == 8) {
+        } else if (this.parameter.type == 3 || this.parameter.type == 7 || this.parameter.type == 8 || this.parameter.type == 9) {
             let valueLower = value.toLowerCase();
             return valueLower.startsWith("0x") ? valueLower : "0x" + valueLower;
         } else if (this.parameter.type == 5) {

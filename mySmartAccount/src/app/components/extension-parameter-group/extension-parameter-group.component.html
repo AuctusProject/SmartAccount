@@ -3,6 +3,7 @@
         <mat-panel-title>{{title}}</mat-panel-title>
     </mat-expansion-panel-header>
     <mat-list>
+        <mat-label *ngIf="!!subtitle" class="subtitle">{{subtitle}}</mat-label>
         <div *ngFor="let param of parameters; let i = index" [attr.data-index]="i">
             <app-extension-parameter 
                 [smartAccountAddress]="smartAccountAddress" 
