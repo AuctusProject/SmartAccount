@@ -1,11 +1,13 @@
 import { Component, OnInit, NgZone, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { SmartAccountService } from '../../services/smart-account.service';
 import { ParameterUI } from '../../model/ParameterUI';
 import { Web3Service } from '../../services/web3.service';
 import * as SolidityCoder from 'web3/lib/solidity/coder';
 import { GeneralUtil } from '../../util/generalUtil';
 import { Subscription } from 'rxjs/Subscription';
+import { ConfirmationDialogComponent } from "../confirmation-dialog/confirmation-dialog.component";
 
 @Component({
   selector: 'app-extension-parameter-group',
@@ -39,7 +41,8 @@ export class ExtensionParameterGroupComponent implements OnInit {
         private zone: NgZone, 
         private router: Router,
         private smartAccountService: SmartAccountService,
-        private web3Service: Web3Service) { }
+        private web3Service: Web3Service,
+        public dialog: MatDialog) { }
     
     ngOnInit() {
         this.executing = false;
@@ -75,12 +78,16 @@ export class ExtensionParameterGroupComponent implements OnInit {
                     if (ret) {
                         self.executed.emit();
                     } else {
-                        //TODO: failed message
+                        this.dialog.open(ConfirmationDialogComponent, {
+                            data: { customTitle: "Oops!", hideConfirmation: true, text: "The smart contract creation failed." }
+                          });
                     }
                 });
             });
         } else {
-            //TODO: invalid input message
+            this.dialog.open(ConfirmationDialogComponent, {
+                data: { customTitle: "Invalid Input", hideConfirmation: true, text: "The data entered is invalid." }
+              });
         }
     }
 

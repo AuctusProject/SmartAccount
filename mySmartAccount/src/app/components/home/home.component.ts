@@ -113,12 +113,16 @@ export class HomeComponent implements OnInit {
             if (ret) {
               self.redirect();
             } else {
-              //TODO: failed message
+              this.dialog.open(ConfirmationDialogComponent, {
+                data: { customTitle: "Oops!", hideConfirmation: true, text: "The smart contract creation failed." }
+              });
             }
           });
         } else {
           this.executing = false;
-          //TODO: invalid input message
+          this.dialog.open(ConfirmationDialogComponent, {
+            data: { customTitle: "Invalid Input", hideConfirmation: true, text: "The data entered is invalid." }
+          });
         }
       } else {
         this.savePromise = this.smartAccountService.createAccountSC().subscribe(contractAddress => {
@@ -127,12 +131,16 @@ export class HomeComponent implements OnInit {
             self.contractAddress = { value: contractAddress, status: true };
             self.redirect();
           } else {
-            //TODO: failed message
+            this.dialog.open(ConfirmationDialogComponent, {
+              data: { customTitle: "Oops!", hideConfirmation: true, text: "The smart contract creation failed." }
+            });
           }
         });
       }
     } else {
-      //TODO: invalid input message
+      this.dialog.open(ConfirmationDialogComponent, {
+        data: { customTitle: "Invalid Input", hideConfirmation: true, text: "The data entered is invalid." }
+      });
     }
   }
 

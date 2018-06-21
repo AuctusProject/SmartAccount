@@ -1,9 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { AddressUtil } from '../../../util/addressUtil';
 import { SmartAccountService } from '../../../services/smart-account.service';
 import { ParameterUI } from '../../../model/ParameterUI';
 import { Web3Service } from '../../../services/web3.service';
 import { Subscription } from 'rxjs/Subscription';
+import { ConfirmationDialogComponent } from "../../confirmation-dialog/confirmation-dialog.component";
 
 @Component({
   selector: 'app-eth-balance',
@@ -19,7 +21,8 @@ export class EthBalanceComponent implements OnInit {
   promise: Subscription;
 
   constructor(private smartAccountService: SmartAccountService,
-    private web3Service: Web3Service) {
+    private web3Service: Web3Service,
+    public dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -35,12 +38,16 @@ export class EthBalanceComponent implements OnInit {
               self.ethBalance = ret;
             });
           } else {
-            //TODO: failed message
+            this.dialog.open(ConfirmationDialogComponent, {
+              data: { customTitle: "Oops!", hideConfirmation: true, text: "The smart contract creation failed." }
+            });
           }
         });
       });
     } else {
-      //TODO: invalid input message
+      this.dialog.open(ConfirmationDialogComponent, {
+        data: { customTitle: "Invalid Input", hideConfirmation: true, text: "The data entered is invalid." }
+      });
     }
   }
 

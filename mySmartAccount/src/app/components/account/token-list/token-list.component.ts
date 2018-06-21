@@ -83,7 +83,9 @@ export class TokenListComponent implements OnInit {
         self.cancel();
       });
     } else {
-      //TODO: invalid input message
+      this.dialog.open(ConfirmationDialogComponent, {
+        data: { customTitle: "Invalid Input", hideConfirmation: true, text: "The data entered is invalid." }
+      });
     }
   }
 
@@ -115,12 +117,16 @@ export class TokenListComponent implements OnInit {
               self.cancel();
             } else {
               self.executing = false;
-              //TODO: failed message
+              this.dialog.open(ConfirmationDialogComponent, {
+                data: { customTitle: "Oops!", hideConfirmation: true, text: "The smart contract creation failed." }
+              });
             }
           });
       });
     } else {
-      //TODO: invalid input message
+      this.dialog.open(ConfirmationDialogComponent, {
+        data: { customTitle: "Invalid Input", hideConfirmation: true, text: "The data entered is invalid." }
+      });
     }
   }
 

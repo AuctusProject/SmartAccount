@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, NgZone } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { SmartAccountService } from '../../services/smart-account.service';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { ExtensionService } from '../../services/extension.service';
@@ -8,6 +9,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { ParameterUI } from '../../model/ParameterUI';
 import { ExtensionStorage } from '../../model/ExtensionStorage';
+import { ConfirmationDialogComponent } from "../confirmation-dialog/confirmation-dialog.component";
 
 @Component({
   selector: 'app-account',
@@ -26,7 +28,8 @@ export class AccountComponent implements OnInit {
     private extensionService: ExtensionService,
     private router: Router, 
     private route: ActivatedRoute,
-    private zone : NgZone) { }
+    private zone : NgZone,
+    public dialog: MatDialog) { }
 
   ngOnInit() {
     let self = this;
@@ -154,7 +157,9 @@ export class AccountComponent implements OnInit {
       this.localStorageService.setAccountData(account);
       this.back();
     } else {
-      //TODO: invalid input message
+      this.dialog.open(ConfirmationDialogComponent, {
+        data: { customTitle: "Invalid Input", hideConfirmation: true, text: "The data entered is invalid." }
+      });
     }
   }
 }

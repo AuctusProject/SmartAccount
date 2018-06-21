@@ -94,7 +94,9 @@ export class ExtensionSetComponent implements OnInit {
               if (ret) {
                   self.zone.run(() => self.router.navigate(['extension-setup', self.smartAccountAddress, self.extensionAddress]));
               } else {
-                  //TODO: failed message
+                this.dialog.open(ConfirmationDialogComponent, {
+                  data: { customTitle: "Oops!", hideConfirmation: true, text: "The smart contract creation failed." }
+                });
               }
             });
           });
@@ -107,7 +109,9 @@ export class ExtensionSetComponent implements OnInit {
           if (ret) {
             self.back();
           } else {
-            //TODO: failed message
+            this.dialog.open(ConfirmationDialogComponent, {
+              data: { customTitle: "Oops!", hideConfirmation: true, text: "The smart contract creation failed." }
+            });
           }
         });
       });

@@ -1,5 +1,6 @@
 import { Component, OnInit, NgZone, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { Web3Service } from '../../services/web3.service';
 import { SmartAccountService } from '../../services/smart-account.service';
@@ -9,6 +10,7 @@ import { ActionUI } from '../../model/ActionUI';
 import * as SolidityCoder from 'web3/lib/solidity/coder';
 import { Observable } from 'rxjs/Observable';
 import { ParameterUI } from '../../model/ParameterUI';
+import { ConfirmationDialogComponent } from "../confirmation-dialog/confirmation-dialog.component";
 
 @Component({
     selector: 'app-extension-instance-details',
@@ -39,7 +41,8 @@ export class ExtensionInstanceDetailsComponent implements OnInit {
     private ref: ChangeDetectorRef,
     private localStorageService: LocalStorageService,
     private smartAccountService: SmartAccountService,
-    private web3Service: Web3Service) {}
+    private web3Service: Web3Service,
+    public dialog: MatDialog) {}
 
     ngOnInit(): void {
         let self = this;
@@ -249,7 +252,9 @@ export class ExtensionInstanceDetailsComponent implements OnInit {
             this.localStorageService.setAccountData(account);
             this.back();
         } else {
-            //TODO: invalid input message
+            this.dialog.open(ConfirmationDialogComponent, {
+                data: { customTitle: "Invalid Input", hideConfirmation: true, text: "The data entered is invalid." }
+              });
         }
     }
 }

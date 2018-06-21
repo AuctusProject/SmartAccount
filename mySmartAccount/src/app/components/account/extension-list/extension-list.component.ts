@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, NgZone } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { LocalStorageService } from '../../../services/local-storage.service';
 import { environment } from '../../../../environments/environment';
 import { SmartAccountService } from '../../../services/smart-account.service';
@@ -9,6 +10,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AddressUtil } from '../../../util/addressUtil';
 import { ParameterUI } from '../../../model/ParameterUI';
 import { Subscription } from 'rxjs/Subscription';
+import { ConfirmationDialogComponent } from "../../confirmation-dialog/confirmation-dialog.component";
 
 @Component({
   selector: 'app-extension-list',
@@ -33,7 +35,8 @@ export class ExtensionListComponent implements OnInit {
     private smartAccountService : SmartAccountService,
     private extensionService : ExtensionService,
     private router: Router,
-    private zone : NgZone) { }
+    private zone : NgZone,
+    public dialog: MatDialog) { }
 
   ngOnInit() {
     this.back();
@@ -93,7 +96,9 @@ export class ExtensionListComponent implements OnInit {
             self.localStorageService.setAccountData(accountData);
             self.goToExtension();
           } else {
-            //TODO: failed message
+            this.dialog.open(ConfirmationDialogComponent, {
+              data: { customTitle: "Oops!", hideConfirmation: true, text: "The smart contract creation failed." }
+            });
           }
         });
       } else {
@@ -101,7 +106,9 @@ export class ExtensionListComponent implements OnInit {
         this.goToExtension();
       }
     } else {
-      //TODO: invalid input message
+      this.dialog.open(ConfirmationDialogComponent, {
+        data: { customTitle: "Invalid Input", hideConfirmation: true, text: "The data entered is invalid." }
+      });
     }
   }
 
