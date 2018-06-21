@@ -1,5 +1,6 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { Web3Service } from '../../services/web3.service';
 import { SmartAccountService } from '../../services/smart-account.service';
@@ -8,6 +9,7 @@ import { Router } from '@angular/router';
 import { ExtensionStorage } from '../../model/ExtensionStorage';
 import { GeneralUtil } from '../../util/generalUtil';
 import { Subscription } from 'rxjs/Subscription';
+import { ConfirmationDialogComponent } from "../confirmation-dialog/confirmation-dialog.component";
 
 @Component({
   selector: 'app-extension-set',
@@ -31,7 +33,8 @@ export class ExtensionSetComponent implements OnInit {
     private router: Router,
     private localStorageService: LocalStorageService,
     private web3Service: Web3Service,
-    private smartAccountService: SmartAccountService) { }
+    private smartAccountService: SmartAccountService,
+    public dialog: MatDialog) { }
     
   ngOnInit() {
     let self = this;
@@ -55,8 +58,8 @@ export class ExtensionSetComponent implements OnInit {
               break;
             }
           }
-          self.note = !self.active ? "After activating you still need set the extension's configuration." 
-            : "After inactivating all existing extension's configuration will be disabled.";
+          self.note = !self.active ? "After activating, you also need configure the extension settings." 
+            : "After deactivating, all existing extension's settings will be disabled.";
           self.executing = false;
         }
       }
@@ -72,22 +75,30 @@ export class ExtensionSetComponent implements OnInit {
   }
 
   getActionName() {
-    return this.active ? "INACTIVE" : "ACTIVE";
+    return this.active ? "DEACTIVATE" : "ACTIVATE";
   }
 
   setAction() {
     let self = this;
     this.executing = true;
     if (!this.active) {
-      this.promise = this.smartAccountService.addExtension(this.smartAccountAddress, this.extensionAddress).subscribe(txHash => {
-        self.web3Service.isSuccessfullyMinedTransaction(txHash).subscribe(ret => {
-          self.executing = false;
-          if (ret) {
-            self.zone.run(() => self.router.navigate(['extension-setup', self.smartAccountAddress, self.extensionAddress]));
-          } else {
-            //TODO: failed message
-          }
-        });
+      let dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+        data: { text: "Do you really want to authorize this extension?", cancelLabel: "Cancel", confirmationLabel: "Confirm" }
+      });
+      
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.promise = this.smartAccountService.addExtension(this.smartAccountAddress, this.extensionAddress).subscribe(txHash => {
+          self.web3Service.isSuccessfullyMinedTransaction(txHash).subscribe(ret => {
+              self.executing = false;
+              if (ret) {
+                  self.zone.run(() => self.router.navigate(['extension-setup', self.smartAccountAddress, self.extensionAddress]));
+              } else {
+                  //TODO: failed message
+              }
+            });
+          });
+        }
       });
     } else {
       this.promise = this.smartAccountService.removeExtension(this.smartAccountAddress, this.extensionAddress).subscribe(txHash => {
