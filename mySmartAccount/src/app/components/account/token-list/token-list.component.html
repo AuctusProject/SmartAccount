@@ -61,7 +61,7 @@
                 </app-extension-parameter>
                 <div fxLayout="row" fxLayoutGap="10px">
                     <button class="mat-raised-button" fxFlex="50" mat-button (click)="cancel()" [disabled]="executing">CANCEL</button>
-                    <button color="primary" fxFlex="50" class="mat-raised-button mat-primary" mat-button [disabled]="executing" (click)="addToken()">ADD TOKEN</button>
+                    <button color="primary" fxFlex="50" class="mat-raised-button mat-primary" mat-button [promiseBtn]="addTokenPromise" (click)="addToken()">ADD TOKEN</button>
                 </div>
             </mat-list>
         </div>
