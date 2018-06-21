@@ -7,6 +7,7 @@ import { AddressUtil } from '../../../util/addressUtil';
 import { ParameterUI } from '../../../model/ParameterUI';
 import { Web3Service } from '../../../services/web3.service';
 import { ConfirmationDialogComponent } from "../../confirmation-dialog/confirmation-dialog.component";
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-token-list',
@@ -28,6 +29,7 @@ export class TokenListComponent implements OnInit {
   amount: any;
   selectedToken: TokenStorage;
   amountParameter: ParameterUI;
+  promise: Subscription;
 
   constructor(
     private localStorageService: LocalStorageService,
@@ -76,10 +78,12 @@ export class TokenListComponent implements OnInit {
       accountData.updateSmartAccount(smartAccount);
       this.localStorageService.setAccountData(accountData);
       let self = this;
-      this.smartAccountService.getTokenBalance(this.smartAccountAddress, this.contractAddress.value, this.decimals).subscribe(ret => {
+      this.promise = this.smartAccountService.getTokenBalance(this.smartAccountAddress, this.contractAddress.value, this.decimals).subscribe(ret => {
         self.updateBalance(self.contractAddress.value, ret);
         self.cancel();
       });
+    } else {
+      //TODO: invalid input message
     }
   }
 
@@ -101,15 +105,22 @@ export class TokenListComponent implements OnInit {
       this.executing = true;
       let self = this;
       let tokenAddress = this.selectedToken.address;
-      this.smartAccountService.transferToken(this.smartAccountAddress, this.selectedToken.address, 
+      this.promise = this.smartAccountService.transferToken(this.smartAccountAddress, this.selectedToken.address, 
         this.toAddress.value, this.amount.value).subscribe(txHash => {
           self.web3Service.isSuccessfullyMinedTransaction(txHash).subscribe(ret => {
-            self.smartAccountService.getTokenBalance(self.smartAccountAddress, tokenAddress, self.selectedToken.decimals).subscribe(ret => {
-              self.updateBalance(tokenAddress, ret);
-            });
-            self.cancel();
+            if (ret) {
+              self.smartAccountService.getTokenBalance(self.smartAccountAddress, tokenAddress, self.selectedToken.decimals).subscribe(ret => {
+                self.updateBalance(tokenAddress, ret);
+              });
+              self.cancel();
+            } else {
+              self.executing = false;
+              //TODO: failed message
+            }
           });
       });
+    } else {
+      //TODO: invalid input message
     }
   }
 

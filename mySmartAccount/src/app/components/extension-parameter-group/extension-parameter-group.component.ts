@@ -5,7 +5,7 @@ import { ParameterUI } from '../../model/ParameterUI';
 import { Web3Service } from '../../services/web3.service';
 import * as SolidityCoder from 'web3/lib/solidity/coder';
 import { GeneralUtil } from '../../util/generalUtil';
-
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-extension-parameter-group',
@@ -33,6 +33,7 @@ export class ExtensionParameterGroupComponent implements OnInit {
     @Output() executed = new EventEmitter();
     executing: boolean;
     values = new Array<any>();
+    promise: Subscription;
 
     constructor(private route: ActivatedRoute, 
         private zone: NgZone, 
@@ -68,12 +69,18 @@ export class ExtensionParameterGroupComponent implements OnInit {
             }
             this.executing = true;
             let self = this;
-            this.smartAccountService.sendGenericTransaction(to, 0, 0, data).subscribe(txHash => {
+            this.promise = this.smartAccountService.sendGenericTransaction(to, 0, 0, data).subscribe(txHash => {
                 self.web3Service.isSuccessfullyMinedTransaction(txHash).subscribe(ret => {
-                    this.executing = false;
-                    self.executed.emit();
+                    self.executing = false;
+                    if (ret) {
+                        self.executed.emit();
+                    } else {
+                        //TODO: failed message
+                    }
                 });
             });
+        } else {
+            //TODO: invalid input message
         }
     }
 

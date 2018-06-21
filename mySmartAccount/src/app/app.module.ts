@@ -14,7 +14,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {MatDialogModule} from '@angular/material';
+import { MatDialogModule } from '@angular/material';
 import { Angular2PromiseButtonModule } from 'angular2-promise-buttons/dist';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { UiSwitchModule } from 'angular2-ui-switch'
@@ -86,7 +86,7 @@ import { ConfirmationDialogComponent } from './components/confirmation-dialog/co
         spinnerTpl: '<span class="btn-spinner"></span>',
         disableBtn: true,
         btnLoadingClass: 'is-loading',
-        handleCurrentBtnOnly: true,
+        handleCurrentBtnOnly: false
       }),
     FormsModule,
     MatDialogModule

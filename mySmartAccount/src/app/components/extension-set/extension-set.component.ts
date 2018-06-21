@@ -7,6 +7,7 @@ import { ExtensionData } from '../../model/ExtensionData';
 import { Router } from '@angular/router';
 import { ExtensionStorage } from '../../model/ExtensionStorage';
 import { GeneralUtil } from '../../util/generalUtil';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-extension-set',
@@ -23,6 +24,7 @@ export class ExtensionSetComponent implements OnInit {
   name: string;
   description: string;
   note: string;
+  promise: Subscription;
 
   constructor(private route: ActivatedRoute, 
     private zone: NgZone, 
@@ -77,15 +79,25 @@ export class ExtensionSetComponent implements OnInit {
     let self = this;
     this.executing = true;
     if (!this.active) {
-      this.smartAccountService.addExtension(this.smartAccountAddress, this.extensionAddress).subscribe(txHash => {
+      this.promise = this.smartAccountService.addExtension(this.smartAccountAddress, this.extensionAddress).subscribe(txHash => {
         self.web3Service.isSuccessfullyMinedTransaction(txHash).subscribe(ret => {
-          self.zone.run(() => self.router.navigate(['extension-setup', self.smartAccountAddress, self.extensionAddress]));
+          self.executing = false;
+          if (ret) {
+            self.zone.run(() => self.router.navigate(['extension-setup', self.smartAccountAddress, self.extensionAddress]));
+          } else {
+            //TODO: failed message
+          }
         });
       });
     } else {
-      this.smartAccountService.removeExtension(this.smartAccountAddress, this.extensionAddress).subscribe(txHash => {
+      this.promise = this.smartAccountService.removeExtension(this.smartAccountAddress, this.extensionAddress).subscribe(txHash => {
         self.web3Service.isSuccessfullyMinedTransaction(txHash).subscribe(ret => {
-          self.back();
+          self.executing = false;
+          if (ret) {
+            self.back();
+          } else {
+            //TODO: failed message
+          }
         });
       });
     }

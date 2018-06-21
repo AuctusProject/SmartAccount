@@ -42,8 +42,8 @@
             </app-extension-parameter>
         </mat-list>
         <div fxLayout="row" fxLayoutGap="10px">
-            <button class="mat-raised-button" fxFlex="50" mat-button (click)="back()">CANCEL</button>
-            <button color="primary" fxFlex="50" class="mat-raised-button mat-primary" mat-button (click)="loadCustomExtension()">LOAD</button>
+            <button class="mat-raised-button" fxFlex="50" mat-button (click)="back()" [disabled]="executing">CANCEL</button>
+            <button color="primary" fxFlex="50" class="mat-raised-button mat-primary" mat-button [promiseBtn]="promise" (click)="loadCustomExtension()">LOAD</button>
         </div>
     </mat-list>
 </mat-expansion-panel>

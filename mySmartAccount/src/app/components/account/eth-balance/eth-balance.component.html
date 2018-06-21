@@ -22,7 +22,7 @@
         (parameterSet)="setAmount($event)">
     </app-extension-parameter>
     <div fxLayout="row">
-      <button color="primary" class="mat-raised-button mat-primary" mat-button [disabled]="executing" (click)="transferEth()">SEND</button>
+      <button color="primary" class="mat-raised-button mat-primary" mat-button [promiseBtn]="promise" (click)="transferEth()">SEND</button>
     </div>
   </mat-list>
 </mat-expansion-panel>

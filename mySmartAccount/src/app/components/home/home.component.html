@@ -11,24 +11,22 @@
     </mat-list>
   </mat-expansion-panel>
   <div fxLayout="row" fxLayoutGap="10px">
-    <form (ngSubmit)="save()" *ngIf="adding" fxFlex="100">
-      <mat-list>
-        <app-extension-parameter 
-          [index]="getNameIndex()"
-          [parameter]="getNameParameter()"
-          (parameterSet)="setName($event)">
-        </app-extension-parameter>
-        <app-extension-parameter *ngIf="importing" 
-          [index]="getContractAddressIndex()"
-          [parameter]="getContractAddressParameter()"
-          (parameterSet)="setContractAddress($event)">
-        </app-extension-parameter>
-        <div fxLayout="row" fxLayoutGap="10px">
-          <button mat-raised-button fxFlex="50" [disabled]="executing" (click)="clearAdding()">CANCEL</button>
-          <button mat-raised-button fxFlex="50" type="submit" color="primary" [disabled]="executing">{{getAction()}}</button>
-        </div>
-      </mat-list>
-    </form>
+    <mat-list *ngIf="adding" fxFlex="100">
+      <app-extension-parameter 
+        [index]="getNameIndex()"
+        [parameter]="getNameParameter()"
+        (parameterSet)="setName($event)">
+      </app-extension-parameter>
+      <app-extension-parameter *ngIf="importing" 
+        [index]="getContractAddressIndex()"
+        [parameter]="getContractAddressParameter()"
+        (parameterSet)="setContractAddress($event)">
+      </app-extension-parameter>
+      <div fxLayout="row" fxLayoutGap="10px">
+        <button mat-raised-button fxFlex="50" [disabled]="executing" (click)="clearAdding()">CANCEL</button>
+        <button mat-raised-button fxFlex="50" type="submit" color="primary"  (click)="save()" [promiseBtn]="savePromise">{{getAction()}}</button>
+      </div>
+    </mat-list>
     <button mat-raised-button fxFlex="50" (click)="import()" *ngIf="!adding">IMPORT EXISTING</button>
     <button mat-raised-button fxFlex="50" color="primary" (click)="create()" *ngIf="!adding">CREATE NEW</button>
   </div>

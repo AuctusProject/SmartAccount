@@ -8,6 +8,7 @@ import { Observable } from 'rxjs/Observable';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AddressUtil } from '../../../util/addressUtil';
 import { ParameterUI } from '../../../model/ParameterUI';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-extension-list',
@@ -26,6 +27,7 @@ export class ExtensionListComponent implements OnInit {
   selectedActive: boolean;
   executing: boolean;
   extensionAddress: any;
+  promise: Subscription;
 
   constructor(private localStorageService: LocalStorageService, 
     private smartAccountService : SmartAccountService,
@@ -84,18 +86,22 @@ export class ExtensionListComponent implements OnInit {
       let accountData = this.localStorageService.getAccountData();
       let ui = accountData.getExtensionUI(this.extensionAddress.value);
       if (!ui) {
-        this.extensionService.getExtension(this.extensionAddress.value).subscribe(ret => {
+        this.promise = this.extensionService.getExtension(this.extensionAddress.value).subscribe(ret => {
           self.executing = false;
           if (ret) {
             accountData.setExtensionUI(ret);
             self.localStorageService.setAccountData(accountData);
             self.goToExtension();
+          } else {
+            //TODO: failed message
           }
         });
       } else {
         this.executing = false;
         this.goToExtension();
       }
+    } else {
+      //TODO: invalid input message
     }
   }
 

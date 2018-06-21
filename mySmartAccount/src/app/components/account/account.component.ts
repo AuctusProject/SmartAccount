@@ -153,6 +153,8 @@ export class AccountComponent implements OnInit {
       account.updateSmartAccount(this.smartAccount);
       this.localStorageService.setAccountData(account);
       this.back();
+    } else {
+      //TODO: invalid input message
     }
   }
 }

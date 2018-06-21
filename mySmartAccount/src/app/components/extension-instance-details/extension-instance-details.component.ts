@@ -248,6 +248,8 @@ export class ExtensionInstanceDetailsComponent implements OnInit {
             account.updateSmartAccount(smartAccount);
             this.localStorageService.setAccountData(account);
             this.back();
+        } else {
+            //TODO: invalid input message
         }
     }
 }

@@ -108,26 +108,31 @@ export class HomeComponent implements OnInit {
       this.executing = true;
       if (this.importing) {
         if (this.contractAddress && this.contractAddress.status) {
-          this.smartAccountService.getSmartAccountVersion(this.contractAddress.value).subscribe(ret => {
+          this.savePromise = this.smartAccountService.getSmartAccountVersion(this.contractAddress.value).subscribe(ret => {
+            self.executing = false;
             if (ret) {
               self.redirect();
             } else {
-              this.executing = false;
+              //TODO: failed message
             }
           });
         } else {
           this.executing = false;
+          //TODO: invalid input message
         }
       } else {
         this.savePromise = this.smartAccountService.createAccountSC().subscribe(contractAddress => {
+          self.executing = false;
           if (contractAddress) {
             self.contractAddress = { value: contractAddress, status: true };
             self.redirect();
           } else {
-            this.executing = false;
+            //TODO: failed message
           }
         });
       }
+    } else {
+      //TODO: invalid input message
     }
   }
 

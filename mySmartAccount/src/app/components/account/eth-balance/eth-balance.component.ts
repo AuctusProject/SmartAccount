@@ -3,6 +3,7 @@ import { AddressUtil } from '../../../util/addressUtil';
 import { SmartAccountService } from '../../../services/smart-account.service';
 import { ParameterUI } from '../../../model/ParameterUI';
 import { Web3Service } from '../../../services/web3.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-eth-balance',
@@ -15,7 +16,7 @@ export class EthBalanceComponent implements OnInit {
   @Input() ethBalance: number;
   recipient: any;
   value: any;
-  executing: boolean;
+  promise: Subscription;
 
   constructor(private smartAccountService: SmartAccountService,
     private web3Service: Web3Service) {
@@ -26,16 +27,20 @@ export class EthBalanceComponent implements OnInit {
 
   transferEth() {
     if (this.smartAccountAddress && this.recipient && this.recipient.status && this.value && this.value.status && this.value.value > 0) {
-      this.executing = true;
       let self = this;
-      this.smartAccountService.sendEther(this.smartAccountAddress, this.recipient.value, this.value.value).subscribe(txHash => {
+      this.promise = this.smartAccountService.sendEther(this.smartAccountAddress, this.recipient.value, this.value.value).subscribe(txHash => {
         self.web3Service.isSuccessfullyMinedTransaction(txHash).subscribe(ret => {
-          self.executing = false;
-          self.smartAccountService.getETHBalance(self.smartAccountAddress).subscribe(ret => {
-            self.ethBalance = ret;
-          });
+          if (ret) {
+            self.smartAccountService.getETHBalance(self.smartAccountAddress).subscribe(ret => {
+              self.ethBalance = ret;
+            });
+          } else {
+            //TODO: failed message
+          }
         });
       });
+    } else {
+      //TODO: invalid input message
     }
   }
 
