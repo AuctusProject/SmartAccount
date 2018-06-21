@@ -1,8 +1,11 @@
-<h1 mat-dialog-title>Are you sure?</h1>
+<h1 mat-dialog-title>{{(data.customTitle) || "Are you sure?"}}</h1>
 <div mat-dialog-content>
   <p>{{data.text}}</p>
 </div>
-<div class="dialog-buttons" mat-dialog-actions>
+<div *ngIf="!data.hideConfirmation" class="dialog-buttons" mat-dialog-actions>
   <button mat-button (click)="onNoClick()">{{data.cancelLabel}}</button>
   <button mat-button [mat-dialog-close]="true" cdkFocusInitial>{{data.confirmationLabel}}</button>
+</div>
+<div *ngIf="data.hideConfirmation" class="dialog-single-button" mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">OK</button>
 </div>

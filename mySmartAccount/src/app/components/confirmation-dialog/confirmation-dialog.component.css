@@ -1,3 +1,6 @@
 .dialog-buttons button {
     width: 48%;
 }
+.dialog-single-button button {
+    width: 96%;
+}
