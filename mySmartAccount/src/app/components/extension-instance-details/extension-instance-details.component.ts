@@ -100,9 +100,9 @@ export class ExtensionInstanceDetailsComponent implements OnInit {
         let self = this;
         Observable.combineLatest(array).subscribe(function handleValues(values) {
             self.dataValues = new Array<any>();
-            values.forEach(val => {
-                self.dataValues.push(val[0]);
-            });
+            for (let i = 0; i < self.ui.viewDataParameters.length; ++i) {
+                self.dataValues.push(self.parseParameterReturn(self.ui.viewDataParameters[i].output, values[i][0]));
+            }
             self.showData = true;
         });
     }
@@ -113,19 +113,21 @@ export class ExtensionInstanceDetailsComponent implements OnInit {
         this.web3Service.callConstMethodWithData(data, this.extensionAddress, this.ui.getSetupWeb3Types()).subscribe(ret => {
             self.setupValues = new Array<any>();
             for (let i = 0; i < self.ui.setupParameters.length; ++i) {
-                let value = null;
-                if (self.ui.setupParameters[i].type == 1 || self.ui.setupParameters[i].type == 2) {
-                    value = ret[i] / (self.ui.setupParameters[i].decimals > 1 ? self.ui.setupParameters[i].decimals : 1);
-                } else if (self.ui.setupParameters[i].type == 5) {
-                    value = new Date(ret[i]);
-                } else {
-                    value = ret[i];
-                }
-                self.setupValues.push(value);
+                self.setupValues.push(self.parseParameterReturn(self.ui.setupParameters[i], ret[i]));
             }
             self.showSetup = true;
         });
     }
+
+    parseParameterReturn(parameter: ParameterUI, ret: any) {
+        if (parameter.type == 1 || parameter.type == 2) {
+            return ret / (parameter.decimals > 1 ? parameter.decimals : 1);
+        } else if (parameter.type == 5) {
+            return new Date(ret);
+        } else {
+            return ret;
+        }
+    } 
 
     getBackDestination() {
         return ['account', this.smartAccountAddress]; 
