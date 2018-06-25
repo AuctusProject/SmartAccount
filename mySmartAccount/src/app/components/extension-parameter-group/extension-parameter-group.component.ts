@@ -56,6 +56,9 @@ export class ExtensionParameterGroupComponent implements OnInit {
                 types.push("bytes32");
                 values.push(this.identifier);
             }
+            this.values.sort((a, b) => {
+                return a.index > b.index ? 1 : a.index == b.index ? 0 : -1;
+            });
             for (let i = 0; i < this.values.length; ++ i) {
                 types.push(GeneralUtil.getWeb3Type(this.parameters[i]));
                 values.push(this.values[i].value)
