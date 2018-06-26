@@ -97,15 +97,15 @@ export class SmartAccountStorage {
                 break;
             case "42":
                 result.push(new ExtensionStorage('0x67c5ca5378472889683fa3c6e22cb3a408fb3950', null));
-                result.push(new ExtensionStorage('0x5c28a75f6ed8feb7c1dd1a933ad940228dc07b1a', null));
+                result.push(new ExtensionStorage('0xc7f92c58847c1c506f59a19257f924eef9a03050', null));
                 break;
             case "3":
                 result.push(new ExtensionStorage('0xc8b40177ee3c704228079bc959af595e4396c81b', null));
-                result.push(new ExtensionStorage('0x1a930eeab0e0c54e95315dca5210ed5b8f647be8', null));
+                result.push(new ExtensionStorage('0xeaa98c7880254efad4cbdfb3321c435dbf54e35b', null));
                 break;
             case "4":
                 result.push(new ExtensionStorage('0x4581c9cd11efeaf9448d99ee5b91e8e9ca2425c8', null));
-                result.push(new ExtensionStorage('0x45df523c577b48ab7e871b9aaec86a2ee38b9081', null));
+                result.push(new ExtensionStorage('0x7ddb6d5a79199266c7718c8f0f5abc2eb6a53413', null));
                 break;
             default: 
                 break;

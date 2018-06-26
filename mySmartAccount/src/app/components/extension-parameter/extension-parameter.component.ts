@@ -11,6 +11,7 @@ import { ExtensionParameterElementComponent } from './extension-parameter-elemen
 export class ExtensionParameterComponent implements OnInit {
   
     @Input() smartAccountAddress: string;
+    @Input() identifier: string;
     @Input() index: number;
     @Input() parameter: ParameterUI;
     @Input() setValue: any;
@@ -48,6 +49,7 @@ export class ExtensionParameterComponent implements OnInit {
             id: this.getNextId(),
             description: this.isArray() ? "" : this.getDescription(),
             smartAccountAddress: this.smartAccountAddress,
+            identifier: this.identifier,
             setValue: value
         });
     }

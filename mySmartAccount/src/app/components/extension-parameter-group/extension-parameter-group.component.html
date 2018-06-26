@@ -7,6 +7,7 @@
         <div *ngFor="let param of parameters; let i = index" [attr.data-index]="i">
             <app-extension-parameter 
                 [smartAccountAddress]="smartAccountAddress" 
+                [identifier]="identifier" 
                 [index]="i"
                 [parameter]="param"
                 [setValue]="initialValues[i]"

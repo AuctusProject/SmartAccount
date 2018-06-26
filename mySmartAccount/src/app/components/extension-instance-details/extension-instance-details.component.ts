@@ -104,6 +104,7 @@ export class ExtensionInstanceDetailsComponent implements OnInit {
                 self.dataValues.push(self.parseParameterReturn(self.ui.viewDataParameters[i].output, values[i][0]));
             }
             self.showData = true;
+            self.ref.detectChanges();
         });
     }
 
@@ -116,6 +117,7 @@ export class ExtensionInstanceDetailsComponent implements OnInit {
                 self.setupValues.push(self.parseParameterReturn(self.ui.setupParameters[i], ret[i]));
             }
             self.showSetup = true;
+            self.ref.detectChanges();
         });
     }
 
@@ -211,7 +213,7 @@ export class ExtensionInstanceDetailsComponent implements OnInit {
     actionExecuted() {
         this.showActionDetails = false;
         this.setDataValues();
-        this.ref.detectChanges();
+        this.setSetupValues();
     }
 
     setEditName() {
