@@ -52,7 +52,7 @@ contract RecurringPayment is IExtension {
     parameters1[0] = Parameter(false, false, SMARTACCOUNTADDRESS, 0, "Smart account");
     parameters1[1] = Parameter(false, false, FLOAT, 1000000000000000000, "Amount");
     Parameter[] memory parameters2 = new Parameter[](1);
-    parameters2[0] = Parameter(false, false, ADDRESS, 0, "Beneficiary");
+    parameters2[0] = Parameter(false, false, IDENTIFIER, 0, "Beneficiary");
     Action[] memory action = new Action[](2);
     action[0].description = "Make a withdraw";
     action[0].parameters = parameters1;
@@ -154,14 +154,14 @@ contract RecurringPayment is IExtension {
     return allowedAmount;
   }
   
-  function cancelRecurringPayment(address _beneficiary) external {
-    require(configuration[msg.sender][_beneficiary].recurrenceTime > 0);
-    configuration[msg.sender][_beneficiary].recurrenceTime = 0;
-    configuration[msg.sender][_beneficiary].periods = 0;
-    configuration[msg.sender][_beneficiary].maximumAmountPerPeriod = 0;
-    configuration[msg.sender][_beneficiary].paymentInEther = false;
-    configuration[msg.sender][_beneficiary].tokenAddress = address(0);
-    removeIdentifier(bytes32(_beneficiary));
+  function cancelRecurringPayment(bytes32 _identifier) external {
+    require(configuration[msg.sender][address(_identifier)].recurrenceTime > 0);
+    configuration[msg.sender][address(_identifier)].recurrenceTime = 0;
+    configuration[msg.sender][address(_identifier)].periods = 0;
+    configuration[msg.sender][address(_identifier)].maximumAmountPerPeriod = 0;
+    configuration[msg.sender][address(_identifier)].paymentInEther = false;
+    configuration[msg.sender][address(_identifier)].tokenAddress = address(0);
+    removeIdentifier(_identifier);
   }
   
   function withdrawal(address _smartAccount, uint256 _amount) external { 
